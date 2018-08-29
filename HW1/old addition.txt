@@ -1,0 +1,27 @@
+int bounce = 0;
+	int term1Length = 1, term2Length = 1;
+	int duration, sum;
+	
+	node * temp1 = new node;
+	node * temp2 = new node;
+	node * temp3 = new node;
+	temp1 = term1.head;
+	while(temp1->next != NULL){
+		temp1 = temp1->next;
+		term1Length++;
+	}
+	
+	temp2 = term2.head;
+	while(temp2->next != NULL){
+		temp2 = temp2->next;
+		term2Length++;	
+	}
+	
+	if(term1Length < term2Length)
+		duration = term1Length;
+	else
+		duration = term2Length;
+	
+	temp3 = term3.tail;
+	temp1 = term1.tail;
+	temp2 = term2.tail;

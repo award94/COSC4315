@@ -1,0 +1,27 @@
+if(opChar == '*'){
+		for(int i = 0; i < term1Length; i++){
+			temp2 = term2.tail;
+			temp3 = term3.tail;
+			for(int k = i; k > 0; k--)
+				temp3 = temp3->previous;
+			
+			for(int j = 0; j < term2Length; j++){
+				//cout<<temp1->value<<"*"<<temp2->value<<endl;
+				term3.print();
+				int product = temp1->value * temp2->value;
+				int remainder = product%10;
+				bounce = (product + temp3->value)/10;
+				cout<<"product="<<product<<" remainder="<<remainder
+					<<" bounce="<<bounce<<endl;
+				cout<<"temp3V="<<temp3->value<<endl;
+				
+				temp3->value += remainder;
+				
+				temp2 = temp2->previous;
+				temp3 = temp3->previous;
+				
+				temp3->value += bounce;
+			}
+			temp1 = temp1->previous;
+		}
+	}
