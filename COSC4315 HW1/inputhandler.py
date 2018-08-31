@@ -1,11 +1,12 @@
 class inputhandler:
-    
+
 #   constructor
     def __init__(self, rawInput, dpn):
         self.rawInput = rawInput            #the math term we're equating
         self.dpn = dpn                      #digits per node
         self.term1 = []                     #left hand term
         self.term2 = []                     #right hand term
+        self.term3 = []                     #the result
         self.op = ['a']                     #+ or *
 
 #   will change input string into managable data
