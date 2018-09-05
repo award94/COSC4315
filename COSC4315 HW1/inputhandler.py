@@ -10,6 +10,9 @@ class inputhandler:
         self.term1 = []                     #left hand term
         self.term2 = []                     #right hand term
         self.term3 = []                     #the result
+        self.listTerm1 = [];
+        self.listTerm2 = [];
+        self.listTerm3 = [];
         self.op = ['a']                     #+ or *
 
 #   will change input string into managable data
@@ -118,6 +121,30 @@ class inputhandler:
         print(tempList1)
         print(tempList2)
 
+        self.listTerm1 = tempList1
+        self.listTerm2 = tempList2
+
 #   Does the math operation
     def domath(self):
         print("inside domath()")
+
+        def addition(term1, term2):
+            print("inside addition()")
+            print(term1, '+',  term2)
+            print(term1.__len__())
+            print(term2.__len__())
+
+        def multiplication(term1, term2):
+            print("inside multiplication()")
+            print(term1, '*', term2)
+
+        print(self.op)
+        if(self.op[0] == '+'):
+            print("Addition")
+            addition(self.listTerm1, self.listTerm2)
+        elif(self.op[0] == '*'):
+            print("Multiplication")
+            multiplication(self.listTerm1, self.listTerm2)
+        else:
+            print("Invalid Operator");
+
