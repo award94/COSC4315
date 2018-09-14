@@ -166,7 +166,7 @@ class inputhandler:
                 print("inside basedaddition")
                 if i > j:
                     # subtract until j is 0
-                    if j > 0:
+                    if j >= 0:
                         # The program  should recurse and add the values together until the shorter term ends
                         print("case 1: i > j")
                         result = int(term1[i]) + int(term2[j])
@@ -179,7 +179,7 @@ class inputhandler:
                         #on my function passing
                     else:
                         # case where j substring has ended
-                        if i > 0:
+                        if i >= 0:
                             print("Case 1: j has ended")
                             term3[k] = term1[i]
                             i -= 1
@@ -187,7 +187,7 @@ class inputhandler:
                             baseaddition(term1, term2, term3, i, j, k)
                 elif j > i:
                     # subtract until i is 0
-                    if i > 0:
+                    if i >= 0:
                         print("Case 3: j > i")
                         result = int(term1[i]) + int(term2[j])
                         term3[k] = result
@@ -196,7 +196,7 @@ class inputhandler:
                         k -= 1
                         baseaddition(term1, term2, term3, i, j, k)
                     else:
-                        if j > 0:
+                        if j >= 0:
                             print("Case 2: i has ended")
                             term3[k] = term2[j]
                             j -= 1
@@ -220,10 +220,6 @@ class inputhandler:
                         print(result)
                 print(term3)
                 # IDK why this shit prints 3 times, I'll troubleshoot it more tomorrow
-
-                    #baseaddition(term1, term2, term3)
-                    # i and j are the same, therefore just iterate one at a time, maybe modify this to  elif (i == j)
-                    # in order to use else to just catch all other stuff
 
             baseaddition(term1, term2, term3, i, j, k)
 
