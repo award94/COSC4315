@@ -167,69 +167,6 @@ class inputhandler:
                     addrestofterm(term, term3, counter-1)
 
 
-
-                #
-                # if i > j:
-                #     # subtract until j is 0
-                #     if j > 0:
-                #         # The program  should recurse and add the values together until the shorter term ends
-                #         print("case 1: i > j")
-                #         result = int(term1[i]) + int(term2[j])
-                #         term3[k] = result
-                #         i -= 1
-                #         j -= 1
-                #         k -= 1
-                #         baseaddition(term1, term2, term3, i, j, k)
-                #         # commenting out for now because otherwise it will cause infinite recursion because I messed up
-                #         # on my function passing
-                #     else:
-                #         # case where j substring has ended
-                #         if i > 0:
-                #             print("Case 1: j has ended")
-                #             term3[k] = term1[i]
-                #             i -= 1
-                #             k -= 1
-                #             baseaddition(term1, term2, term3, i, j, k)
-                # elif j > i:
-                #     # subtract until i is 0
-                #     if i > 0:
-                #         print("Case 3: j > i")
-                #         result = int(term1[i]) + int(term2[j])
-                #         term3[k] = result
-                #         i -= 1
-                #         j -= 1
-                #         k -= 1
-                #         baseaddition(term1, term2, term3, i, j, k)
-                #     else:
-                #         if j > 0:
-                #             print("Case 2: i has ended")
-                #             term3[k] = term2[j]
-                #             j -= 1
-                #             k -= 1
-                #             baseaddition(term1, term2, term3, i, j, k)
-                # else:
-                #     # exit condition
-                #     # I'm going  to code for overflow after I get the basic version working
-                #     print("Case 3: i = j")
-                #     if i > 0:
-                #         result = int(term1[i]) + int(term2[j])
-                #         term3[k] = result
-                #         print(term3[k])
-                #         i -= 1
-                #         j -= 1
-                #         k -= 1
-                #         baseaddition(term1, term2, term3, i, j, k)
-                #     else:
-                #         result = int(term1[i]) + int(term2[j])
-                #         term3[k] = result
-                #         print(result)
-                #print(term3)
-                # IDK why this shit prints 3 times, I'll troubleshoot it more tomorrow
-
-                # baseaddition(term1, term2, term3)
-                # i and j are the same, therefore just iterate one at a time, maybe modify this to  elif (i == j)
-                # in order to use else to just catch all other stuff
-
             baseaddition(term1, term2, term3, i, j, k)
             #print(term3)
 
@@ -311,19 +248,16 @@ class inputhandler:
 
         #Removes any leading zeroes
         def trimEmptyHeads(listTerm3, i, j):
-            if(i < j):
+            if(i < j and j != 1):
                 if(int(listTerm3[i]) == 0):
                     listTerm3.pop(i)
                     self.term3Len -= 1
                 else:
                     return 0
-                trimEmptyHeads(listTerm3, i+1, self.term3Len)
+                trimEmptyHeads(listTerm3, i, self.term3Len)
 
-        #print(self.listTerm3)
-        #print(self.term3Len)
         if(self.term3Len != 1):
             trimEmptyHeads(self.listTerm3, 0, self.term3Len)
-        #print(self.listTerm3)
 
         #Adds appropriate # of 0's to a 0 node
         def padZeroes(i, k):
@@ -341,7 +275,6 @@ class inputhandler:
 
                 convertNodesFromIntToString(i+1)
 
-        #print(self.listTerm3)
         self.listTerm3[0] = str(self.listTerm3[0])
         convertNodesFromIntToString(1)
 
