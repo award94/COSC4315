@@ -85,7 +85,6 @@ class inputhandler:
         #if head node is equal size to dpn
         if(offset1 != 0):
             addHead(tempList1, self.term1, tempString, 0, offset1)
-
         if(offset2 != 0):
             addHead(tempList2, self.term2, tempString, 0, offset2)
 
@@ -219,6 +218,8 @@ class inputhandler:
 
     def printResult(self):
         self.term3Len = self.listTerm3.__len__()
+        #print("\n-----------------------------------\n")
+        #print(self.listTerm3)
 
         #Removes any leading zeroes
         def trimEmptyHeads(listTerm3, i, j):
@@ -234,18 +235,24 @@ class inputhandler:
             trimEmptyHeads(self.listTerm3, 0, self.term3Len)
 
         #Adds appropriate # of 0's to a 0 node
-        def padZeroes(i, k):
-            if(i > 1):
-                self.listTerm3[k] = '0' + self.listTerm3[k]
-                padZeroes(i-1, k)
+        def padZeroes(k, i):
+            if(k > 0):
+                #print("pad")
+                self.listTerm3[i] = '0' + self.listTerm3[i]
+                padZeroes(k-1, i)
 
         #Converts each node to strings for joining
         def convertNodesFromIntToString(i):
             if(i < self.term3Len):
+                #print(self.listTerm3[i])
                 self.listTerm3[i] = str(self.listTerm3[i])
 
                 if(str(self.listTerm3[i]).__len__() < self.dpn):
-                    padZeroes(self.dpn, i)
+                    #print("padding Zeroes for:", self.listTerm3[i])
+                    numZeroes = int(self.dpn) - str(self.listTerm3[i]).__len__()
+                    #print("dpn=",self.dpn)
+                    #print(str(self.dpn), '-' ,str(self.listTerm3[i]).__len__(), '=', numZeroes)
+                    padZeroes(numZeroes, i)
 
                 convertNodesFromIntToString(i+1)
 
