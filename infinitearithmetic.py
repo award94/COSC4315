@@ -27,16 +27,20 @@ def main(i):
         #create new instance of class
         ih = inputhandler.inputhandler(input, digitsPerNode)
         #turns input strings into appropraite variables
-        errorCode = ih.parseraw()
-        #print(errorCode)
-        if(errorCode == 0):
-            #splits term list objects by digits per node
-            ih.splitlistbydpn()
-            #find 3rd term by addition or multiplication
-            ih.domath()
-            #parsing of results to look pretty
-            ih.printResult()
-            #go to next line
-        main(i-1)
+        errorCode = 2
+        if(ih.dpn == 0):
+            errorCode = -1
+        if(errorCode != -1):
+            errorCode = ih.parseraw()
+            #print(errorCode)
+            if(errorCode == 0):
+                #splits term list objects by digits per node
+                ih.splitlistbydpn()
+                #find 3rd term by addition or multiplication
+                ih.domath()
+                #parsing of results to look pretty
+                ih.printResult()
+                #go to next line
+            main(i-1)
 
 main(j)
