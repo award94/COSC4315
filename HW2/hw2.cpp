@@ -11,9 +11,9 @@
 
 using namespace std;
 
-bool checkifconst(string token) {
-	for (int i = 0; i < token.length(); i++) {
-		if (isdigit(token[i]) == false)
+bool checkifconst(string Var) {
+	for (int i = 0; i < Var.length(); i++) {
+		if (isdigit(Var[i]) == false)
 			return false;
 	}
 	return true;
@@ -21,63 +21,60 @@ bool checkifconst(string token) {
 
 int main(int argc, char* argv[]){
 	cout<< "Homework 2"<<endl;
-	cout << checkifconst("1") << endl;
-
-	postfixconverter pfx;
-	bool temp = pfx.precedence('a', 'b');
-	pfx.convertToPostfix();
 	
 	string line;
-	list<token*> Tokens;
+	list<variable*> Variables;
 	int tokenNum = 1;						//id of next token to be created
 	
 	while (getline(cin, line)){				//Iterate through each statement
 		cout<<line<<endl;					//Current statement
-		
+		list<string> currentline;
+
 		int i = 0;							//char index of the statement
+
 		while (i < line.length()) {
 
-			//Read in next token
+			//Read in next variable
 			while (line[i] == ' ' && i < line.length())
 				i++;
 
-			string nextToken;
+			string nextVar;
 
 			if (isalnum(line[i])) {
 				while (isalnum(line[i]) && i < line.length()) {
 					cout << "i=" << i << ", line[i]=" << line[i] << endl;
-					nextToken.append(line, i, 1);
+					nextVar.append(line, i, 1);
 					i++;
 				}
 
-				if (nextToken.compare("func") == 0) {
-					createNewFunc(line, i, Tokens);
+				if (nextVar.compare("func") == 0) {
+					createNewFunc(line, i, Variables);
 				}
-				else if (checkifconst(nextToken) == true) {
-					cout << "nextToken is constant" << endl;
+				else if (checkifconst(nextVar) == true) {
+					cout << "nextVar is constant" << endl;
 				}
 				else {
-					createNewVar(nextToken, Tokens);
+					createNewVar(nextVar, Variables);
 				}
 
-				cout << "nextToken=" << nextToken << endl;
+				cout << "nextVar=" << nextVar << endl;
 			}
 
 			else if (line[i] == '=' || line[i] == '+') {
-				cout << "next token is an arithmetic operator" << endl;
+				cout << "next var is an arithmetic operator" << endl;
 
 				while (line[i] == '=' || line[i] == '+') {
 					cout << "i=" << i << ", line[i]=" << line[i] << endl;
-					nextToken.append(line, i, 1);
+					nextVar.append(line, i, 1);
 					i++;
 				}
 
-				cout << "nextToken=" << nextToken << endl;
+				cout << "nextVar=" << nextVar << endl;
 			}
 		}
 	}
-	printTokens(Tokens);
-	deleteTokens(Tokens);
+	printVariables(Variables);
+	deleteVariables(Variables);
 	
 	return 0;	
 }

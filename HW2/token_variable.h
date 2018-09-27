@@ -1,15 +1,15 @@
 using namespace std;
 
-void createNewVar(string nextToken, list<token*> & Tokens) {
+void createNewVar(string nextVar, list<variable*> & Variables) {
 
 	cout << "nextToken is a variable" << endl;
 
 	//Create a new token
-	token * newToken = new token();
-	newToken->name = nextToken;
-	newToken->value = 1;
+	variable * newVar = new variable();
+	newVar->name = nextVar;
+	newVar->value = 1;
 	
-	Tokens.push_back(newToken);
-	newToken = NULL;
-	delete newToken;
+	Variables.push_back(newVar);
+	newVar = NULL;
+	delete newVar;
 }

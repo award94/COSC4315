@@ -1,24 +1,24 @@
 using namespace std;
 
-struct token {
+struct variable {
 	string name;
 	int value;
 };
 
-void printTokens(list<token*> myTokens) {
-	cout << "inside printTokens" << endl;
+void printVariables(list<variable*> myVariables) {
+	cout << "inside printVariables" << endl;
 
-	for (list<token*>::iterator it = myTokens.begin(); it != myTokens.end(); it++)
-		cout << "token data" << endl;
+	for (list<variable*>::iterator it = myVariables.begin(); it != myVariables.end(); it++)
+		cout << "variable data" << endl;
 }
 
-void deleteTokens(list<token*> myTokens) {
-	cout << "inside deleteTokens" << endl;
+void deleteVariables(list<variable*> myVariables) {
+	cout << "inside deleteVariables" << endl;
 
-	token * temp = NULL;
-	while (myTokens.size() != 0) {
-		temp = myTokens.front();
-		myTokens.pop_front();
+	variable * temp = NULL;
+	while (myVariables.size() != 0) {
+		temp = myVariables.front();
+		myVariables.pop_front();
 		delete temp;
 	}
 }

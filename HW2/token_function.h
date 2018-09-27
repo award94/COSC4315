@@ -1,7 +1,7 @@
 using namespace std;
 
-void createNewFunc(string line, int & i, list<token*> & Tokens) {
-	cout << "nextToken is a function" << endl;
+void createNewFunc(string line, int & i, list<variable*> & Variables) {
+	cout << "nextVar is a function" << endl;
 
 	string funcName;
 
@@ -11,11 +11,11 @@ void createNewFunc(string line, int & i, list<token*> & Tokens) {
 		i++;
 	}
 
-	token * newToken = new token();
-	newToken->name = funcName;
-	newToken->value = 1;
+	variable * newVar = new variable();
+	newVar->name = funcName;
+	newVar->value = 1;
 
-	Tokens.push_back(newToken);
-	newToken = NULL;
-	delete newToken;
+	Variables.push_back(newVar);
+	newVar = NULL;
+	delete newVar;
 }
