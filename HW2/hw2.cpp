@@ -51,61 +51,83 @@ int main(int argc, char* argv[]){
 		//IF IF/ELSE
 		//	Idk yet, but it's gonna eventually evaluate x inside if(x) and then branch
 
-		while (i < line.length()) {
 
 			//Read in next variable
-			while (line[i] == ' ' && i < line.length())
+
+		string nextVar;
+			
+		while (line[i] == ' ' && i < line.length()) {
+			i++;
+		}
+		while (isalnum(line[i]) && i < line.length()) {
+			nextVar.append(line, i, 1);
+			i++;
+		}
+
+		cout << "nextToken=" << nextVar << endl;
+
+		if (nextVar.compare("def") == 0) {
+			createNewFunc(line, i, Variables);
+		}
+		else if (nextVar.compare("print") == 0) {
+			print();
+		}
+		else if (nextVar.compare("if") == 0) {
+			ifelse();
+		}
+		else {
+			assignment(line);
+		}
+		cout << endl;
+
+		/*
+		if (nextVar.compare("def") == 0) {
+			createNewFunc(line, i, Variables);
+		}
+		else if()
+
+		else if (isalnum(line[i])) {
+			while (isalnum(line[i]) && i < line.length()) {
+				cout << "i=" << i << ", line[i]=" << line[i] << endl;
+				nextVar.append(line, i, 1);
 				i++;
-
-			string nextVar;
-
-			if (nextVar.compare("def") == 0) {
-				createNewFunc(line, i, Variables);
 			}
-
-			else if (isalnum(line[i])) {
-				while (isalnum(line[i]) && i < line.length()) {
-					cout << "i=" << i << ", line[i]=" << line[i] << endl;
-					nextVar.append(line, i, 1);
-					i++;
-				}
 
 				
 
-				if (checkifconst(nextVar) == true) {
-					cout << "nextVar is constant" << endl;
-				}
-				else {
-					//Search for if the variable exists already
-					//if so add it's value the string in place of variable name
-					//if not create a new one
-					createNewVar(nextVar, Variables);
-				}
-
-				cout << "nextVar=" << nextVar << endl;
+			if (checkifconst(nextVar) == true) {
+				cout << "nextVar is constant" << endl;
+			}
+			else {
+				//Search for if the variable exists already
+				//if so add it's value the string in place of variable name
+				//if not create a new one
+				createNewVar(nextVar, Variables);
 			}
 
-			else if (line[i] == '=' || line[i] == '+') {
-				cout << "next var is an arithmetic operator" << endl;
-
-				while (line[i] == '=' || line[i] == '+') {
-					cout << "i=" << i << ", line[i]=" << line[i] << endl;
-					nextVar.append(line, i, 1);
-					i++;
-				}
-
-				cout << "nextVar=" << nextVar << endl;
-				if (nextVar.compare("=") == 0) {
-					cout << "Assignment" << endl;
-
-					assignment(line);
-
-				}
-			}
+			cout << "nextVar=" << nextVar << endl;
 		}
-		printVariables(Variables);
+
+		else if (line[i] == '=' || line[i] == '+') {
+			cout << "next var is an arithmetic operator" << endl;
+
+			while (line[i] == '=' || line[i] == '+') {
+				cout << "i=" << i << ", line[i]=" << line[i] << endl;
+				nextVar.append(line, i, 1);
+				i++;
+			}
+
+			cout << "nextVar=" << nextVar << endl;
+			if (nextVar.compare("=") == 0) {
+				cout << "Assignment" << endl;
+
+				assignment(line);
+
+			}
+
+		}
+		*/
 	}
-	deleteVariables(Variables);
 	
 	return 0;	
 }
