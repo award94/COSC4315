@@ -6,10 +6,10 @@ struct variable {
 };
 
 void printVariables(list<variable*> myVariables) {
-	cout << "inside printVariables" << endl;
+	cout << "All Variables in system" << endl;
 
 	for (list<variable*>::iterator it = myVariables.begin(); it != myVariables.end(); it++)
-		cout << "variable data" << endl;
+		cout << "ID="<<(*it)->name<<" value="<<(*it)->value << endl;
 }
 
 void deleteVariables(list<variable*> myVariables) {

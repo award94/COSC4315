@@ -8,6 +8,9 @@
 #include "postfixconverter.h"
 #include "token_function.h"
 #include "token_variable.h"
+#include "token_assignment.h"
+#include "token_ifelse.h"
+#include "token_print.h"
 
 using namespace std;
 
@@ -28,9 +31,25 @@ int main(int argc, char* argv[]){
 	
 	while (getline(cin, line)){				//Iterate through each statement
 		cout<<line<<endl;					//Current statement
-		list<string> currentline;
 
 		int i = 0;							//char index of the statement
+
+		//IDENTIFY WHAT KIND OF STATEMENT THIS IS
+		//
+		//IF ASSIGNMENT, 
+		//	1. Keep LHS as it's variable name, change RHS to all constants
+		//	2. Change LHS to postfix form
+		//	3. Send line through assignment() to be evaluated
+		//
+		//IF FUNCTION,
+		//	Idk yet, but it's gonna eventually create a variable with the func name and value
+		//
+		//IF PRINT
+		//	1. Grab all values from variables
+		//	2. concatenate the values into a string and cout it
+		//
+		//IF IF/ELSE
+		//	Idk yet, but it's gonna eventually evaluate x inside if(x) and then branch
 
 		while (i < line.length()) {
 
@@ -40,20 +59,26 @@ int main(int argc, char* argv[]){
 
 			string nextVar;
 
-			if (isalnum(line[i])) {
+			if (nextVar.compare("def") == 0) {
+				createNewFunc(line, i, Variables);
+			}
+
+			else if (isalnum(line[i])) {
 				while (isalnum(line[i]) && i < line.length()) {
 					cout << "i=" << i << ", line[i]=" << line[i] << endl;
 					nextVar.append(line, i, 1);
 					i++;
 				}
 
-				if (nextVar.compare("func") == 0) {
-					createNewFunc(line, i, Variables);
-				}
-				else if (checkifconst(nextVar) == true) {
+				
+
+				if (checkifconst(nextVar) == true) {
 					cout << "nextVar is constant" << endl;
 				}
 				else {
+					//Search for if the variable exists already
+					//if so add it's value the string in place of variable name
+					//if not create a new one
 					createNewVar(nextVar, Variables);
 				}
 
@@ -70,10 +95,16 @@ int main(int argc, char* argv[]){
 				}
 
 				cout << "nextVar=" << nextVar << endl;
+				if (nextVar.compare("=") == 0) {
+					cout << "Assignment" << endl;
+
+					assignment(line);
+
+				}
 			}
 		}
+		printVariables(Variables);
 	}
-	printVariables(Variables);
 	deleteVariables(Variables);
 	
 	return 0;	
