@@ -2,7 +2,7 @@ using namespace std;
 
 struct variable {
 	string name;
-	int value;
+	float value;
 };
 
 void printVariables(list<variable*> myVariables) {
