@@ -11,11 +11,5 @@ void createNewFunc(string line, int & i, list<variable*> & Variables) {
 		i++;
 	}
 
-	variable * newVar = new variable();
-	newVar->name = funcName;
-	newVar->value = 1;
-
-	Variables.push_back(newVar);
-	newVar = NULL;
-	delete newVar;
+	createNewVar(funcName, Variables);
 }

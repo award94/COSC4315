@@ -1,18 +1,11 @@
 using namespace std;
 
-struct ifelsebrancher {
-	int offset;
-	int branchlength;
-};
-
 string getarg(string ifline);
 bool evaluatearg(string arg, list<variable*> Variables);
 list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestoskip);
 
 
 void ifelse(string ifline, int iflineNum, list<variable*> Variables, list<string> & branch, int & linestoskip) {
-	cout << "inside ifelse()" << endl;
-	cout << ifline << " " << iflineNum << endl;
 
 	string line;
 	string firstWord;
@@ -119,7 +112,6 @@ bool evaluatearg(string arg, list<variable*> Variables) {
 }
 
 list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestoskip) {
-	cout << "inside findbranchdata" << endl;
 	
 	list<string> branch1;
 	list<string> branch2;
@@ -175,9 +167,3 @@ list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestosk
 		return branch2;
 	return branch1;
 }
-
-
-/*
-
-
-*/

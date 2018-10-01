@@ -48,6 +48,8 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 		i++;
 	}
 
+	
+
 	//Check if LHS Var has been declared yet
 	//If not, declare it
 	if (!checkforvariable(LHS, Variables)) {

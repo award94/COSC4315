@@ -14,13 +14,17 @@
 
 using namespace std;
 
+list<list<variable*>> AllVariables;
+
 void processstatement(list<variable*> & Variables, int lineNum, string line);
 
 int main(int argc, char* argv[]){
 	cout<< "Homework 2"<<endl;
-	
+
 	string line;
 	list<variable*> Variables;
+	AllVariables.push_back(Variables);
+	
 	int tokenNum = 1;						//id of next token to be created
 	int lineNum = 0;
 
@@ -28,7 +32,11 @@ int main(int argc, char* argv[]){
 		lineNum++;
 		cout << "next statment(" << lineNum << "):" << line << endl;					//Current statement
 		processstatement(Variables, lineNum, line);
+		cout << endl;
 	}
+
+	printVariables(Variables);
+	deleteVariables(Variables);
 
 	return 0;	
 }
@@ -76,9 +84,10 @@ void processstatement(list<variable*> & Variables, int lineNum, string line) {
 			for (list<string>::iterator it = branch.begin(); it != branch.end(); it++) {
 				processstatement(Variables, lineNum, (*it));
 			}
+			cout << endl;
 		}
 		else if (nextVar.compare("else") == 0) {
-			cout << "ignore this line" << endl;
+			cout << "ERROR: No if for this else" << endl;
 		}
 		else {
 			cout << "Variable Assignment/Arithmetic" << endl;
@@ -86,24 +95,24 @@ void processstatement(list<variable*> & Variables, int lineNum, string line) {
 		}
 	}
 	cout << endl;
-	//cout << "finished statement" << endl;
 }
 
 //IDENTIFY WHAT KIND OF STATEMENT THIS IS
 //
-//IF ASSIGNMENT, 
+//ASSIGNMENT, 
 //	1. Keep LHS as it's variable name, change RHS to all constants
 //	2. Change LHS to postfix form
 //	3. Send line through assignment() to be evaluated
+
 //
-//IF FUNCTION,
+//FUNCTION,
 //	Idk yet, but it's gonna eventually create a variable with the func name and value
 //
-//IF PRINT
+//PRINT
 //	1. Grab all values from variables
 //	2. concatenate the values into a string and cout it
 //
-//IF IF/ELSE
+//IF/ELSE
 //	Idk yet, but it's gonna eventually evaluate x inside if(x) and then branch
 //ALSO COMMENTS #
 
