@@ -8,7 +8,6 @@
 #include "variable.h"
 #include "postfixconverter.h"
 #include "token_function.h"
-#include "token_variable.h"
 #include "token_assignment.h"
 #include "token_ifelse.h"
 #include "token_print.h"
@@ -31,10 +30,12 @@ int main(int argc, char* argv[]){
 	string line;
 	list<variable*> Variables;
 	int tokenNum = 1;						//id of next token to be created
+	int lineNum = 0;
 
 	while (getline(cin, line)){				//Iterate through each statement
-		cout<<"next statment:"<<line<<endl;					//Current statement
-
+		lineNum++;
+		cout<<"next statment(" << lineNum << "):"<<line<<endl;					//Current statement
+		
 		int i = 0;							//char index of the statement
 
 		//IDENTIFY WHAT KIND OF STATEMENT THIS IS
@@ -80,7 +81,7 @@ int main(int argc, char* argv[]){
 		}
 		else if (nextVar.compare("if") == 0) {
 			cout << "If/Else statement" << endl;
-			ifelse();
+			ifelse(line, lineNum, Variables);
 		}
 		else {
 			cout << "Variable Assignment/Arithmetic" << endl;

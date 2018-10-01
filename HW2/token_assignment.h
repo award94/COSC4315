@@ -1,11 +1,8 @@
 using namespace std;
 
 bool checkifconst(string Var);
-bool checkforvariable(string Varname, list<variable*> Variables);
-variable * getvariable(string VarName, list<variable*> Variables);
 void convertToConstants(string & line, list<variable*> & Variables, string & RHS,
 	string & LHS);
-
 float computeresult(string exp);
 
 void assignment(string line, list<variable*> & Variables) {
@@ -43,31 +40,11 @@ bool checkifconst(string Var) {
 	return true;
 }
 
-bool checkforvariable(string VarName, list<variable*> Variables) {
-	for (list<variable*>::iterator it = Variables.begin();
-		it != Variables.end(); it++) {
-		if ((*it)->name.compare(VarName) == 0)
-			return true;
-	}
-	return false;
-}
-
-variable* getvariable(string VarName, list<variable*> Variables) {
-	//cout << "inside getvariable()" << endl;
-	for (list<variable*>::iterator it = Variables.begin();
-		it != Variables.end(); it++) {
-		if ((*it)->name.compare(VarName) == 0)
-			return (*it);
-	}
-	//cout << "Variable does not exist" << endl;
-	return NULL;
-}
-
 void convertToConstants(string & line, list<variable*> & Variables, string & RHS,
 	string & LHS) {
 	int i = 0;
 
-	//Find LHS variable
+	//parse LHS variable
 	while (isalnum(line[i])) {
 		//cout << line[i] << endl;
 		LHS.append(line, i, 1);
@@ -76,8 +53,9 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 
 	//cout << "LHS = " << LHS << endl;
 
+	//Check if LHS Var has been declared yet
+	//If not, declare it
 	if (!checkforvariable(LHS, Variables)) {
-		//cout << "create new variable: " << LHS << endl;
 		createNewVar(LHS, Variables);
 	}
 
@@ -88,7 +66,7 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 
 	//Error checking for '='
 	if (line[i] != '=')
-		cout << "Error no assignment operator" << endl;
+		cout << "Error invalid assignment format" << endl;
 	else
 		i++;
 
