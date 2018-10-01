@@ -6,30 +6,24 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 float computeresult(string exp);
 
 void assignment(string line, list<variable*> & Variables) {
-	//cout << "inside assignment" << endl;
-
 	string RHS;
 	string LHS;
 	string pfxRHS;
 
+	//converts RHS to a series of constants
 	convertToConstants(line, Variables, RHS, LHS);
-	//cout << "converted to constants" << endl;
-	//cout << RHS << '=' << LHS << endl;
+	//converts RHS to postfix notation
 	postfixconverter converter;
 	pfxRHS = converter.convertToPostfix(RHS);
 
-	//cout << "converted to postfix" << endl;
+	//computes result
 	float result = computeresult(pfxRHS);
 
-	//cout << "found result" << endl;
-
+	//assigns result to LHS Variable
 	variable * lhsvar = getvariable(LHS, Variables);
-	//cout << lhsvar->name << '=' << lhsvar->value << endl;
 	lhsvar->value = result;
 	cout << lhsvar->name << '=' << lhsvar->value << endl;
-
-	//cout << "done" << endl;
-
+	lhsvar = NULL;
 }
 
 bool checkifconst(string Var) {
@@ -45,13 +39,14 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 	int i = 0;
 
 	//parse LHS variable
+
+	while (line[i] == ' ')
+		i++;
+
 	while (isalnum(line[i])) {
-		//cout << line[i] << endl;
 		LHS.append(line, i, 1);
 		i++;
 	}
-
-	//cout << "LHS = " << LHS << endl;
 
 	//Check if LHS Var has been declared yet
 	//If not, declare it

@@ -1,14 +1,18 @@
 using namespace std;
 
+struct ifelsebrancher {
+	int offset;
+	int branchlength;
+};
+
 string getarg(string ifline);
 bool evaluatearg(string arg, list<variable*> Variables);
+list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestoskip);
 
-void ifelse(string ifline, int iflineNum, list<variable*> Variables) {
+
+void ifelse(string ifline, int iflineNum, list<variable*> Variables, list<string> & branch, int & linestoskip) {
 	cout << "inside ifelse()" << endl;
 	cout << ifline << " " << iflineNum << endl;
-
-	list<string> branch1;
-	list<string> branch2;
 
 	string line;
 	string firstWord;
@@ -18,6 +22,8 @@ void ifelse(string ifline, int iflineNum, list<variable*> Variables) {
 	bool iftruth = evaluatearg(arg, Variables);
 	cout << "iftruth=" << iftruth << endl;
 
+	branch = findbranchdata(branch, iftruth, linestoskip);
+	cout << "linestoskip=" << linestoskip << endl;
 }
 
 //returns string of argument
@@ -109,56 +115,60 @@ bool evaluatearg(string arg, list<variable*> Variables) {
 		else
 			return false;
 	}
-
-	return 0;
+	return false;
 }
 
+list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestoskip) {
+	cout << "inside findbranchdata" << endl;
+	
+	list<string> branch1;
+	list<string> branch2;
+	string b1line;
+	string b2line;
+	
+	getline(cin, b1line);
+	cout << b1line << endl;
+	linestoskip++;
+	
+	while (b1line[0] == ' ' != 0 && !cin.eof()) {
+		
+		cout << "next line=" << b1line << endl;
 
+		branch1.push_back(b1line);
+		linestoskip++;
+		getline(cin, b1line);
+	} 
+
+	getline(cin, b2line);
+	cout << b2line << endl;
+	linestoskip++;
+
+	while (b2line[0] == ' ' != 0 && !cin.eof()) {
+		cout << "next line=" << b2line << endl;
+
+		branch2.push_back(b2line);
+		linestoskip++;
+		getline(cin, b2line);
+	}
+
+	linestoskip--;
+
+	cout << "BRANCH1" << endl;
+	for (list<string>::iterator it = branch1.begin(); it != branch1.end(); it++) {
+		cout << (*it) << endl;
+	}
+	cout << "BRANCH2" << endl;
+	for (list<string>::iterator it = branch2.begin(); it != branch2.end(); it++) {
+		cout << (*it) << endl;
+	}
+
+	if (iftruth == 0)
+		return branch2;
+	return branch1;
+}
 
 
 /*
-do {
-getline(cin, line);
-cout << "next line="<<line << endl;
-int j;
 
-while (line[j] == ' ')
-j++;
 
-while (isalpha(line[j])) {
-firstWord += line[j];
-j++;
-}
-
-branch1.push_back(line);
-
-} while (line[0] == ' ' != 0 && cin.eof() != true);
-
-do {
-getline(cin, line);
-cout << "next line=" << line << endl;
-int j;
-
-while (line[j] == ' ')
-j++;
-
-while (isalpha(line[j])) {
-firstWord += line[j];
-j++;
-}
-
-branch2.push_back(line);
-
-} while (line[0] == ' ' != 0 && cin.eof() != true);
-branch1.pop_back();
-branch2.pop_back();
-
-cout << "BRANCH1" << endl;
-for (list<string>::iterator it = branch1.begin(); it != branch1.end(); it++) {
-cout << (*it) << endl;
-}
-cout << "BRANCH2" << endl;
-for (list<string>::iterator it = branch2.begin(); it != branch2.end(); it++) {
-cout << (*it) << endl;
-}
 */

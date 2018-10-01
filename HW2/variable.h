@@ -40,7 +40,7 @@ void printVariables(list<variable*> myVariables) {
 	cout << "All Variables in system" << endl;
 
 	for (list<variable*>::iterator it = myVariables.begin(); it != myVariables.end(); it++)
-		cout << "ID=" << (*it)->name << " value=" << (*it)->value << endl;
+		cout << "name=" << (*it)->name << " value=" << (*it)->value << endl;
 }
 
 void deleteVariables(list<variable*> myVariables) {
