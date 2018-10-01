@@ -127,26 +127,35 @@ list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestosk
 	string b2line;
 	
 	getline(cin, b1line);
-	cout << b1line << endl;
+	//cout << b1line << endl;
 	linestoskip++;
 	
-	while (b1line[0] == ' ' != 0 && !cin.eof()) {
-		
-		cout << "next line=" << b1line << endl;
+	while ((b1line[0] == ' ' || b1line.empty()) && !cin.eof()) {
 
-		branch1.push_back(b1line);
+		//cout << "next line=" << b1line << endl;
+
+		if (!b1line.empty()) {
+			branch1.push_back(b1line);
+		}
+		//else {
+		//	cout << "skipping empty line in b1" << endl;
+		//}
 		linestoskip++;
 		getline(cin, b1line);
 	} 
 
 	getline(cin, b2line);
-	cout << b2line << endl;
+	//cout << b2line << endl;
 	linestoskip++;
 
-	while (b2line[0] == ' ' != 0 && !cin.eof()) {
-		cout << "next line=" << b2line << endl;
+	while ((b2line[0] == ' ' || b2line.empty()) && !cin.eof()) {
+		if (!b2line.empty()) {
+			//cout << "next line=" << b2line << endl;
 
-		branch2.push_back(b2line);
+			branch2.push_back(b2line);
+		}
+		//else
+		//	cout << "skipping empty line in b2" << endl;
 		linestoskip++;
 		getline(cin, b2line);
 	}

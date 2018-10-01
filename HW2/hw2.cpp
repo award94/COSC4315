@@ -47,44 +47,46 @@ void processstatement(list<variable*> & Variables, int lineNum, string line) {
 		i++;
 	}
 
-	if (nextVar.compare("def") == 0) {
-		cout << "Function definition" << endl;
-		createNewFunc(line, i, Variables);
-	}
-	else if (nextVar.compare("print") == 0) {
-		cout << "Print statement" << endl;
-		print();
-	}
-	else if (nextVar.compare("if") == 0) {
-		cout << "If/Else statement" << endl;
+	if (!line.empty()) {
+		if (nextVar.compare("def") == 0) {
+			cout << "Function definition" << endl;
+			createNewFunc(line, i, Variables);
+		}
+		else if (nextVar.compare("print") == 0) {
+			cout << "Print statement" << endl;
+			print();
+		}
+		else if (nextVar.compare("if") == 0) {
+			cout << "If/Else statement" << endl;
 
-		list<string> branch;
-		int linestoskip = 0;
+			list<string> branch;
+			int linestoskip = 0;
 
-		ifelse(line, lineNum, Variables, branch, linestoskip);
+			ifelse(line, lineNum, Variables, branch, linestoskip);
 
-		cin.clear();
-		cin.seekg(0, cin.beg);
-		for (int i = 0; i < lineNum+linestoskip; i++)
-			getline(cin, line);
+			cin.clear();
+			cin.seekg(0, cin.beg);
+			for (int i = 0; i < lineNum + linestoskip; i++)
+				getline(cin, line);
 
-		cout << "branchdata" << endl;
-		for (list<string>::iterator it = branch.begin(); it != branch.end(); it++)
-			cout << (*it) << endl;
+			cout << "branchdata" << endl;
+			for (list<string>::iterator it = branch.begin(); it != branch.end(); it++)
+				cout << (*it) << endl;
 
-		for (list<string>::iterator it = branch.begin(); it != branch.end(); it++) {
-			processstatement(Variables, lineNum, (*it));
+			for (list<string>::iterator it = branch.begin(); it != branch.end(); it++) {
+				processstatement(Variables, lineNum, (*it));
+			}
+		}
+		else if (nextVar.compare("else") == 0) {
+			cout << "ignore this line" << endl;
+		}
+		else {
+			cout << "Variable Assignment/Arithmetic" << endl;
+			assignment(line, Variables);
 		}
 	}
-	else if (nextVar.compare("else") == 0) {
-		cout << "ignore this line" << endl;
-	}
-	else {
-		cout << "Variable Assignment/Arithmetic" << endl;
-		assignment(line, Variables);
-	}
 	cout << endl;
-	cout << "finished statement" << endl;
+	//cout << "finished statement" << endl;
 }
 
 //IDENTIFY WHAT KIND OF STATEMENT THIS IS
