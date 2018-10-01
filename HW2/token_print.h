@@ -1,5 +1,5 @@
 using namespace std;
 
-void print() {
+void print(string line, list<variable*> & Variables) {
 	cout << "inside print()" << endl;
 }

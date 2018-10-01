@@ -54,7 +54,7 @@ void processstatement(list<variable*> & Variables, int lineNum, string line) {
 		}
 		else if (nextVar.compare("print") == 0) {
 			cout << "Print statement" << endl;
-			print();
+			print(line,  Variables);
 		}
 		else if (nextVar.compare("if") == 0) {
 			cout << "If/Else statement" << endl;
