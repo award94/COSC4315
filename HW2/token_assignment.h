@@ -1,6 +1,5 @@
 using namespace std;
 
-bool checkifconst(string Var);
 void convertToConstants(string & line, list<variable*> & Variables, string & RHS,
 	string & LHS, int scopelevel);
 float computeresult(string exp);
@@ -24,14 +23,6 @@ void assignment(string line, list<variable*> & Variables, int scopelevel) {
 	lhsvar->value = result;
 	cout << lhsvar->name << '=' << lhsvar->value << endl;
 	lhsvar = NULL;
-}
-
-bool checkifconst(string Var) {
-	for (int i = 0; i < Var.length(); i++) {
-		if (isdigit(Var[i]) == false)
-			return false;
-	}
-	return true;
 }
 
 void convertToConstants(string & line, list<variable*> & Variables, string & RHS,

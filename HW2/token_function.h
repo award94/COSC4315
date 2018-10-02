@@ -1,6 +1,7 @@
 using namespace std;
 
 string findfuncname(string line);
+void setreturnvalue(string line, string funcName, list<variable*> & Variables, int funcscope);
 
 void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int scopelevel){
 	//cout << "nextVar is a function" << endl;
@@ -30,7 +31,30 @@ void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int 
 	for (list<string>::iterator it = funcstatements.begin(); it != funcstatements.end(); it++) {
 		cout << (*it) << endl;
 
+		int i = 0;							//char index of the statement
+		string nextVar;
+
+		while ((*it)[i] == ' ' && i < (*it).length()) {
+			i++;
+		}
+		while (isalnum((*it)[i]) && i < (*it).length()) {
+			nextVar.append((*it), i, 1);
+			i++;
+		}
+
+		cout << nextVar << endl;
+
+		
+
+		if (nextVar.compare("return") == 0) {
+			cout << "found the return" << endl;
+			setreturnvalue((*it), funcName, Variables, funcscope);
+		}
+		else
+			processstatement(Variables, lineNum, (*it), funcscope);
 	}
+
+
 
 	//deleteScope(Variables, funcscope);
 }
@@ -55,4 +79,100 @@ string findfuncname(string line) {
 	}
 
 	return name;
+}
+
+void setreturnvalue(string line, string funcName, list<variable*> & Variables, int funcscope) {
+	cout << "inside setreturnvalue" << endl;
+	cout << "line:" << line << endl;
+	cout << "funcName:" << funcName << endl;
+
+	string alreadypassed;
+	string RHS;
+	int i = 0;
+
+	while (line[i] == ' ' && i < line.length()) {
+		alreadypassed += line[i];
+		i++;
+	}
+	while (isalnum(line[i]) && i < line.length()) {
+		alreadypassed += line[i];
+		i++;
+	}
+	while (line[i] == ' ' && i < line.length()) {
+		alreadypassed += line[i];
+		i++;
+	}
+
+	cout << "alreadypassed:" << alreadypassed <<';'<<endl;
+
+	string tempTerm;
+	while (isalnum(line[i])) {
+		tempTerm += line[i];
+		i++;
+	}
+
+	if (checkifconst(tempTerm)) {
+		cout << "constant value" << endl;
+		RHS += tempTerm;
+	}
+	else {
+		cout << "not a constant value" << endl;
+		for (int j = funcscope; j >= 0; j--) {
+			if (checkforvariableinscope(tempTerm, Variables, j)) {
+				cout << "found variable in this scope:" << j << endl;
+				variable * temp = getvariablescope(tempTerm, Variables, j);
+				RHS += to_string(temp->value);
+				temp = NULL;
+				break;
+			}
+			else {
+				cout << "did not find variable in this scope, try lower ones" << endl;
+			}
+		}
+	}
+
+	while (line[i] == ' ') {
+		i++;
+	}
+
+	while (i < line.length()) {
+		tempTerm = "";
+
+		while (!isalnum(line[i]) && line[i] != ' ') {
+			tempTerm += line[i];
+			i++;
+		}
+		if ((tempTerm.compare("+") == 0) || (tempTerm.compare("-") == 0 ||
+			tempTerm.compare("*") == 0) || (tempTerm.compare("/") == 0)) {
+			RHS += tempTerm;
+		}
+
+		while (line[i] == ' ')
+			i++;
+
+		tempTerm = "";
+
+		while (isalnum(line[i])) {
+			//cout << line[i] << endl;
+			tempTerm.append(line, i, 1);
+			i++;
+		}
+		while (line[i] == ' ' && line.length())
+			i++;
+
+		if (checkifconst(tempTerm)) {
+			RHS += tempTerm;
+		}
+		else {
+			for (int j = funcscope; j >= 0; j--) {
+				if (checkforvariableinscope(tempTerm, Variables, j)) {
+					variable * temp = getvariablescope(tempTerm, Variables, j);
+					RHS += to_string(temp->value);
+					temp = NULL;
+					break;
+				}
+			}
+		}
+	}
+	cout << "RHS:" << RHS << endl;
 }

@@ -1,5 +1,6 @@
 def func():
-   return 2
+   y = 2
+   return y + 3
 
 x3=6
 x4 = x3

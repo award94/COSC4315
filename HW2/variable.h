@@ -15,11 +15,38 @@ bool checkforvariable(string VarName, list<variable*> Variables) {
 	return false;
 }
 
+bool checkforvariableinscope(string VarName, list<variable*> Variables, int scopelevel) {
+	for (list<variable*>::iterator it = Variables.begin();
+		it != Variables.end(); it++) {
+		if ((*it)->name.compare(VarName) == 0 && (*it)->scope == scopelevel)
+			return true;
+	}
+	return false;
+}
+
+bool checkifconst(string Var) {
+	for (int i = 0; i < Var.length(); i++) {
+		if (isdigit(Var[i]) == false)
+			return false;
+	}
+	return true;
+}
+
 variable* getvariable(string VarName, list<variable*> Variables) {
 	//cout << "inside getvariable()" << endl;
 	for (list<variable*>::iterator it = Variables.begin();
 		it != Variables.end(); it++) {
 		if ((*it)->name.compare(VarName) == 0)
+			return (*it);
+	}
+	//cout << "Variable does not exist" << endl;
+	return NULL;
+}
+
+variable* getvariablescope(string VarName, list<variable*> Variables, int scopelevel) {
+	for (list<variable*>::iterator it = Variables.begin();
+		it != Variables.end(); it++) {
+		if ((*it)->name.compare(VarName) == 0 && (*it)->scope == scopelevel)
 			return (*it);
 	}
 	//cout << "Variable does not exist" << endl;

@@ -4,8 +4,12 @@
 #include <list>
 #include <stack>
 #include <cstdlib>
+#include <unistd.h>
 
 #include "variable.h"
+
+void processstatement(list<variable*> & Variables, int & lineNum, string line, int scopelevel);
+
 #include "postfixconverter.h"
 #include "token_function.h"
 #include "token_assignment.h"
@@ -13,9 +17,6 @@
 #include "token_print.h"
 
 using namespace std;
-
-
-void processstatement(list<variable*> & Variables, int & lineNum, string line, int scopelevel);
 
 int main(int argc, char* argv[]){
 	cout<< "Homework 2"<<endl;
