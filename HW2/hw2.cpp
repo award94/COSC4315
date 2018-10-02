@@ -19,23 +19,21 @@ void processstatement(list<variable*> & Variables, int & lineNum, string line, i
 
 int main(int argc, char* argv[]){
 	cout<< "Homework 2"<<endl;
-	cout<<"Testing why changes won't compile"<<endl;
+
 	string line;
 	list<variable*> Variables;
-	/*
-	int tokenNum = 1;						//id of next token to be created
+	
 	int lineNum = 0;
 
 	while (getline(cin, line) && !cin.eof()) {			//Iterate through each statement
 		lineNum++;
-		//cout << "next statment(" << lineNum << "):" << line << endl;					//Current statement
 		processstatement(Variables, lineNum, line, 0);
 		cout << endl;
 	}
 
 	printVariables(Variables);
 	deleteVariables(Variables);
-	*/
+	
 	return 0;	
 }
 

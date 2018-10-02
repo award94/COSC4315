@@ -59,7 +59,7 @@ void printVariables(list<variable*> myVariables) {
 
 	for (list<variable*>::iterator it = myVariables.begin(); it != myVariables.end(); it++)
 		cout << "name=" << (*it)->name << " value=" << (*it)->value 
-			<< "scope=" << (*it)->scope << endl;
+			<< " scope=" << (*it)->scope << endl;
 }
 
 void deleteVariables(list<variable*> myVariables) {

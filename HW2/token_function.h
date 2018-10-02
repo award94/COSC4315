@@ -8,7 +8,7 @@ void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int 
 
 	string funcName = findfuncname(line);
 
-	createNewVar(funcName, funcscope, Variables);
+	createNewVar(funcName, scopelevel, Variables);
 
 	list<string> funcstatements;
 	string funcline;
