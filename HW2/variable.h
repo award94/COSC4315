@@ -3,6 +3,7 @@ using namespace std;
 struct variable {
 	string name;
 	float value;
+	int scope;
 };
 
 bool checkforvariable(string VarName, list<variable*> Variables) {
@@ -25,7 +26,7 @@ variable* getvariable(string VarName, list<variable*> Variables) {
 	return NULL;
 }
 
-void createNewVar(string nextVar, list<variable*> & Variables) {
+void createNewVar(string nextVar, int scopelevel, list<variable*> & Variables) {
 	if (nextVar.compare("if") == 0 || nextVar.compare("else") == 0 || nextVar.compare("def") == 0 ||
 		nextVar.compare("int") == 0|| nextVar.compare("string") == 0 || nextVar.compare("print") == 0 ||
 		nextVar.compare("list") == 0 || nextVar.compare("False") == 0 || nextVar.compare("class") == 0 ||
@@ -46,6 +47,7 @@ void createNewVar(string nextVar, list<variable*> & Variables) {
 	variable * newVar = new variable();
 	newVar->name = nextVar;
 	newVar->value = 0;
+	newVar->scope = scopelevel;
 
 	Variables.push_back(newVar);
 	newVar = NULL;
@@ -56,7 +58,8 @@ void printVariables(list<variable*> myVariables) {
 	cout << "All Variables in system" << endl;
 
 	for (list<variable*>::iterator it = myVariables.begin(); it != myVariables.end(); it++)
-		cout << "name=" << (*it)->name << " value=" << (*it)->value << endl;
+		cout << "name=" << (*it)->name << " value=" << (*it)->value 
+			<< "scope=" << (*it)->scope << endl;
 }
 
 void deleteVariables(list<variable*> myVariables) {
@@ -67,5 +70,17 @@ void deleteVariables(list<variable*> myVariables) {
 		temp = myVariables.front();
 		myVariables.pop_front();
 		delete temp;
+	}
+}
+
+void deleteScope(list<variable*> & myVariables, int scopelevel) {
+	cout << "inside deleteScope" << endl;
+
+	for (list<variable*>::iterator it = myVariables.begin(); it != myVariables.end();) {
+		if ((*it)->scope == scopelevel) {
+			it = myVariables.erase(it);
+		}
+		else
+			it++;
 	}
 }

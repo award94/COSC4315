@@ -2,16 +2,16 @@ using namespace std;
 
 bool checkifconst(string Var);
 void convertToConstants(string & line, list<variable*> & Variables, string & RHS,
-	string & LHS);
+	string & LHS, int scopelevel);
 float computeresult(string exp);
 
-void assignment(string line, list<variable*> & Variables) {
+void assignment(string line, list<variable*> & Variables, int scopelevel) {
 	string RHS;
 	string LHS;
 	string pfxRHS;
 
 	//converts RHS to a series of constants
-	convertToConstants(line, Variables, RHS, LHS);
+	convertToConstants(line, Variables, RHS, LHS, scopelevel);
 	//converts RHS to postfix notation
 	postfixconverter converter;
 	pfxRHS = converter.convertToPostfix(RHS);
@@ -35,7 +35,7 @@ bool checkifconst(string Var) {
 }
 
 void convertToConstants(string & line, list<variable*> & Variables, string & RHS,
-	string & LHS) {
+	string & LHS, int scopelevel) {
 	int i = 0;
 
 	//parse LHS variable
@@ -53,7 +53,7 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 	//Check if LHS Var has been declared yet
 	//If not, declare it
 	if (!checkforvariable(LHS, Variables)) {
-		createNewVar(LHS, Variables);
+		createNewVar(LHS, scopelevel, Variables);
 	}
 
 	//Skipping whitespaces

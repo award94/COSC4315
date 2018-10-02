@@ -14,24 +14,22 @@
 
 using namespace std;
 
-list<list<variable*>> AllVariables;
 
-void processstatement(list<variable*> & Variables, int lineNum, string line);
+void processstatement(list<variable*> & Variables, int & lineNum, string line, int scopelevel);
 
 int main(int argc, char* argv[]){
 	cout<< "Homework 2"<<endl;
 
 	string line;
 	list<variable*> Variables;
-	AllVariables.push_back(Variables);
 	
 	int tokenNum = 1;						//id of next token to be created
 	int lineNum = 0;
 
 	while (getline(cin, line) && !cin.eof()) {			//Iterate through each statement
 		lineNum++;
-		cout << "next statment(" << lineNum << "):" << line << endl;					//Current statement
-		processstatement(Variables, lineNum, line);
+		//cout << "next statment(" << lineNum << "):" << line << endl;					//Current statement
+		processstatement(Variables, lineNum, line, 0);
 		cout << endl;
 	}
 
@@ -41,8 +39,8 @@ int main(int argc, char* argv[]){
 	return 0;	
 }
 
-void processstatement(list<variable*> & Variables, int lineNum, string line) {
-	cout << "inside processstatement" << endl;
+void processstatement(list<variable*> & Variables, int & lineNum, string line, int scopelevel) {
+	cout << "inside processstatement: " << line<< " ("<<lineNum<< ")"<<endl;
 
 	int i = 0;							//char index of the statement
 	string nextVar;
@@ -56,16 +54,17 @@ void processstatement(list<variable*> & Variables, int lineNum, string line) {
 	}
 
 	if (!line.empty()) {
+
 		if (nextVar.compare("def") == 0) {
-			cout << "Function definition" << endl;
-			createNewFunc(line, i, Variables);
+			//cout << "Function definition" << endl;
+			createNewFunc(line, lineNum, Variables, scopelevel);
 		}
 		else if (nextVar.compare("print") == 0) {
-			cout << "Print statement" << endl;
+			//cout << "Print statement" << endl;
 			print(line,  Variables);
 		}
 		else if (nextVar.compare("if") == 0) {
-			cout << "If/Else statement" << endl;
+			//cout << "If/Else statement" << endl;
 
 			list<string> branch;
 			int linestoskip = 0;
@@ -74,15 +73,16 @@ void processstatement(list<variable*> & Variables, int lineNum, string line) {
 
 			cin.clear();
 			cin.seekg(0, cin.beg);
-			for (int i = 0; i < lineNum + linestoskip; i++)
+			for (int i = 0; i < lineNum + linestoskip; i++) {
 				getline(cin, line);
+			}
 
 			cout << "branchdata" << endl;
 			for (list<string>::iterator it = branch.begin(); it != branch.end(); it++)
 				cout << (*it) << endl;
 
 			for (list<string>::iterator it = branch.begin(); it != branch.end(); it++) {
-				processstatement(Variables, lineNum, (*it));
+				processstatement(Variables, lineNum, (*it), scopelevel);
 			}
 			cout << endl;
 		}
@@ -90,8 +90,8 @@ void processstatement(list<variable*> & Variables, int lineNum, string line) {
 			cout << "ERROR: No if for this else" << endl;
 		}
 		else {
-			cout << "Variable Assignment/Arithmetic" << endl;
-			assignment(line, Variables);
+			//cout << "Variable Assignment/Arithmetic" << endl;
+			assignment(line, Variables, scopelevel);
 		}
 	}
 	cout << endl;
