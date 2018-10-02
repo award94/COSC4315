@@ -19,11 +19,10 @@ void processstatement(list<variable*> & Variables, int & lineNum, string line, i
 
 int main(int argc, char* argv[]){
 	cout<< "Homework 2"<<endl;
-	cout << "I can add stuff" << endl;
-
+	print("Testing why changes won't compile");
 	string line;
 	list<variable*> Variables;
-	
+	/*
 	int tokenNum = 1;						//id of next token to be created
 	int lineNum = 0;
 
@@ -36,7 +35,7 @@ int main(int argc, char* argv[]){
 
 	printVariables(Variables);
 	deleteVariables(Variables);
-
+	*/
 	return 0;	
 }
 
