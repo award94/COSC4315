@@ -11,8 +11,8 @@
 void processstatement(list<variable*> & Variables, int & lineNum, string line, int scopelevel);
 
 #include "postfixconverter.h"
-#include "token_function.h"
 #include "token_assignment.h"
+#include "token_function.h"
 #include "token_ifelse.h"
 #include "token_print.h"
 

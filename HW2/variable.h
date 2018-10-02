@@ -43,6 +43,14 @@ variable* getvariable(string VarName, list<variable*> Variables) {
 	return NULL;
 }
 
+void setValue(string VarName, float VarValue, list<variable*> Variables) {
+	for (list<variable*>::iterator it = Variables.begin();
+		it != Variables.end(); it++) {
+		if ((*it)->name.compare(VarName) == 0)
+			(*it)->value = VarValue;
+	}
+}
+
 variable* getvariablescope(string VarName, list<variable*> Variables, int scopelevel) {
 	for (list<variable*>::iterator it = Variables.begin();
 		it != Variables.end(); it++) {

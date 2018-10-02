@@ -1,13 +1,14 @@
 using namespace std;
 
 string findfuncname(string line);
-void setreturnvalue(string line, string funcName, list<variable*> & Variables, int funcscope);
+float setreturnvalue(string line, string funcName, list<variable*> & Variables, int funcscope);
 
 void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int scopelevel){
 	//cout << "nextVar is a function" << endl;
 	int funcscope = scopelevel + 1;
 
 	string funcName = findfuncname(line);
+	float funcResult;
 
 	createNewVar(funcName, scopelevel, Variables);
 
@@ -15,7 +16,7 @@ void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int 
 	string funcline;
 	getline(cin, funcline);
 	while ((funcline[0] == ' ' && funcline[1] == ' ') || funcline.empty()) {
-		cout << "found a line" << endl;
+		//cout << "found a line" << endl;
 		funcstatements.push_back(funcline);
 		lineNum++;
 		getline(cin, funcline);
@@ -27,7 +28,7 @@ void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int 
 	for (int j = 0; j < lineNum; j++)
 		getline(cin, dummy);
 
-	cout << "lines in function" << endl;
+	//cout << "lines in function" << endl;
 	for (list<string>::iterator it = funcstatements.begin(); it != funcstatements.end(); it++) {
 		cout << (*it) << endl;
 
@@ -42,21 +43,22 @@ void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int 
 			i++;
 		}
 
-		cout << nextVar << endl;
+		//cout << nextVar << endl;
 
 		
 
 		if (nextVar.compare("return") == 0) {
-			cout << "found the return" << endl;
-			setreturnvalue((*it), funcName, Variables, funcscope);
+			//cout << "found the return" << endl;
+			funcResult = setreturnvalue((*it), funcName, Variables, funcscope);
 		}
 		else
 			processstatement(Variables, lineNum, (*it), funcscope);
 	}
 
+	cout << "funcResult=" << funcResult << endl;
 
-
-	//deleteScope(Variables, funcscope);
+	setValue(funcName, funcResult, Variables);
+	deleteScope(Variables, funcscope);
 }
 
 string findfuncname(string line) {
@@ -81,10 +83,10 @@ string findfuncname(string line) {
 	return name;
 }
 
-void setreturnvalue(string line, string funcName, list<variable*> & Variables, int funcscope) {
-	cout << "inside setreturnvalue" << endl;
-	cout << "line:" << line << endl;
-	cout << "funcName:" << funcName << endl;
+float setreturnvalue(string line, string funcName, list<variable*> & Variables, int funcscope) {
+	//cout << "inside setreturnvalue" << endl;
+	//cout << "line:" << line << endl;
+	//cout << "funcName:" << funcName << endl;
 
 	string alreadypassed;
 	string RHS;
@@ -103,7 +105,7 @@ void setreturnvalue(string line, string funcName, list<variable*> & Variables, i
 		i++;
 	}
 
-	cout << "alreadypassed:" << alreadypassed <<';'<<endl;
+	//cout << "alreadypassed:" << alreadypassed <<';'<<endl;
 
 	string tempTerm;
 	while (isalnum(line[i])) {
@@ -112,22 +114,22 @@ void setreturnvalue(string line, string funcName, list<variable*> & Variables, i
 	}
 
 	if (checkifconst(tempTerm)) {
-		cout << "constant value" << endl;
+		//cout << "constant value" << endl;
 		RHS += tempTerm;
 	}
 	else {
-		cout << "not a constant value" << endl;
+		//cout << "not a constant value" << endl;
 		for (int j = funcscope; j >= 0; j--) {
 			if (checkforvariableinscope(tempTerm, Variables, j)) {
-				cout << "found variable in this scope:" << j << endl;
+				//cout << "found variable in this scope:" << j << endl;
 				variable * temp = getvariablescope(tempTerm, Variables, j);
 				RHS += to_string(temp->value);
 				temp = NULL;
 				break;
 			}
-			else {
-				cout << "did not find variable in this scope, try lower ones" << endl;
-			}
+			//else {
+			//	cout << "did not find variable in this scope, try lower ones" << endl;
+			//}
 		}
 	}
 
@@ -174,5 +176,9 @@ void setreturnvalue(string line, string funcName, list<variable*> & Variables, i
 			}
 		}
 	}
-	cout << "RHS:" << RHS << endl;
+	//cout << "RHS:" << RHS << endl;
+	postfixconverter converter;
+	RHS = converter.convertToPostfix(RHS);
+	//cout << "RHS:" << RHS << endl;
+	return computeresult(RHS);
 }
