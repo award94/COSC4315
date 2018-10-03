@@ -12,7 +12,7 @@ void print(string line, list<variable*> & Variables) {
 	
 	// While loop to loop through line 
 	while ((pos = line.find(delimiter)) != std::string::npos) {
-		//cout << "Line is: " << line << endl;
+		cout << "Line is: " << line << endl;
 		// Adding to theh finaloutputt string
 		token = line.substr(0, pos);
 		finalOutput += token;
@@ -38,3 +38,32 @@ void print(string line, list<variable*> & Variables) {
 */
 }
 
+/*
+SUGGESTION FOR PARSING OUT WHAT YOU'RE PRINTING
+line = "print(this, is, what, you, want, to, grab)";
+string nextvar;								//each word in "this, is, what, you, want, to, grab"
+
+string argument;							//put "this, is, what, you, want, to, grab" here
+											// after finding the value of each word
+											//(Whether or not it is a constant or variable)
+
+int i = 0 ;
+
+while(line[i] == ' ')
+	i++;
+while(line[i] != '(')
+	i++;
+while(line[i] = ' ')
+	i++;
+
+	This now has i at t's index after the parenthesis in print(this, is, what, you, want, to, grab);
+															i->^
+												grab all this->^---------------------------------^
+	Now you can grab all those variables inside until you find a ')'
+
+while(line[i] != ',')
+	nextvar += line[i]
+
+argument += nextvar;
+argument += ' ';
+*/
