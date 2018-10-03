@@ -26,20 +26,20 @@ bool checkforvariableinscope(string VarName, list<variable*> Variables, int scop
 
 bool checkifconst(string Var) {
 	for (int i = 0; i < Var.length(); i++) {
-		if (isdigit(Var[i]) == false)
+		if ((isdigit(Var[i]) || (i == 0 && Var[i] == '-')) == false)
 			return false;
 	}
 	return true;
 }
 
 variable* getvariable(string VarName, list<variable*> Variables) {
-	//cout << "inside getvariable()" << endl;
+	cout << "inside getvariable(): " << VarName<< endl;
 	for (list<variable*>::iterator it = Variables.begin();
 		it != Variables.end(); it++) {
 		if ((*it)->name.compare(VarName) == 0)
 			return (*it);
 	}
-	//cout << "Variable does not exist" << endl;
+	cout << "Variable does not exist" << endl;
 	return NULL;
 }
 
@@ -93,7 +93,7 @@ void printVariables(list<variable*> myVariables) {
 	cout << "All Variables in system" << endl;
 
 	for (list<variable*>::iterator it = myVariables.begin(); it != myVariables.end(); it++)
-		cout << "name=" << (*it)->name << " value=" << (*it)->value 
+		cout << "name=" << (*it)->name << " value=" << (*it)->value
 			<< " scope=" << (*it)->scope << endl;
 }
 

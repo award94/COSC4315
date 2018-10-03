@@ -32,47 +32,38 @@ bool postfixconverter::precedence(char opr1, char opr2){
 
 string postfixconverter::convertToPostfix(string expression) {
 	//cout << "inside convertToPostfix()" << endl;
+	//cout << "expression=" << expression << ';' << endl;
 
 	string pfxexpression = "";
 
 	int i = 0;
 	while (i < expression.length()) {
 
-		if (isdigit(expression[i])) {
+		string newsymbol;
 
-			//cout << "digit found" << endl;
-
-			string strnewnumber = "";
-
-			while ((isdigit(expression[i]) || expression[i] == '.') && i < expression.length()) {
-				strnewnumber.append(expression, i, 1);
-				i++;
-			}	
-
-			pfxexpression.append(strnewnumber);
-			pfxexpression.append(" ");
-
-			//cout << "Adding " << strnewnumber << " to the pfx" << endl;
+		while (expression[i] != ' ') {
+			newsymbol += expression[i];
+			i++;
 		}
+		//cout << "newsymbol=" << newsymbol << endl;
 
-		else if (expression[i] == '+' || expression[i] == '-' ||
-			expression[i] == '*' || expression[i] == '/') {
-			//cout << "operator found" << endl;
-
-			char newoperator = expression[i];
-
+		while (expression[i] == ' ')
+			i++;
+		
+		if ((newsymbol[0] == '+' || newsymbol[0] == '-' || newsymbol[0] == '*' || newsymbol[0] == '/') && newsymbol.length() == 1) {
+			char newoperator = newsymbol[0];
 			//cout << newoperator << endl;
 
 			if (operstack.size() == 0) {
 				//cout << "empty stack" << endl;
 				operstack.push(newoperator);
 
-				//cout << "adding " << newoperator << " to the stack" << endl;
+				//cout << "adding " << newoperator << ": to the stack" << endl;
 
 			}
 			else if (precedence(newoperator, operstack.top())) {
 				//cout << "new symbol has precedence" << endl;
-				
+
 				operstack.push(newoperator);
 
 				//cout << "adding " << newoperator << " to the stack" << endl;
@@ -96,10 +87,77 @@ string postfixconverter::convertToPostfix(string expression) {
 				operstack.push(newoperator);
 
 			}
+		}
+		else {
+			pfxexpression += newsymbol;
+			pfxexpression += ' ';
+		}
+
+		/*
+		if (isdigit(expression[i])) {
+
+			cout << "digit found" << endl;
+
+			string strnewnumber = "";
+
+			while (expression[i] != ' ') {
+				strnewnumber.append(expression, i, 1);
+				i++;
+			}	
+
+			pfxexpression.append(strnewnumber);
+			pfxexpression.append(" ");
+
+			cout << "Adding " << strnewnumber << ": to the pfx" << endl;
+		}
+
+		else if ((expression[i] == '+' || expression[i] == '-' ||
+			expression[i] == '*' || expression[i] == '/') &&) {
+			cout << "operator found" << endl;
+
+			char newoperator = expression[i];
+
+			cout << newoperator << endl;
+
+			if (operstack.size() == 0) {
+				//cout << "empty stack" << endl;
+				operstack.push(newoperator);
+
+				cout << "adding " << newoperator << ": to the stack" << endl;
+
+			}
+			else if (precedence(newoperator, operstack.top())) {
+				cout << "new symbol has precedence" << endl;
+				
+				operstack.push(newoperator);
+
+				cout << "adding " << newoperator << " to the stack" << endl;
+
+			}
+			else {
+
+				cout << "adding " << operstack.top() << " to the pfx" << endl;
+				cout << "adding " << newoperator << " to the stack" << endl;
+
+				pfxexpression += operstack.top();
+				pfxexpression += ' ';
+				operstack.pop();
+
+				if (operstack.size() != 0) {
+					pfxexpression += operstack.top();
+					pfxexpression += ' ';
+					operstack.pop();
+				}
+
+				operstack.push(newoperator);
+
+			}
 
 
 			i++;
+		
 		}
+		*/
 	}
 
 	while (operstack.size() != 0) {
@@ -109,6 +167,7 @@ string postfixconverter::convertToPostfix(string expression) {
 	}
 	cout << endl;
 
+	//cout << "pfxexpression=" << pfxexpression << endl;
 	return pfxexpression;
 }
 

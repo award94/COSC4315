@@ -30,7 +30,7 @@ void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int 
 
 	//cout << "lines in function" << endl;
 	for (list<string>::iterator it = funcstatements.begin(); it != funcstatements.end(); it++) {
-		cout << (*it) << endl;
+		//cout << (*it) << endl;
 
 		int i = 0;							//char index of the statement
 		string nextVar;
@@ -55,7 +55,7 @@ void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int 
 			processstatement(Variables, lineNum, (*it), funcscope);
 	}
 
-	cout << "funcResult=" << funcResult << endl;
+	//cout << "funcResult=" << funcResult << endl;
 
 	setValue(funcName, funcResult, Variables);
 	deleteScope(Variables, funcscope);
@@ -79,6 +79,8 @@ string findfuncname(string line) {
 		name += line[i];
 		i++;
 	}
+
+	name += "()";
 
 	return name;
 }
@@ -116,6 +118,7 @@ float setreturnvalue(string line, string funcName, list<variable*> & Variables, 
 	if (checkifconst(tempTerm)) {
 		//cout << "constant value" << endl;
 		RHS += tempTerm;
+		RHS += ' ';
 	}
 	else {
 		//cout << "not a constant value" << endl;
@@ -124,6 +127,7 @@ float setreturnvalue(string line, string funcName, list<variable*> & Variables, 
 				//cout << "found variable in this scope:" << j << endl;
 				variable * temp = getvariablescope(tempTerm, Variables, j);
 				RHS += to_string(temp->value);
+				RHS += ' ';
 				temp = NULL;
 				break;
 			}
@@ -147,6 +151,7 @@ float setreturnvalue(string line, string funcName, list<variable*> & Variables, 
 		if ((tempTerm.compare("+") == 0) || (tempTerm.compare("-") == 0 ||
 			tempTerm.compare("*") == 0) || (tempTerm.compare("/") == 0)) {
 			RHS += tempTerm;
+			RHS += ' ';
 		}
 
 		while (line[i] == ' ')
@@ -164,12 +169,14 @@ float setreturnvalue(string line, string funcName, list<variable*> & Variables, 
 
 		if (checkifconst(tempTerm)) {
 			RHS += tempTerm;
+			RHS += ' ';
 		}
 		else {
 			for (int j = funcscope; j >= 0; j--) {
 				if (checkforvariableinscope(tempTerm, Variables, j)) {
 					variable * temp = getvariablescope(tempTerm, Variables, j);
 					RHS += to_string(temp->value);
+					RHS += ' ';
 					temp = NULL;
 					break;
 				}

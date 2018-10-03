@@ -5,8 +5,10 @@
 #include <stack>
 #include <cstdlib>
 #include <unistd.h>
+#include <iomanip>
 
 #include "variable.h"
+list<variable*> Variables;
 
 void processstatement(list<variable*> & Variables, int & lineNum, string line, int scopelevel);
 
@@ -18,11 +20,13 @@ void processstatement(list<variable*> & Variables, int & lineNum, string line, i
 
 using namespace std;
 
+
+
 int main(int argc, char* argv[]){
 	cout<< "Homework 2"<<endl;
 
 	string line;
-	list<variable*> Variables;
+	
 	
 	int lineNum = 0;
 
@@ -47,12 +51,14 @@ void processstatement(list<variable*> & Variables, int & lineNum, string line, i
 	while (line[i] == ' ' && i < line.length()) {
 		i++;
 	}
-	while (isalnum(line[i]) && i < line.length()) {
+	while ((isalnum(line[i]) || line[i] == '#') && i < line.length()) {
 		nextVar.append(line, i, 1);
 		i++;
 	}
 
-	if (!line.empty()) {
+	if (!line.empty() && !(nextVar[0] == '#')) {
+
+		cout << "nextVar = " << nextVar << endl;
 
 		if (nextVar.compare("def") == 0) {
 			//cout << "Function definition" << endl;
@@ -93,6 +99,9 @@ void processstatement(list<variable*> & Variables, int & lineNum, string line, i
 			assignment(line, Variables, scopelevel);
 		}
 	}
+	else {
+		cout << "Line empty or comment" << endl;
+	}
 	cout << endl;
 }
 
@@ -114,9 +123,8 @@ void processstatement(list<variable*> & Variables, int & lineNum, string line, i
 //IF/ELSE
 //	Idk yet, but it's gonna eventually evaluate x inside if(x) and then branch
 //ALSO COMMENTS #
-
-
-
+//Comments at the start of line
+//Comments in the middle of a line
 
 /*
 if (nextVar.compare("def") == 0) {

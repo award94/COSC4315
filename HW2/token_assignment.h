@@ -5,28 +5,34 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 float computeresult(string exp);
 
 void assignment(string line, list<variable*> & Variables, int scopelevel) {
+	cout << "inside assignment" << endl;
+	printVariables(Variables);
 	string RHS;
 	string LHS;
 	string pfxRHS;
 
 	//converts RHS to a series of constants
 	convertToConstants(line, Variables, RHS, LHS, scopelevel);
+	//cout << "convertToConstants done" << endl;
 	//converts RHS to postfix notation
 	postfixconverter converter;
+	//cout << "RHS:" << RHS << endl;
 	pfxRHS = converter.convertToPostfix(RHS);
+	//cout << "postfixconversion done" << endl;
 
 	//computes result
 	float result = computeresult(pfxRHS);
-
+	//cout << "result computed" << endl;
 	//assigns result to LHS Variable
 	variable * lhsvar = getvariable(LHS, Variables);
 	lhsvar->value = result;
-	cout << lhsvar->name << '=' << lhsvar->value << endl;
+	//cout << lhsvar->name << '=' << lhsvar->value << endl;
 	lhsvar = NULL;
 }
 
 void convertToConstants(string & line, list<variable*> & Variables, string & RHS,
 	string & LHS, int scopelevel) {
+	//cout << "inside convertToConstants" << endl;
 	int i = 0;
 
 	//parse LHS variable
@@ -47,6 +53,8 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 		createNewVar(LHS, scopelevel, Variables);
 	}
 
+	//cout << "LHS Found or declared" << endl;
+
 	//Skipping whitespaces
 	while (line[i] == ' ')
 		i++;
@@ -61,34 +69,46 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 	while (line[i] == ' ')
 		i++;
 
+	//cout << "Found = " << endl;
 
 	//Finding First term in RHS
 	string tempterm;
-	while (isalnum(line[i])) {
+	while (isalnum(line[i]) || line[i] == '-') {
 		//cout << line[i] << endl;
 		tempterm.append(line, i, 1);
 		i++;
 	}
 
-	//cout << tempterm << endl;
+	//cout <<"tempterm="<< tempterm << endl;
+	if ((i + 2) <= line.length()) {
+		//cout << "next 2:"<<line[i] << line[i + 1] << endl;
+		if (line[i] == '(' && line[i + 1] == ')') {
+			tempterm += "()";
+			i += 2;
+		}
+	}
 
 	//If constant append it to RHS
 	//If variable lookup value and append it to RHS
 	if (checkifconst(tempterm)) {
-		//cout << "is a constant" << endl;
+		//cout << "is a constant: " << tempterm <<";"<< endl;
 		RHS.append(tempterm);
+		RHS += ' ';
 	}
 	else {
-		//cout << "variable" << endl;
+		//cout << "variable:" << tempterm<<endl;
 		variable * grabValue = getvariable(tempterm, Variables);
 		if (grabValue == NULL)
 			cout << "error: " << tempterm << " is undefined at this point" << endl;
 		else {
+			//cout << to_string(grabValue->value) << endl;
 			RHS.append(to_string(grabValue->value));
+			RHS += ' ';
 			grabValue = NULL;
 		}
 	}
 
+	//RHS After first time is appended
 	//cout << "RHS=" << RHS << endl;
 	//cout << i << ' ' << line.length() << endl;
 
@@ -97,19 +117,26 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 	//Then finds Constant and appends to RHS
 	while (i < line.length()) {
 		tempterm = "";
+		//cout << line[i] << endl;
 
 		//cout << "inside loop" << endl;
-		while (line[i] == ' ')
+		while (line[i] == ' ') {
 			i++;
+		}
+		//cout << line[i] << endl;
 
-		while (!isalnum(line[i])) {
+		while (line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/') {
 			tempterm.append(line, i, 1);
 			i++;
 		}
+		//cout << i<<" tempterm=" << tempterm << 'a'<<endl;
+		//cout << tempterm.compare("-") << endl;
 
 		if ((tempterm.compare("+") == 0) || (tempterm.compare("-") == 0 ||
 			tempterm.compare("*") == 0) || (tempterm.compare("/") == 0)) {
+			//cout << "operator=" << tempterm << endl;
 			RHS.append(tempterm);
+			RHS += ' ';
 		}
 
 		while (line[i] == ' ')
@@ -129,8 +156,9 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 		//cout << tempterm << endl;
 
 		if (checkifconst(tempterm)) {
-			//cout << "is a constant" << endl;
+			//cout << "is a constant:" <<tempterm<<";"<< endl;
 			RHS.append(tempterm);
+			RHS += ' ';
 		}
 		else {
 			//cout << "variable" << endl;
@@ -139,6 +167,7 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 				cout << "error: " << tempterm << " is undefined at this point" << endl;
 			else {
 				RHS.append(to_string(grabValue->value));
+				RHS += ' ';
 				grabValue = NULL;
 			}
 		}
@@ -148,10 +177,12 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 }
 
 float computeresult(string exp) {
-	//cout << exp << endl;
+	//cout <<"expression="<< exp << endl;
 
 	list<string> explist;
 	int i = 0;
+	while (exp[i] == ' ')
+		i++; 
 
 	while (i < exp.length()) {
 		string toadd = "";
@@ -190,7 +221,6 @@ float computeresult(string exp) {
 
 			switch (op) {
 			case('+'):
-				//cout << "addition" << endl;
 				term3 = term1 + term2;
 				break;
 			case('-'):
