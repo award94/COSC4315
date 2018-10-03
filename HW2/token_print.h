@@ -1,21 +1,28 @@
 using namespace std;
+#include "stdlib.h"
 
 void print(string line, list<variable*> & Variables) {
 	//string line = "something something, darkside, hello, its me";
+	// print statement is separated by commas so make comma the delimiter
 	string delimiter = ",";
+	// final string to  be outputed
 	string finalOutput;
-	auto start = 0U;
-	auto end = line.find(delimiter);
+	string token;
+	size_t pos = 0;
 	
-	
-
-	// Alternative method
-	while (end != std::string::npos) {
-		cout << line.substr(start, end - start) << endl;
-		start = end + delimiter.length();
-		end = line.find(delimiter, start);
+	// While loop to loop through line 
+	while ((pos = line.find(delimiter)) != std::string::npos) {
+		//cout << "Line is: " << line << endl;
+		// Adding to theh finaloutputt string
+		token = line.substr(0, pos);
+		finalOutput += token;
+		finalOutput += " ";
+		// TBH i probably shouldn't erase the linei as I go but it seems to kind of work
+		// I'll find a replacement 
+		line.erase(0, pos + delimiter.length());
 	}
-
+	
+	cout << finalOutput << endl;
 /*
 	// Create a string object that will be cout'd at the end
 	string finalOutput;
