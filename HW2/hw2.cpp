@@ -69,12 +69,22 @@ void processstatement(list<variable*> & Variables, int & lineNum, string line, i
 			print(line,  Variables);
 		}
 		else if (nextVar.compare("if") == 0) {
-			//cout << "If/Else statement" << endl;
+			cout << "If/Else statement" << endl;
+			cout << "rest of cin" << endl;
+
+
+			while (!cin.eof()) {
+				string dummy;
+				getline(cin, dummy);
+				cout << dummy << endl;
+			}
 
 			list<string> branch;
 			int linestoskip = 0;
 
 			ifelse(line, lineNum, Variables, branch, linestoskip);
+
+			cout << "linestoskip=" << linestoskip << endl;
 
 			cin.clear();
 			cin.seekg(0, cin.beg);

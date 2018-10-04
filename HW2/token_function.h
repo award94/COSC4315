@@ -4,7 +4,7 @@ string findfuncname(string line);
 float setreturnvalue(string line, string funcName, list<variable*> & Variables, int funcscope);
 
 void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int scopelevel){
-	//cout << "nextVar is a function" << endl;
+	cout << "inside Function" << endl;
 	int funcscope = scopelevel + 1;
 
 	string funcName = findfuncname(line);
@@ -15,8 +15,8 @@ void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int 
 	list<string> funcstatements;
 	string funcline;
 	getline(cin, funcline);
-	while ((funcline[0] == ' ' && funcline[1] == ' ') || funcline.empty()) {
-		//cout << "found a line" << endl;
+	while (((funcline[0] == ' ' && funcline[1] == ' ') || funcline.empty()) && !cin.eof()) {
+		//cout << "found a line:" << funcline<< endl;
 		funcstatements.push_back(funcline);
 		lineNum++;
 		getline(cin, funcline);
@@ -28,9 +28,9 @@ void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int 
 	for (int j = 0; j < lineNum; j++)
 		getline(cin, dummy);
 
-	//cout << "lines in function" << endl;
+	cout << "lines in function" << endl;
 	for (list<string>::iterator it = funcstatements.begin(); it != funcstatements.end(); it++) {
-		//cout << (*it) << endl;
+		cout <<"processing this inside func():"<< (*it) << endl;
 
 		int i = 0;							//char index of the statement
 		string nextVar;
@@ -43,19 +43,19 @@ void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int 
 			i++;
 		}
 
-		//cout << nextVar << endl;
+		cout <<"nextVar="<< nextVar << endl;
 
 		
 
 		if (nextVar.compare("return") == 0) {
-			//cout << "found the return" << endl;
+			cout << "found the return" << endl;
 			funcResult = setreturnvalue((*it), funcName, Variables, funcscope);
 		}
 		else
 			processstatement(Variables, lineNum, (*it), funcscope);
 	}
 
-	//cout << "funcResult=" << funcResult << endl;
+	cout << "funcResult=" << funcResult << endl;
 
 	setValue(funcName, funcResult, Variables);
 	deleteScope(Variables, funcscope);

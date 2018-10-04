@@ -7,17 +7,26 @@ list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestosk
 string parseexpr(string line);
 
 void ifelse(string ifline, int iflineNum, list<variable*> Variables, list<string> & branch, int & linestoskip) {
+	cout << "inside if()" << endl;
+	cout << "rest of cin" << endl;
+
+	
+	while (!cin.eof()) {
+		string dummy;
+		getline(cin, dummy);
+		cout << dummy << endl;
+	}
 
 	string line;
 	string firstWord;
 
 	string arg = getarg(ifline);
-	//cout << "arg=" << arg << endl;
+	cout << "arg=" << arg << endl;
 	bool iftruth = evaluatearg(arg, Variables);
-	//cout << "iftruth=" << iftruth << endl;
+	cout << "iftruth=" << iftruth << endl;
 
 	branch = findbranchdata(branch, iftruth, linestoskip);
-	//cout << "linestoskip=" << linestoskip << endl;
+	cout << "linestoskip=" << linestoskip << endl;
 }
 
 //returns string of argument
@@ -165,16 +174,19 @@ bool evaluatearg(string arg, list<variable*> Variables) {
 		rawexpr1 += arg[i++];
 	}
 
-	//cout << "expr1=" << rawexpr1 << endl;
+	cout << "rawexpr1=" << rawexpr1 << endl;
 
-	while (arg[i] != ' ')
+	while (arg[i] == '=' || arg[i] == '<' || arg[i] == '>' || arg[i] == '!') {
+		cout << "i" << i << endl;
 		compoper += arg[i++];
+	}
+
+	cout << "compoper=" << compoper << endl;
 
 	while (i < arg.length())
 		rawexpr2 += arg[i++];
 
-	//cout << "compoper=" << compoper << endl;
-	//cout << "expr2=" << rawexpr2 << endl;
+	cout << "rawexpr2=" << rawexpr2 << endl;
 
 	postfixconverter converter;
 
@@ -187,11 +199,11 @@ bool evaluatearg(string arg, list<variable*> Variables) {
 	float term1f = computeresult(expr1);
 	float term2f = computeresult(expr2);
 
-	//cout << "expr1=" << expr1 << endl;
-	//cout << "term1=" << term1f << endl;
-	//cout << "expr2=" << expr2 << endl;
-	//cout << "term2=" << term2f << endl;
-	//cout << "compoper=" << compoper << endl;
+	cout << "expr1=" << expr1 << endl;
+	cout << "term1=" << term1f << endl;
+	cout << "expr2=" << expr2 << endl;
+	cout << "term2=" << term2f << endl;
+	cout << "compoper=" << compoper << endl;
 	
 	if (compoper.compare("==") == 0) {
 		cout << "is equal to" << endl;
@@ -237,87 +249,6 @@ bool evaluatearg(string arg, list<variable*> Variables) {
 	}
 	return false;
 
-	/*
-	
-	string term1;
-	string term2;
-	string compoper;
-
-	int i = 0;
-	while (arg[i] == ' ')
-		i++;
-
-	while (isalnum(arg[i]) || arg[i] == '(' || arg[i] == ')') {
-		cout << arg[i] << endl;
-		term1 += arg[i++];
-	}
-
-	cout << "term1=" << term1 << ';' << endl;
-	cout << "arg[i]=" << arg[i] << ';' << endl;
-
-	while (arg[i] == ' ')
-		i++;
-
-	while (arg[i] == '=' || arg[i] == '>' || arg[i] == '<' || arg[i] == '!')
-		compoper += arg[i++];
-
-	while (arg[i] == ' ')
-		i++;
-
-	while (isalnum(arg[i]))
-		term2 += arg[i++];
-	
-	variable * term1Var = getvariable(term1, Variables);
-	variable * term2Var = getvariable(term2, Variables);
-	float term1f = term1Var->value;
-	float term2f = term2Var->value;
-	term1Var = NULL;
-	term2Var = NULL;
-
-	if (compoper.compare("==") == 0) {
-		cout << "is equal to" << endl;
-		if (term1f == term2f)
-			return true;
-		else
-			return false;
-	}
-	else if (compoper.compare(">=") == 0) {
-		cout << "greater than or equal to" << endl;
-		if (term1f >= term2f)
-			return true;
-		else
-			return false;
-	}
-	else if (compoper.compare(">") == 0) {
-		cout << "greater than" << endl;
-		if (term1f > term2f)
-			return true;
-		else
-			return false;
-	}
-	else if (compoper.compare("<=") == 0) {
-		cout << "less than or equal to" << endl;
-		if (term1f <= term2f)
-			return true;
-		else
-			return false;
-	}
-	else if (compoper.compare("<") == 0) {
-		cout << "less than" << endl;
-		if (term1f < term2f) 
-			return true;
-		else
-			return false;
-	}
-	else if (compoper.compare("!=") == 0) {
-		cout << "not equal to" << endl;
-		if (term1f != term2f)
-			return true;
-		else
-			return false;
-	}
-	return false;
-	*/
 }
 
 list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestoskip) {
@@ -327,13 +258,15 @@ list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestosk
 	string b1line;
 	string b2line;
 	
-	getline(cin, b1line);
-	//cout << b1line << endl;
+	
+
+	//getline(cin, b1line);
+	//cout <<"b1line="<< b1line << endl;
 	linestoskip++;
 	
 	while ((b1line[0] == ' ' || b1line.empty()) && !cin.eof()) {
 
-		//cout << "next line=" << b1line << endl;
+		cout << "next line=" << b1line << endl;
 
 		if (!b1line.empty()) {
 			branch1.push_back(b1line);
@@ -346,7 +279,7 @@ list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestosk
 	} 
 
 	getline(cin, b2line);
-	//cout << b2line << endl;
+	cout << b2line << endl;
 	linestoskip++;
 
 	while ((b2line[0] == ' ' || b2line.empty()) && !cin.eof()) {
@@ -376,3 +309,87 @@ list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestosk
 		return branch2;
 	return branch1;
 }
+
+
+
+/*
+
+string term1;
+string term2;
+string compoper;
+
+int i = 0;
+while (arg[i] == ' ')
+i++;
+
+while (isalnum(arg[i]) || arg[i] == '(' || arg[i] == ')') {
+cout << arg[i] << endl;
+term1 += arg[i++];
+}
+
+cout << "term1=" << term1 << ';' << endl;
+cout << "arg[i]=" << arg[i] << ';' << endl;
+
+while (arg[i] == ' ')
+i++;
+
+while (arg[i] == '=' || arg[i] == '>' || arg[i] == '<' || arg[i] == '!')
+compoper += arg[i++];
+
+while (arg[i] == ' ')
+i++;
+
+while (isalnum(arg[i]))
+term2 += arg[i++];
+
+variable * term1Var = getvariable(term1, Variables);
+variable * term2Var = getvariable(term2, Variables);
+float term1f = term1Var->value;
+float term2f = term2Var->value;
+term1Var = NULL;
+term2Var = NULL;
+
+if (compoper.compare("==") == 0) {
+cout << "is equal to" << endl;
+if (term1f == term2f)
+return true;
+else
+return false;
+}
+else if (compoper.compare(">=") == 0) {
+cout << "greater than or equal to" << endl;
+if (term1f >= term2f)
+return true;
+else
+return false;
+}
+else if (compoper.compare(">") == 0) {
+cout << "greater than" << endl;
+if (term1f > term2f)
+return true;
+else
+return false;
+}
+else if (compoper.compare("<=") == 0) {
+cout << "less than or equal to" << endl;
+if (term1f <= term2f)
+return true;
+else
+return false;
+}
+else if (compoper.compare("<") == 0) {
+cout << "less than" << endl;
+if (term1f < term2f)
+return true;
+else
+return false;
+}
+else if (compoper.compare("!=") == 0) {
+cout << "not equal to" << endl;
+if (term1f != term2f)
+return true;
+else
+return false;
+}
+return false;
+*/
