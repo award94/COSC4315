@@ -8,8 +8,7 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope);
 string parseexpr(string line);
 
 void ifelse(string ifline, int & iflineNum, list<string> & branch, int & linestoskip, int prevscope) {
-	cout << "===========================================" << endl;
-	cout << "inside if()" << endl;
+	cout << endl<<"============IF ELSE SCOPE BEGIN==========" << endl;
 	
 
 	int currentscope = prevscope + 1;
@@ -18,9 +17,9 @@ void ifelse(string ifline, int & iflineNum, list<string> & branch, int & linesto
 	int elseline = -1;
 	int lastline = findlastlineifelse(iflineNum, elseline, currentscope);
 	
-	cout << "iflineNum=" << iflineNum << endl;
-	cout << "lastline=" << lastline << endl;
-	cout << "elseline=" << elseline << endl;
+	cout << "if start line Num=" << iflineNum << endl;
+	cout << "if/else last line=" << lastline << endl;
+	cout << "else start line=" << elseline << endl;
 	
 
 	string line;
@@ -34,7 +33,7 @@ void ifelse(string ifline, int & iflineNum, list<string> & branch, int & linesto
 	if (iftruth == 1) {
 		if (elseline == -1) {
 			for (int i = iflineNum+1; i < lastline; i++) {
-				cout << "i=" << i <<endl;
+				//cout << "i=" << i <<endl;
 				string currentLine = fileLines[i];
 				processstatement(i, currentLine, currentscope);
 			}
@@ -42,7 +41,7 @@ void ifelse(string ifline, int & iflineNum, list<string> & branch, int & linesto
 		}
 		else {
 			for (int i = iflineNum+1; i < elseline; i++) {
-				cout << "i=" << i << endl;
+				//cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
 				processstatement(i, currentLine, currentscope);
 			}
@@ -56,7 +55,7 @@ void ifelse(string ifline, int & iflineNum, list<string> & branch, int & linesto
 		}
 		else {
 			for (int i = elseline+1; i < lastline; i++) {
-				cout << "i=" << i << endl;
+				//cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
 				processstatement(i, currentLine, currentscope);
 			}
@@ -71,24 +70,25 @@ void ifelse(string ifline, int & iflineNum, list<string> & branch, int & linesto
 	iflineNum = lastline-1;
 	cout << "lineNum=" << iflineNum << endl;
 
-	cout << "=========================================" << endl;
+	deleteScope(Variables, currentscope);
+	cout << "============IF ELSE SCOPE END==========" << endl;
 	
 }
 
 int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
-	cout << "findlastline" << endl;
+	//cout << "findlastline" << endl;
 
 	int i = startLineNum + 1;
 	while (i < fileLines.size()) {
 		string currentLine = fileLines[i];
-		cout << currentLine << endl;
+		//cout << currentLine << endl;
 	
 		bool checkscope = 1;
 		for (int j = 0; j < 3 * currentscope; j++) {
 			if (currentLine[j] != ' ')
 				checkscope = 0;
 		}
-		cout << "checkscope=" << checkscope << endl;
+		//cout << "checkscope=" << checkscope << endl;
 		if (checkscope == 0) {
 			int j = 0;
 			while (currentLine[j] == ' ')
@@ -99,7 +99,7 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 			while (currentLine[j] != ' ' && j < currentLine.length())
 				nextvar += currentLine[j++];
 
-			cout << "nextvar=" << nextvar << ';' << endl;
+			//cout << "nextvar=" << nextvar << ';' << endl;
 
 			if (nextvar.compare("else:") == 0)
 				elseline = i;
@@ -109,7 +109,7 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 		i++;
 
 	}
-	cout << i << endl;
+	//cout << i << endl;
 	return i;
 }
 
@@ -261,7 +261,7 @@ bool evaluatearg(string arg) {
 	cout << "rawexpr1=" << rawexpr1 << endl;
 
 	while (arg[i] == '=' || arg[i] == '<' || arg[i] == '>' || arg[i] == '!') {
-		cout << "i" << i << endl;
+		//cout << "i" << i << endl;
 		compoper += arg[i++];
 	}
 

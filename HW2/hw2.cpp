@@ -36,11 +36,13 @@ int main(int argc, char* argv[]){
 		fileLines.push_back(line);
 	}
 
+	cout << "Size of File=" << fileLines.size() << endl;
+
 	for (int lineNum = 0; lineNum < fileLines.size(); lineNum++) {
-		cout << "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" << endl;
+		cout << "==================MAIN SCOPE BEGIN=====================" << endl;
 		processstatement(lineNum, fileLines[lineNum], 0);
-		cout << "lineNum after" << lineNum << endl;
-		cout << "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" << endl;
+		cout << "lineNum after = " << lineNum << endl;
+		cout << "==================MAIN SCOPE END=====================" << endl;
 	}
 
 	printVariables(Variables);
@@ -51,7 +53,7 @@ int main(int argc, char* argv[]){
 
 void processstatement(int & lineNum, string line, int scopelevel) {
 	cout << "inside processstatement: " << line<< " ("<<lineNum<< ")"<<endl;
-	cout << "lineNum" << lineNum << endl;
+	cout << "lineNum = " << lineNum << endl;
 	cout << fileLines[lineNum] << endl;
 
 	int i = 0;							//char index of the statement
@@ -67,7 +69,7 @@ void processstatement(int & lineNum, string line, int scopelevel) {
 
 	if (!line.empty() && !(nextVar[0] == '#')) {
 		
-		cout << "nextVar = " << nextVar << endl;
+		//cout << "nextVar = " << nextVar << endl;
 
 		if (nextVar.compare("def") == 0) {
 			//cout << "Function definition" << endl;
@@ -78,7 +80,7 @@ void processstatement(int & lineNum, string line, int scopelevel) {
 			print(line);
 		}
 		else if (nextVar.compare("if") == 0) {
-			cout << "If/Else statement" << endl;
+			//cout << "If/Else statement" << endl;
 
 			list<string> branch;
 			int linestoskip = 0;
