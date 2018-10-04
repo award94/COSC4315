@@ -3,14 +3,16 @@
 #include <ctype.h>
 #include <list>
 #include <stack>
+#include <vector>
 #include <cstdlib>
 #include <unistd.h>
 #include <iomanip>
 
 #include "variable.h"
 list<variable*> Variables;
+vector<string> fileLines;
 
-void processstatement(list<variable*> & Variables, int & lineNum, string line, int scopelevel);
+void processstatement(int & lineNum, string line, int scopelevel);
 
 #include "postfixconverter.h"
 #include "token_assignment.h"
@@ -27,13 +29,18 @@ int main(int argc, char* argv[]){
 
 	string line;
 	
-	
 	int lineNum = 0;
 
 	while (getline(cin, line) && !cin.eof()) {			//Iterate through each statement
 		lineNum++;
-		processstatement(Variables, lineNum, line, 0);
-		cout << endl;
+		fileLines.push_back(line);
+	}
+
+	for (int lineNum = 0; lineNum < fileLines.size(); lineNum++) {
+		cout << "lineNum" << lineNum << endl;
+		cout << fileLines[lineNum] << endl;
+		processstatement(lineNum, fileLines[lineNum], 0);
+		cout << "lineNum after" << lineNum << endl;
 	}
 
 	printVariables(Variables);
@@ -42,7 +49,7 @@ int main(int argc, char* argv[]){
 	return 0;	
 }
 
-void processstatement(list<variable*> & Variables, int & lineNum, string line, int scopelevel) {
+void processstatement(int & lineNum, string line, int scopelevel) {
 	cout << "inside processstatement: " << line<< " ("<<lineNum<< ")"<<endl;
 
 	int i = 0;							//char index of the statement
@@ -62,11 +69,11 @@ void processstatement(list<variable*> & Variables, int & lineNum, string line, i
 
 		if (nextVar.compare("def") == 0) {
 			//cout << "Function definition" << endl;
-			createNewFunc(line, lineNum, Variables, scopelevel);
+			createNewFunc(line, lineNum, scopelevel);
 		}
 		else if (nextVar.compare("print") == 0) {
 			//cout << "Print statement" << endl;
-			print(line,  Variables);
+			print(line);
 		}
 		else if (nextVar.compare("if") == 0) {
 			cout << "If/Else statement" << endl;
@@ -82,7 +89,7 @@ void processstatement(list<variable*> & Variables, int & lineNum, string line, i
 			list<string> branch;
 			int linestoskip = 0;
 
-			ifelse(line, lineNum, Variables, branch, linestoskip);
+			ifelse(line, lineNum, branch, linestoskip, scopelevel);
 
 			cout << "linestoskip=" << linestoskip << endl;
 
@@ -97,7 +104,7 @@ void processstatement(list<variable*> & Variables, int & lineNum, string line, i
 				cout << (*it) << endl;
 
 			for (list<string>::iterator it = branch.begin(); it != branch.end(); it++) {
-				processstatement(Variables, lineNum, (*it), scopelevel);
+				processstatement(lineNum, (*it), scopelevel);
 			}
 			cout << endl;
 		}
@@ -106,7 +113,7 @@ void processstatement(list<variable*> & Variables, int & lineNum, string line, i
 		}
 		else {
 			//cout << "Variable Assignment/Arithmetic" << endl;
-			assignment(line, Variables, scopelevel);
+			assignment(line, scopelevel);
 		}
 	}
 	else {

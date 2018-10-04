@@ -1,32 +1,55 @@
 using namespace std;
 
 string getarg(string ifline);
-bool evaluatearg(string arg, list<variable*> Variables);
+bool evaluatearg(string arg);
 list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestoskip);
+int findlastlineifelse(int startLineNum, int currentscope);
 
 string parseexpr(string line);
 
-void ifelse(string ifline, int iflineNum, list<variable*> Variables, list<string> & branch, int & linestoskip) {
+void ifelse(string ifline, int iflineNum, list<string> & branch, int & linestoskip, int prevscope) {
 	cout << "inside if()" << endl;
-	cout << "rest of cin" << endl;
-
 	
-	while (!cin.eof()) {
-		string dummy;
-		getline(cin, dummy);
-		cout << dummy << endl;
-	}
+
+	int currentscope = prevscope + 1;
+	cout << "scopelevel=" << currentscope << endl;
+	int lastline = findlastlineifelse(iflineNum, currentscope);
+	
 
 	string line;
 	string firstWord;
 
 	string arg = getarg(ifline);
 	cout << "arg=" << arg << endl;
-	bool iftruth = evaluatearg(arg, Variables);
+	bool iftruth = evaluatearg(arg);
 	cout << "iftruth=" << iftruth << endl;
 
 	branch = findbranchdata(branch, iftruth, linestoskip);
 	cout << "linestoskip=" << linestoskip << endl;
+}
+
+int findlastlineifelse(int startLineNum, int currentscope) {
+	cout << "findlastline" << endl;
+	cout << startLineNum << endl;
+
+	int i = startLineNum + 1;
+	while (i < fileLines.size()) {
+		string currentLine = fileLines[i];
+		cout << currentLine << endl;
+		i++;
+
+		bool checkscope = 1;
+		for (int j = 0; j < 3 * currentscope; j++) {
+			if (currentLine[j] != ' ')
+				checkscope = 0;
+		}
+		cout << "checkscope=" << checkscope << endl;
+		if (checkscope == 0)
+			break;
+
+	}
+	cout << i - 1 << endl;
+	return i - 1;
 }
 
 //returns string of argument
@@ -160,7 +183,7 @@ string parseexpr(string line) {
 }
 
 //parses out the values from the argument and determines the truth of it
-bool evaluatearg(string arg, list<variable*> Variables) {
+bool evaluatearg(string arg) {
 	string rawexpr1;
 	string rawexpr2;
 	string compoper;

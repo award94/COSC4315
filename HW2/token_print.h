@@ -1,7 +1,7 @@
 using namespace std;
 #include "stdlib.h"
 
-void print(string line, list<variable*> & Variables) {
+void print(string line) {
 	//string line = "something something, darkside, hello, its me";
 	// print statement is separated by commas so make comma the delimiter
 	string delimiter = ",";

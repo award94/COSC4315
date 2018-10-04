@@ -6,7 +6,7 @@ struct variable {
 	int scope;
 };
 
-bool checkforvariable(string VarName, list<variable*> Variables) {
+bool checkforvariable(string VarName, list<variable*> & Variables) {
 	for (list<variable*>::iterator it = Variables.begin();
 		it != Variables.end(); it++) {
 		if ((*it)->name.compare(VarName) == 0)
@@ -15,7 +15,7 @@ bool checkforvariable(string VarName, list<variable*> Variables) {
 	return false;
 }
 
-bool checkforvariableinscope(string VarName, list<variable*> Variables, int scopelevel) {
+bool checkforvariableinscope(string VarName, list<variable*> & Variables, int scopelevel) {
 	for (list<variable*>::iterator it = Variables.begin();
 		it != Variables.end(); it++) {
 		if ((*it)->name.compare(VarName) == 0 && (*it)->scope == scopelevel)
@@ -32,8 +32,8 @@ bool checkifconst(string Var) {
 	return true;
 }
 
-variable* getvariable(string VarName, list<variable*> Variables) {
-	cout << "inside getvariable(): " << VarName<< endl;
+variable* getvariable(string VarName, list<variable*> & Variables) {
+	cout << "inside getvariable():" << VarName<< ';'<< endl;
 	for (list<variable*>::iterator it = Variables.begin();
 		it != Variables.end(); it++) {
 		if ((*it)->name.compare(VarName) == 0)
@@ -43,7 +43,7 @@ variable* getvariable(string VarName, list<variable*> Variables) {
 	return NULL;
 }
 
-void setValue(string VarName, float VarValue, list<variable*> Variables) {
+void setValue(string VarName, list<variable*> & Variables, float VarValue) {
 	for (list<variable*>::iterator it = Variables.begin();
 		it != Variables.end(); it++) {
 		if ((*it)->name.compare(VarName) == 0)
@@ -51,7 +51,7 @@ void setValue(string VarName, float VarValue, list<variable*> Variables) {
 	}
 }
 
-variable* getvariablescope(string VarName, list<variable*> Variables, int scopelevel) {
+variable* getvariablescope(string VarName, list<variable*> & Variables, int scopelevel) {
 	for (list<variable*>::iterator it = Variables.begin();
 		it != Variables.end(); it++) {
 		if ((*it)->name.compare(VarName) == 0 && (*it)->scope == scopelevel)
@@ -61,7 +61,7 @@ variable* getvariablescope(string VarName, list<variable*> Variables, int scopel
 	return NULL;
 }
 
-void createNewVar(string nextVar, int scopelevel, list<variable*> & Variables) {
+void createNewVar(string nextVar, list<variable*> & Variables, int scopelevel) {
 	if (nextVar.compare("if") == 0 || nextVar.compare("else") == 0 || nextVar.compare("def") == 0 ||
 		nextVar.compare("int") == 0|| nextVar.compare("string") == 0 || nextVar.compare("print") == 0 ||
 		nextVar.compare("list") == 0 || nextVar.compare("False") == 0 || nextVar.compare("class") == 0 ||
@@ -89,31 +89,31 @@ void createNewVar(string nextVar, int scopelevel, list<variable*> & Variables) {
 	delete newVar;
 }
 
-void printVariables(list<variable*> myVariables) {
+void printVariables(list<variable*> & Variables) {
 	cout << "All Variables in system" << endl;
 
-	for (list<variable*>::iterator it = myVariables.begin(); it != myVariables.end(); it++)
+	for (list<variable*>::iterator it = Variables.begin(); it != Variables.end(); it++)
 		cout << "name=" << (*it)->name << " value=" << (*it)->value
 			<< " scope=" << (*it)->scope << endl;
 }
 
-void deleteVariables(list<variable*> myVariables) {
+void deleteVariables(list<variable*> & Variables) {
 	cout << "inside deleteVariables" << endl;
 
 	variable * temp = NULL;
-	while (myVariables.size() != 0) {
-		temp = myVariables.front();
-		myVariables.pop_front();
+	while (Variables.size() != 0) {
+		temp = Variables.front();
+		Variables.pop_front();
 		delete temp;
 	}
 }
 
-void deleteScope(list<variable*> & myVariables, int scopelevel) {
+void deleteScope(list<variable*> & Variables, int scopelevel) {
 	cout << "inside deleteScope" << endl;
 
-	for (list<variable*>::iterator it = myVariables.begin(); it != myVariables.end();) {
+	for (list<variable*>::iterator it = Variables.begin(); it != Variables.end();) {
 		if ((*it)->scope == scopelevel) {
-			it = myVariables.erase(it);
+			it = Variables.erase(it);
 		}
 		else
 			it++;

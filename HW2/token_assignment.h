@@ -1,10 +1,10 @@
 using namespace std;
 
-void convertToConstants(string & line, list<variable*> & Variables, string & RHS,
+void convertToConstants(string & line, string & RHS,
 	string & LHS, int scopelevel);
 float computeresult(string exp);
 
-void assignment(string line, list<variable*> & Variables, int scopelevel) {
+void assignment(string line, int scopelevel) {
 	cout << "inside assignment" << endl;
 	printVariables(Variables);
 	string RHS;
@@ -12,7 +12,7 @@ void assignment(string line, list<variable*> & Variables, int scopelevel) {
 	string pfxRHS;
 
 	//converts RHS to a series of constants
-	convertToConstants(line, Variables, RHS, LHS, scopelevel);
+	convertToConstants(line, RHS, LHS, scopelevel);
 	//cout << "convertToConstants done" << endl;
 	//converts RHS to postfix notation
 	postfixconverter converter;
@@ -30,7 +30,7 @@ void assignment(string line, list<variable*> & Variables, int scopelevel) {
 	lhsvar = NULL;
 }
 
-void convertToConstants(string & line, list<variable*> & Variables, string & RHS,
+void convertToConstants(string & line, string & RHS,
 	string & LHS, int scopelevel) {
 	//cout << "inside convertToConstants" << endl;
 	int i = 0;
@@ -50,9 +50,8 @@ void convertToConstants(string & line, list<variable*> & Variables, string & RHS
 	//Check if LHS Var has been declared yet
 	//If not, declare it
 	if (!checkforvariable(LHS, Variables)) {
-		createNewVar(LHS, scopelevel, Variables);
+		createNewVar(LHS, Variables, scopelevel);
 	}
-
 	//cout << "LHS Found or declared" << endl;
 
 	//Skipping whitespaces

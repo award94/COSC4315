@@ -1,18 +1,78 @@
 using namespace std;
 
 string findfuncname(string line);
-float setreturnvalue(string line, string funcName, list<variable*> & Variables, int funcscope);
+int findlastlinefunc(int startLineNum, int funcscope);
+bool checkreturn(int startLine, int lastLine, int scopelevel);
+float setreturnvalue(string line, string funcName, int funcscope);
 
-void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int scopelevel){
+void createNewFunc(string line, int & lineNum, int scopelevel){
 	cout << "inside Function" << endl;
 	int funcscope = scopelevel + 1;
 
 	string funcName = findfuncname(line);
 	float funcResult;
 
-	createNewVar(funcName, scopelevel, Variables);
+	createNewVar(funcName, Variables, scopelevel);
 
-	list<string> funcstatements;
+	//list<string> funcstatements;
+	vector<string> funcstatements;
+
+	cout << endl << "current line#=" << lineNum << endl;
+	int lastLine = findlastlinefunc(lineNum, funcscope);
+
+	cout << "-----------------------------" << endl;
+	cout << "ENTIRE FUNCION DEFINITION" << endl;
+	for (int i = lineNum; i <= lastLine; i++) {
+		cout << fileLines[i] << endl;
+		string currentLine = fileLines[i];
+
+		bool lineinscope = 1;
+		for (int j = 0; j < funcscope* 3; j++) {
+			if (currentLine[j] != ' ')
+				lineinscope = 0;
+		}
+		if (currentLine[(funcscope * 3) + 1] == ' ')
+			lineinscope = 0;
+		cout << "isthisline in scope=" << lineinscope << endl;
+
+		if (lineinscope) {
+			int j = 0;
+			while (currentLine[j] == ' ')
+				j++;
+
+			string nextvar;
+
+			while (currentLine[j] != ' ' && j < currentLine.length())
+				nextvar += currentLine[j++];
+
+			cout << "nextvar=" << nextvar << ';'<< endl;
+
+			if (nextvar.compare("return") != 0) {
+				cout << "I will process this statement" << endl;
+				processstatement(i, currentLine, funcscope);
+			}
+			else {
+				cout << "assigning return value" << endl;
+				float returnvalue = setreturnvalue(currentLine, funcName, funcscope);
+				variable * temp = getvariable(funcName, Variables);
+				temp->value = returnvalue;
+				temp = NULL;
+				break;
+			}
+		}
+
+	}
+	cout << "-----------------------------" << endl;
+
+	lineNum = lastLine;
+	deleteScope(Variables, funcscope);
+
+
+	//bool doesreturn;
+	//doesreturn = checkreturn(lineNum, lastLine, funcscope);
+	//cout << "doesreturn = "<<doesreturn << endl;
+
+	/*
 	string funcline;
 	getline(cin, funcline);
 	while (((funcline[0] == ' ' && funcline[1] == ' ') || funcline.empty()) && !cin.eof()) {
@@ -49,16 +109,73 @@ void createNewFunc(string line, int & lineNum, list<variable*> & Variables, int 
 
 		if (nextVar.compare("return") == 0) {
 			cout << "found the return" << endl;
-			funcResult = setreturnvalue((*it), funcName, Variables, funcscope);
+			funcResult = setreturnvalue((*it), funcName, funcscope);
 		}
 		else
-			processstatement(Variables, lineNum, (*it), funcscope);
+			processstatement(lineNum, (*it), funcscope);
 	}
 
 	cout << "funcResult=" << funcResult << endl;
 
-	setValue(funcName, funcResult, Variables);
+	setValue(funcName, Variables, funcResult);
 	deleteScope(Variables, funcscope);
+	*/
+}
+
+int findlastlinefunc(int startLineNum, int funcscope) {
+	cout << "findlastline" << endl;
+	cout << startLineNum << endl;
+
+	int i = startLineNum + 1;
+	while (i < fileLines.size()) {
+		string currentLine = fileLines[i];
+		cout << currentLine << endl;
+		i++;
+
+		bool checkscope = 1;
+		for (int j = 0; j < 3 * funcscope; j++) {
+			if (currentLine[j] != ' ')
+				checkscope = 0;
+		}
+		cout << "checkscope=" << checkscope << endl;
+		if (checkscope == 0)
+			break;
+
+	}
+	cout << i-1 << endl;
+	return i-1;
+}
+
+bool checkreturn(int startLine, int lastLine, int scopelevel) {
+	cout << "inside checkreturn()" << endl;
+	cout << "scope=" << scopelevel << endl;
+
+	for (int i = startLine + 1; i < lastLine; i++) {
+		cout << fileLines[i] << endl;
+		string currentLine = fileLines[i];
+
+		bool lineinscope = 1;
+		for (int j = 0; j < scopelevel * 3; j++) {
+			if (currentLine[j] != ' ')
+				lineinscope = 0;
+		}
+		if (currentLine[(scopelevel * 3) + 1] == ' ')
+			lineinscope = 0;
+		cout << "isthisline in scope=" << lineinscope << endl;
+
+		int j = 0;
+		while (currentLine[j] == ' ')
+			j++;
+
+		string nextvar;
+
+		while (currentLine[j] != ' ' && j < currentLine.length())
+			nextvar += currentLine[j++];
+
+		cout << "nextvar="<<nextvar << endl;
+	}
+
+	return 0;
 }
 
 string findfuncname(string line) {
@@ -85,7 +202,7 @@ string findfuncname(string line) {
 	return name;
 }
 
-float setreturnvalue(string line, string funcName, list<variable*> & Variables, int funcscope) {
+float setreturnvalue(string line, string funcName, int funcscope) {
 	//cout << "inside setreturnvalue" << endl;
 	//cout << "line:" << line << endl;
 	//cout << "funcName:" << funcName << endl;
@@ -183,9 +300,9 @@ float setreturnvalue(string line, string funcName, list<variable*> & Variables, 
 			}
 		}
 	}
-	//cout << "RHS:" << RHS << endl;
+	cout << "RHS:" << RHS << endl;
 	postfixconverter converter;
 	RHS = converter.convertToPostfix(RHS);
-	//cout << "RHS:" << RHS << endl;
+	cout << "RHS:" << RHS << endl;
 	return computeresult(RHS);
 }
