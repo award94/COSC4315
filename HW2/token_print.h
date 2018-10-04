@@ -28,6 +28,8 @@ void print(string line) {
 			if (checkforvariable(argument, Variables) == 1){
 			finalOutput += argument;
 			}
+			// I need to add in a check to see if it's an arithmetic operation
+			// wasn't sure whichh function to call, so i just left a comment for now
 			finalOutput += argument;
 			argument.clear();
 			if (i < line.length()){
