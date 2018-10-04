@@ -1,41 +1,45 @@
 using namespace std;
-#include "stdlib.h"
 
 void print(string line) {
-	//string line = "something something, darkside, hello, its me";
-	// print statement is separated by commas so make comma the delimiter
-	string delimiter = ",";
-	// final string to  be outputed
+	// Argument is used as a temporary variable to hold the contents before the delimiter
+	// When the delimiter is reached, the strings are checked and appended to finalOutputt
+	string argument;
 	string finalOutput;
-	string token;
-	size_t pos = 0;
-	
-	// While loop to loop through line 
-	while ((pos = line.find(delimiter)) != std::string::npos) {
-		cout << "Line is: " << line << endl;
-		// Adding to theh finaloutputt string
-		token = line.substr(0, pos);
-		finalOutput += token;
-		finalOutput += " ";
-		// TBH i probably shouldn't erase the linei as I go but it seems to kind of work
-		// I'll find a replacement 
-		line.erase(0, pos + delimiter.length());
+
+	int i = 0;
+	while (i < line.length()) {
+		while (line[i] != ',') {
+			argument += line[i];
+			if (i < line.length()){
+				i++;
+			}
+			// I get string subscript out of range without this break in the else statement
+			else {
+				break;
+			}
+		}
+		while (line[i] == ',') {
+			//Testing for const or variable
+			if (checkifconst(argument) == 1){
+			finalOutput += argument;
+			}
+			// I'm not entirely sure how to get the value that variables<argument> is 
+			// Pointing to in inrder to append the value associated with argument
+			if (checkforvariable(argument, Variables) == 1){
+			finalOutput += argument;
+			}
+			finalOutput += argument;
+			argument.clear();
+			if (i < line.length()){
+				i++;
+			}
+			// I get string subscript out of range without this break in the else statement
+			else {
+				break;
+			}
+		} 
 	}
-	
-	cout << finalOutput << endl;
-/*
-	// Create a string object that will be cout'd at the end
-	string finalOutput;
-	// Parsing the argument line that will serve as the input to the print statement
-	cout << "Final value of line is: " << line << endl;	
-
-
-	// append them to the string you're printing. if they're variales 
-	cout << "inside print()" << endl;
-	// Check for type of input, if type is string or anything besides int, just cout it
-	// If type is int call the arithmetic func Adam wrote
-	// Parse with a comma delimiter
-*/
+cout << "Final output is: " << finalOutput << endl;
 }
 
 /*
