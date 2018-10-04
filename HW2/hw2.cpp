@@ -37,10 +37,10 @@ int main(int argc, char* argv[]){
 	}
 
 	for (int lineNum = 0; lineNum < fileLines.size(); lineNum++) {
-		cout << "lineNum" << lineNum << endl;
-		cout << fileLines[lineNum] << endl;
+		cout << "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" << endl;
 		processstatement(lineNum, fileLines[lineNum], 0);
 		cout << "lineNum after" << lineNum << endl;
+		cout << "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" << endl;
 	}
 
 	printVariables(Variables);
@@ -51,6 +51,8 @@ int main(int argc, char* argv[]){
 
 void processstatement(int & lineNum, string line, int scopelevel) {
 	cout << "inside processstatement: " << line<< " ("<<lineNum<< ")"<<endl;
+	cout << "lineNum" << lineNum << endl;
+	cout << fileLines[lineNum] << endl;
 
 	int i = 0;							//char index of the statement
 	string nextVar;
@@ -64,7 +66,7 @@ void processstatement(int & lineNum, string line, int scopelevel) {
 	}
 
 	if (!line.empty() && !(nextVar[0] == '#')) {
-
+		
 		cout << "nextVar = " << nextVar << endl;
 
 		if (nextVar.compare("def") == 0) {
@@ -77,20 +79,12 @@ void processstatement(int & lineNum, string line, int scopelevel) {
 		}
 		else if (nextVar.compare("if") == 0) {
 			cout << "If/Else statement" << endl;
-			cout << "rest of cin" << endl;
-
-
-			while (!cin.eof()) {
-				string dummy;
-				getline(cin, dummy);
-				cout << dummy << endl;
-			}
 
 			list<string> branch;
 			int linestoskip = 0;
 
 			ifelse(line, lineNum, branch, linestoskip, scopelevel);
-
+			/*
 			cout << "linestoskip=" << linestoskip << endl;
 
 			cin.clear();
@@ -98,14 +92,17 @@ void processstatement(int & lineNum, string line, int scopelevel) {
 			for (int i = 0; i < lineNum + linestoskip; i++) {
 				getline(cin, line);
 			}
-
+			*/
+			/*
 			cout << "branchdata" << endl;
 			for (list<string>::iterator it = branch.begin(); it != branch.end(); it++)
 				cout << (*it) << endl;
-
+			cout << "end branchdata" << endl;
 			for (list<string>::iterator it = branch.begin(); it != branch.end(); it++) {
 				processstatement(lineNum, (*it), scopelevel);
 			}
+			*/
+			
 			cout << endl;
 		}
 		else if (nextVar.compare("else") == 0) {

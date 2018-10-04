@@ -3,17 +3,24 @@ using namespace std;
 string getarg(string ifline);
 bool evaluatearg(string arg);
 list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestoskip);
-int findlastlineifelse(int startLineNum, int currentscope);
+int findlastlineifelse(int startLineNum, int & elseline, int currentscope);
 
 string parseexpr(string line);
 
-void ifelse(string ifline, int iflineNum, list<string> & branch, int & linestoskip, int prevscope) {
+void ifelse(string ifline, int & iflineNum, list<string> & branch, int & linestoskip, int prevscope) {
+	cout << "===========================================" << endl;
 	cout << "inside if()" << endl;
 	
 
 	int currentscope = prevscope + 1;
 	cout << "scopelevel=" << currentscope << endl;
-	int lastline = findlastlineifelse(iflineNum, currentscope);
+
+	int elseline = -1;
+	int lastline = findlastlineifelse(iflineNum, elseline, currentscope);
+	
+	cout << "iflineNum=" << iflineNum << endl;
+	cout << "lastline=" << lastline << endl;
+	cout << "elseline=" << elseline << endl;
 	
 
 	string line;
@@ -24,32 +31,86 @@ void ifelse(string ifline, int iflineNum, list<string> & branch, int & linestosk
 	bool iftruth = evaluatearg(arg);
 	cout << "iftruth=" << iftruth << endl;
 
-	branch = findbranchdata(branch, iftruth, linestoskip);
-	cout << "linestoskip=" << linestoskip << endl;
+	if (iftruth == 1) {
+		if (elseline == -1) {
+			for (int i = iflineNum+1; i < lastline; i++) {
+				cout << "i=" << i <<endl;
+				string currentLine = fileLines[i];
+				processstatement(i, currentLine, currentscope);
+			}
+			cout << "done1" << endl;
+		}
+		else {
+			for (int i = iflineNum+1; i < elseline; i++) {
+				cout << "i=" << i << endl;
+				string currentLine = fileLines[i];
+				processstatement(i, currentLine, currentscope);
+			}
+			cout << "done2" << endl;
+		}
+	}
+	else {
+		if (elseline == -1) {
+			iflineNum = lastline;
+			cout << "done3" << endl;
+		}
+		else {
+			for (int i = elseline+1; i < lastline; i++) {
+				cout << "i=" << i << endl;
+				string currentLine = fileLines[i];
+				processstatement(i, currentLine, currentscope);
+			}
+			cout << "done4" << endl;
+		}
+	}
+
+
+	//branch = findbranchdata(branch, iftruth, linestoskip);
+	//cout << "linestoskip=" << linestoskip << endl;
+
+	iflineNum = lastline-1;
+	cout << "lineNum=" << iflineNum << endl;
+
+	cout << "=========================================" << endl;
+	
 }
 
-int findlastlineifelse(int startLineNum, int currentscope) {
+int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 	cout << "findlastline" << endl;
-	cout << startLineNum << endl;
 
 	int i = startLineNum + 1;
 	while (i < fileLines.size()) {
 		string currentLine = fileLines[i];
 		cout << currentLine << endl;
-		i++;
-
+	
 		bool checkscope = 1;
 		for (int j = 0; j < 3 * currentscope; j++) {
 			if (currentLine[j] != ' ')
 				checkscope = 0;
 		}
 		cout << "checkscope=" << checkscope << endl;
-		if (checkscope == 0)
-			break;
+		if (checkscope == 0) {
+			int j = 0;
+			while (currentLine[j] == ' ')
+				j++;
+
+			string nextvar;
+
+			while (currentLine[j] != ' ' && j < currentLine.length())
+				nextvar += currentLine[j++];
+
+			cout << "nextvar=" << nextvar << ';' << endl;
+
+			if (nextvar.compare("else:") == 0)
+				elseline = i;
+			else
+				break;
+		}
+		i++;
 
 	}
-	cout << i - 1 << endl;
-	return i - 1;
+	cout << i << endl;
+	return i;
 }
 
 //returns string of argument

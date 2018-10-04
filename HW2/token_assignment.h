@@ -5,6 +5,7 @@ void convertToConstants(string & line, string & RHS,
 float computeresult(string exp);
 
 void assignment(string line, int scopelevel) {
+	cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << endl;
 	cout << "inside assignment" << endl;
 	printVariables(Variables);
 	string RHS;
@@ -26,8 +27,9 @@ void assignment(string line, int scopelevel) {
 	//assigns result to LHS Variable
 	variable * lhsvar = getvariable(LHS, Variables);
 	lhsvar->value = result;
-	//cout << lhsvar->name << '=' << lhsvar->value << endl;
+	cout << lhsvar->name << '=' << lhsvar->value << endl;
 	lhsvar = NULL;
+	cout << "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS" << endl;
 }
 
 void convertToConstants(string & line, string & RHS,

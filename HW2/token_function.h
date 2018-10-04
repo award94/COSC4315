@@ -62,6 +62,7 @@ void createNewFunc(string line, int & lineNum, int scopelevel){
 		}
 
 	}
+
 	cout << "-----------------------------" << endl;
 
 	lineNum = lastLine;
@@ -203,9 +204,9 @@ string findfuncname(string line) {
 }
 
 float setreturnvalue(string line, string funcName, int funcscope) {
-	//cout << "inside setreturnvalue" << endl;
-	//cout << "line:" << line << endl;
-	//cout << "funcName:" << funcName << endl;
+	cout << "inside setreturnvalue" << endl;
+	cout << "line:" << line << endl;
+	cout << "funcName:" << funcName << endl;
 
 	string alreadypassed;
 	string RHS;
@@ -224,7 +225,7 @@ float setreturnvalue(string line, string funcName, int funcscope) {
 		i++;
 	}
 
-	//cout << "alreadypassed:" << alreadypassed <<';'<<endl;
+	cout << "alreadypassed:" << alreadypassed <<';'<<endl;
 
 	string tempTerm;
 	while (isalnum(line[i])) {
@@ -233,7 +234,7 @@ float setreturnvalue(string line, string funcName, int funcscope) {
 	}
 
 	if (checkifconst(tempTerm)) {
-		//cout << "constant value" << endl;
+		cout << "constant value" << endl;
 		RHS += tempTerm;
 		RHS += ' ';
 	}
@@ -261,7 +262,7 @@ float setreturnvalue(string line, string funcName, int funcscope) {
 	while (i < line.length()) {
 		tempTerm = "";
 
-		while (!isalnum(line[i]) && line[i] != ' ') {
+		while ((!isalnum(line[i]) && line[i] != ' ') && i < line.length()) {
 			tempTerm += line[i];
 			i++;
 		}
@@ -271,17 +272,17 @@ float setreturnvalue(string line, string funcName, int funcscope) {
 			RHS += ' ';
 		}
 
-		while (line[i] == ' ')
+		while (line[i] == ' ' && i < line.length())
 			i++;
 
 		tempTerm = "";
 
-		while (isalnum(line[i])) {
+		while (isalnum(line[i]) && i < line.length()) {
 			//cout << line[i] << endl;
 			tempTerm.append(line, i, 1);
 			i++;
 		}
-		while (line[i] == ' ' && line.length())
+		while (line[i] == ' ' && i < line.length())
 			i++;
 
 		if (checkifconst(tempTerm)) {
