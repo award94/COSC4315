@@ -11,11 +11,11 @@ void ifelse(string ifline, int & iflineNum, list<string> & branch, int & linesto
 	cout << endl<<"============IF ELSE SCOPE BEGIN==========" << endl;
 	
 
-	int currentscope = prevscope + 1;
+	int currentscope = prevscope;
 	cout << "scopelevel=" << currentscope << endl;
 
 	int elseline = -1;
-	int lastline = findlastlineifelse(iflineNum, elseline, currentscope);
+	int lastline = findlastlineifelse(iflineNum, elseline, currentscope+1);
 	
 	cout << "if start line Num=" << iflineNum << endl;
 	cout << "if/else last line=" << lastline << endl;
@@ -70,46 +70,63 @@ void ifelse(string ifline, int & iflineNum, list<string> & branch, int & linesto
 	iflineNum = lastline-1;
 	cout << "lineNum=" << iflineNum << endl;
 
-	deleteScope(Variables, currentscope);
+	//deleteScope(Variables, currentscope);
 	cout << "============IF ELSE SCOPE END==========" << endl;
 	
 }
 
 int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
-	//cout << "findlastline" << endl;
+	cout << "findlastline" << endl;
+	cout << "currentscope=" << currentscope << endl;
 
 	int i = startLineNum + 1;
 	while (i < fileLines.size()) {
 		string currentLine = fileLines[i];
-		//cout << currentLine << endl;
-	
-		bool checkscope = 1;
-		for (int j = 0; j < 3 * currentscope; j++) {
-			if (currentLine[j] != ' ')
-				checkscope = 0;
+
+		int k = 0;
+		string commentCheck;
+		while (currentLine[k] == ' ' && k < currentLine.length()) {
+			k++;
 		}
-		//cout << "checkscope=" << checkscope << endl;
-		if (checkscope == 0) {
-			int j = 0;
-			while (currentLine[j] == ' ')
-				j++;
+		while ((isalnum(currentLine[k]) || currentLine[k] == '#') && k < currentLine.length()) {
+			commentCheck += currentLine[k];
+			k++;
+		}
 
-			string nextvar;
+		if (!fileLines[i].empty() && (commentCheck[0] != '#')) {
+			string currentLine = fileLines[i];
+			cout << currentLine << endl;
 
-			while (currentLine[j] != ' ' && j < currentLine.length())
-				nextvar += currentLine[j++];
+			bool checkscope = 1;
+			for (int j = 0; j < 3 * currentscope; j++) {
+				if (currentLine[j] != ' ')
+					checkscope = 0;
+			}
+			cout << "checkscope=" << checkscope << endl;
+			if (checkscope == 0) {
+				int j = 0;
+				while (currentLine[j] == ' ')
+					j++;
 
-			//cout << "nextvar=" << nextvar << ';' << endl;
+				string nextvar;
 
-			if (nextvar.compare("else:") == 0)
-				elseline = i;
-			else
-				break;
+				while (currentLine[j] != ' ' && j < currentLine.length())
+					nextvar += currentLine[j++];
+
+				cout << "nextvar=" << nextvar << ';' << endl;
+
+				if (nextvar.compare("else:") == 0) {
+					cout << "found an else" << endl;
+					elseline = i;
+				}
+				else
+					break;
+			}
 		}
 		i++;
 
 	}
-	//cout << i << endl;
+	cout << i << endl;
 	return i;
 }
 
