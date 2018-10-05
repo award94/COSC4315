@@ -74,10 +74,6 @@ string postfixconverter::convertToPostfix(string expression) {
 				//cout << "adding " << operstack.top() << " to the pfx" << endl;
 				//cout << "adding " << newoperator << " to the stack" << endl;
 
-				pfxexpression += operstack.top();
-				pfxexpression += ' ';
-				operstack.pop();
-
 				if (operstack.size() != 0) {
 					pfxexpression += operstack.top();
 					pfxexpression += ' ';
@@ -92,75 +88,11 @@ string postfixconverter::convertToPostfix(string expression) {
 			pfxexpression += newsymbol;
 			pfxexpression += ' ';
 		}
-
-		/*
-		if (isdigit(expression[i])) {
-
-			cout << "digit found" << endl;
-
-			string strnewnumber = "";
-
-			while (expression[i] != ' ') {
-				strnewnumber.append(expression, i, 1);
-				i++;
-			}	
-
-			pfxexpression.append(strnewnumber);
-			pfxexpression.append(" ");
-
-			cout << "Adding " << strnewnumber << ": to the pfx" << endl;
-		}
-
-		else if ((expression[i] == '+' || expression[i] == '-' ||
-			expression[i] == '*' || expression[i] == '/') &&) {
-			cout << "operator found" << endl;
-
-			char newoperator = expression[i];
-
-			cout << newoperator << endl;
-
-			if (operstack.size() == 0) {
-				//cout << "empty stack" << endl;
-				operstack.push(newoperator);
-
-				cout << "adding " << newoperator << ": to the stack" << endl;
-
-			}
-			else if (precedence(newoperator, operstack.top())) {
-				cout << "new symbol has precedence" << endl;
-				
-				operstack.push(newoperator);
-
-				cout << "adding " << newoperator << " to the stack" << endl;
-
-			}
-			else {
-
-				cout << "adding " << operstack.top() << " to the pfx" << endl;
-				cout << "adding " << newoperator << " to the stack" << endl;
-
-				pfxexpression += operstack.top();
-				pfxexpression += ' ';
-				operstack.pop();
-
-				if (operstack.size() != 0) {
-					pfxexpression += operstack.top();
-					pfxexpression += ' ';
-					operstack.pop();
-				}
-
-				operstack.push(newoperator);
-
-			}
-
-
-			i++;
-		
-		}
-		*/
 	}
 
+
 	while (operstack.size() != 0) {
+		//cout << "top of operstack=" << operstack.top() << endl;
 		pfxexpression += operstack.top();
 		pfxexpression += ' ';
 		operstack.pop();

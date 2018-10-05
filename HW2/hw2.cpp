@@ -12,13 +12,15 @@
 list<variable*> Variables;
 vector<string> fileLines;
 
-void processstatement(int & lineNum, string line, int scopelevel);
+void processstatement(int & lineNum, string line, int lastLine,
+	int scopelevel, string scopename);
 
 #include "postfixconverter.h"
 #include "token_assignment.h"
 #include "token_function.h"
 #include "token_ifelse.h"
 #include "token_print.h"
+#include "token_return.h"
 
 using namespace std;
 
@@ -37,10 +39,12 @@ int main(int argc, char* argv[]){
 	}
 
 	cout << "Size of File=" << fileLines.size() << endl;
+	int lastLine = fileLines.size() - 1;
+	cout << "lastLine = " << lastLine << endl;
 
 	for (int lineNum = 0; lineNum < fileLines.size(); lineNum++) {
 		cout << "==================MAIN SCOPE BEGIN=====================" << endl;
-		processstatement(lineNum, fileLines[lineNum], 0);
+		processstatement(lineNum, fileLines[lineNum], lastLine, 0, "main");
 		cout << "lineNum after = " << lineNum << endl;
 		cout << "==================MAIN SCOPE END=====================" << endl;
 	}
@@ -51,7 +55,8 @@ int main(int argc, char* argv[]){
 	return 0;	
 }
 
-void processstatement(int & lineNum, string line, int scopelevel) {
+void processstatement(int & lineNum, string line, int lastLine, 
+	int scopelevel, string scopename) {
 	cout << "inside processstatement: " << line<< " ("<<lineNum<< ")"<<endl;
 	cout << "lineNum = " << lineNum << endl;
 	cout << fileLines[lineNum] << endl;
@@ -82,10 +87,8 @@ void processstatement(int & lineNum, string line, int scopelevel) {
 		else if (nextVar.compare("if") == 0) {
 			//cout << "If/Else statement" << endl;
 
-			list<string> branch;
-			int linestoskip = 0;
 
-			ifelse(line, lineNum, branch, linestoskip, scopelevel);
+			ifelse(line, lineNum, lastLine, scopelevel, scopename);
 			/*
 			cout << "linestoskip=" << linestoskip << endl;
 
@@ -110,9 +113,13 @@ void processstatement(int & lineNum, string line, int scopelevel) {
 		else if (nextVar.compare("else") == 0) {
 			cout << "ERROR: No if for this else" << endl;
 		}
+		else if (nextVar.compare("return") == 0) {
+			cout << "return found" << endl;
+			setreturn(line, lineNum, lastLine, scopelevel, scopename);
+		}
 		else {
 			//cout << "Variable Assignment/Arithmetic" << endl;
-			assignment(line, scopelevel);
+			assignment(line, scopelevel, scopename);
 		}
 	}
 	else {

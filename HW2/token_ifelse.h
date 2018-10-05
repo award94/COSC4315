@@ -7,19 +7,23 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope);
 
 string parseexpr(string line);
 
-void ifelse(string ifline, int & iflineNum, list<string> & branch, int & linestoskip, int prevscope) {
+void ifelse(string ifline, int & iflineNum, int funclastline, 
+	int prevscope, string scopename) {
 	cout << endl<<"============IF ELSE SCOPE BEGIN==========" << endl;
 	
 
 	int currentscope = prevscope;
 	cout << "scopelevel=" << currentscope << endl;
+	cout << "scopename=" << scopename << endl;
 
 	int elseline = -1;
 	int lastline = findlastlineifelse(iflineNum, elseline, currentscope+1);
 	
 	cout << "if start line Num=" << iflineNum << endl;
-	cout << "if/else last line=" << lastline << endl;
 	cout << "else start line=" << elseline << endl;
+	cout << "if/else last line=" << lastline << endl;
+	cout << "function last line" << funclastline << endl;
+	
 	
 
 	string line;
@@ -32,45 +36,49 @@ void ifelse(string ifline, int & iflineNum, list<string> & branch, int & linesto
 
 	if (iftruth == 1) {
 		if (elseline == -1) {
-			for (int i = iflineNum+1; i < lastline; i++) {
+			int i = iflineNum + 1;
+			for (; i < lastline; i++) {
 				//cout << "i=" << i <<endl;
 				string currentLine = fileLines[i];
-				processstatement(i, currentLine, currentscope);
+				processstatement(i, currentLine, funclastline, currentscope, scopename);
 			}
-			cout << "done1" << endl;
+			iflineNum = i;
+			//cout << "iflineNum=" << iflineNum << endl;
+			//cout << "done1" << endl;
 		}
 		else {
-			for (int i = iflineNum+1; i < elseline; i++) {
+			int i = iflineNum + 1;
+			for (; i < elseline; i++) {
 				//cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
-				processstatement(i, currentLine, currentscope);
+				processstatement(i, currentLine, funclastline, currentscope, scopename);
 			}
-			cout << "done2" << endl;
+			iflineNum = i;
+			//cout << "iflineNum=" << iflineNum << endl;
+			//cout << "done2" << endl;
 		}
 	}
 	else {
 		if (elseline == -1) {
 			iflineNum = lastline;
-			cout << "done3" << endl;
+			//cout << "done3" << endl;
 		}
 		else {
-			for (int i = elseline+1; i < lastline; i++) {
+			int i = elseline;
+			for (; i < lastline; i++) {
 				//cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
-				processstatement(i, currentLine, currentscope);
+				processstatement(i, currentLine, funclastline, currentscope, scopename);
 			}
-			cout << "done4" << endl;
+			iflineNum = i;
+			
+			//cout << "done4" << endl;
 		}
 	}
 
-
-	//branch = findbranchdata(branch, iftruth, linestoskip);
-	//cout << "linestoskip=" << linestoskip << endl;
-
-	iflineNum = lastline-1;
-	cout << "lineNum=" << iflineNum << endl;
-
-	//deleteScope(Variables, currentscope);
+	if (iflineNum < lastline - 1)
+		iflineNum = lastline-1;
+	//cout << "lineNum=" << iflineNum << endl;
 	cout << "============IF ELSE SCOPE END==========" << endl;
 	
 }
@@ -132,6 +140,7 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 
 //returns string of argument
 string getarg(string ifline) {
+	//cout << "inside getarg" << endl;
 	string arg;
 	int i = 0;
 	while (ifline[i] != '(')
@@ -275,19 +284,19 @@ bool evaluatearg(string arg) {
 		rawexpr1 += arg[i++];
 	}
 
-	cout << "rawexpr1=" << rawexpr1 << endl;
+	//cout << "rawexpr1=" << rawexpr1 << endl;
 
 	while (arg[i] == '=' || arg[i] == '<' || arg[i] == '>' || arg[i] == '!') {
 		//cout << "i" << i << endl;
 		compoper += arg[i++];
 	}
 
-	cout << "compoper=" << compoper << endl;
+	//cout << "compoper=" << compoper << endl;
 
 	while (i < arg.length())
 		rawexpr2 += arg[i++];
 
-	cout << "rawexpr2=" << rawexpr2 << endl;
+	//cout << "rawexpr2=" << rawexpr2 << endl;
 
 	postfixconverter converter;
 
@@ -300,197 +309,53 @@ bool evaluatearg(string arg) {
 	float term1f = computeresult(expr1);
 	float term2f = computeresult(expr2);
 
-	cout << "expr1=" << expr1 << endl;
-	cout << "term1=" << term1f << endl;
-	cout << "expr2=" << expr2 << endl;
-	cout << "term2=" << term2f << endl;
-	cout << "compoper=" << compoper << endl;
+	//cout << "expr1=" << expr1 << endl;
+	//cout << "term1=" << term1f << endl;
+	//cout << "expr2=" << expr2 << endl;
+	//cout << "term2=" << term2f << endl;
+	//cout << "compoper=" << compoper << endl;
 	
 	if (compoper.compare("==") == 0) {
-		cout << "is equal to" << endl;
+		//cout << "is equal to" << endl;
 		if (term1f == term2f)
 			return true;
 		else
 			return false;
 	}
 	else if (compoper.compare(">=") == 0) {
-		cout << "greater than or equal to" << endl;
+		//cout << "greater than or equal to" << endl;
 		if (term1f >= term2f)
 			return true;
 		else
 			return false;
 	}
 	else if (compoper.compare(">") == 0) {
-		cout << "greater than" << endl;
+		//cout << "greater than" << endl;
 		if (term1f > term2f)
 			return true;
 		else
 			return false;
 	}
 	else if (compoper.compare("<=") == 0) {
-		cout << "less than or equal to" << endl;
+		//cout << "less than or equal to" << endl;
 		if (term1f <= term2f)
 			return true;
 		else
 			return false;
 	}
 	else if (compoper.compare("<") == 0) {
-		cout << "less than" << endl;
+		//cout << "less than" << endl;
 		if (term1f < term2f)
 			return true;
 		else
 			return false;
 	}
 	else if (compoper.compare("!=") == 0) {
-		cout << "not equal to" << endl;
+		//cout << "not equal to" << endl;
 		if (term1f != term2f)
 			return true;
 		else
 			return false;
 	}
 	return false;
-
 }
-
-list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestoskip) {
-	
-	list<string> branch1;
-	list<string> branch2;
-	string b1line;
-	string b2line;
-	
-	
-
-	//getline(cin, b1line);
-	//cout <<"b1line="<< b1line << endl;
-	linestoskip++;
-	
-	while ((b1line[0] == ' ' || b1line.empty()) && !cin.eof()) {
-
-		cout << "next line=" << b1line << endl;
-
-		if (!b1line.empty()) {
-			branch1.push_back(b1line);
-		}
-		//else {
-		//	cout << "skipping empty line in b1" << endl;
-		//}
-		linestoskip++;
-		getline(cin, b1line);
-	} 
-
-	getline(cin, b2line);
-	cout << b2line << endl;
-	linestoskip++;
-
-	while ((b2line[0] == ' ' || b2line.empty()) && !cin.eof()) {
-		if (!b2line.empty()) {
-			//cout << "next line=" << b2line << endl;
-
-			branch2.push_back(b2line);
-		}
-		//else
-		//	cout << "skipping empty line in b2" << endl;
-		linestoskip++;
-		getline(cin, b2line);
-	}
-
-	linestoskip--;
-
-	cout << "BRANCH1" << endl;
-	for (list<string>::iterator it = branch1.begin(); it != branch1.end(); it++) {
-		cout << (*it) << endl;
-	}
-	cout << "BRANCH2" << endl;
-	for (list<string>::iterator it = branch2.begin(); it != branch2.end(); it++) {
-		cout << (*it) << endl;
-	}
-
-	if (iftruth == 0)
-		return branch2;
-	return branch1;
-}
-
-
-
-/*
-
-string term1;
-string term2;
-string compoper;
-
-int i = 0;
-while (arg[i] == ' ')
-i++;
-
-while (isalnum(arg[i]) || arg[i] == '(' || arg[i] == ')') {
-cout << arg[i] << endl;
-term1 += arg[i++];
-}
-
-cout << "term1=" << term1 << ';' << endl;
-cout << "arg[i]=" << arg[i] << ';' << endl;
-
-while (arg[i] == ' ')
-i++;
-
-while (arg[i] == '=' || arg[i] == '>' || arg[i] == '<' || arg[i] == '!')
-compoper += arg[i++];
-
-while (arg[i] == ' ')
-i++;
-
-while (isalnum(arg[i]))
-term2 += arg[i++];
-
-variable * term1Var = getvariable(term1, Variables);
-variable * term2Var = getvariable(term2, Variables);
-float term1f = term1Var->value;
-float term2f = term2Var->value;
-term1Var = NULL;
-term2Var = NULL;
-
-if (compoper.compare("==") == 0) {
-cout << "is equal to" << endl;
-if (term1f == term2f)
-return true;
-else
-return false;
-}
-else if (compoper.compare(">=") == 0) {
-cout << "greater than or equal to" << endl;
-if (term1f >= term2f)
-return true;
-else
-return false;
-}
-else if (compoper.compare(">") == 0) {
-cout << "greater than" << endl;
-if (term1f > term2f)
-return true;
-else
-return false;
-}
-else if (compoper.compare("<=") == 0) {
-cout << "less than or equal to" << endl;
-if (term1f <= term2f)
-return true;
-else
-return false;
-}
-else if (compoper.compare("<") == 0) {
-cout << "less than" << endl;
-if (term1f < term2f)
-return true;
-else
-return false;
-}
-else if (compoper.compare("!=") == 0) {
-cout << "not equal to" << endl;
-if (term1f != term2f)
-return true;
-else
-return false;
-}
-return false;
-*/

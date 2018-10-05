@@ -4,9 +4,9 @@ void convertToConstants(string & line, string & RHS,
 	string & LHS, int scopelevel);
 float computeresult(string exp);
 
-void assignment(string line, int scopelevel) {
+void assignment(string line, int scopelevel, string scopename) {
 	cout <<endl<< "==========ASSIGNMENT SCOPE BEGIN============" << endl;
-	cout << "scope = " << scopelevel << endl;
+	//cout << "scope = " << scopelevel << endl;
 	printVariables(Variables);
 	string RHS;
 	string LHS;
@@ -14,12 +14,12 @@ void assignment(string line, int scopelevel) {
 
 	//converts RHS to a series of constants
 	convertToConstants(line, RHS, LHS, scopelevel);
-	//cout << "convertToConstants done" << endl;
+	cout << "convertToConstants done" << endl;
 	//converts RHS to postfix notation
 	postfixconverter converter;
-	//cout << "RHS:" << RHS << endl;
+	cout << "RHS:" << RHS << endl;
 	pfxRHS = converter.convertToPostfix(RHS);
-	//cout << "postfixconversion done" << endl;
+	cout << "postfixconversion done" << endl;
 
 	//computes result
 	float result = computeresult(pfxRHS);
@@ -151,6 +151,14 @@ void convertToConstants(string & line, string & RHS,
 			i++;
 		}
 
+		if ((i + 2) <= line.length()) {
+			//cout << "next 2:"<<line[i] << line[i + 1] << endl;
+			if (line[i] == '(' && line[i + 1] == ')') {
+				tempterm += "()";
+				i += 2;
+			}
+		}
+
 		while (line[i] == ' ')
 			i++;
 
@@ -178,6 +186,7 @@ void convertToConstants(string & line, string & RHS,
 }
 
 float computeresult(string exp) {
+	//cout << "inside computeresult" << endl;
 	//cout <<"expression="<< exp << endl;
 
 	list<string> explist;

@@ -33,7 +33,7 @@ bool checkifconst(string Var) {
 }
 
 variable* getvariable(string VarName, list<variable*> & Variables) {
-	cout << "inside getvariable():" << VarName<< ';'<< endl;
+	//cout << "inside getvariable():" << VarName<< ';'<< endl;
 	for (list<variable*>::iterator it = Variables.begin();
 		it != Variables.end(); it++) {
 		if ((*it)->name.compare(VarName) == 0)
@@ -65,16 +65,17 @@ void createNewVar(string nextVar, list<variable*> & Variables, int scopelevel) {
 	if (nextVar.compare("if") == 0 || nextVar.compare("else") == 0 || nextVar.compare("def") == 0 ||
 		nextVar.compare("int") == 0|| nextVar.compare("string") == 0 || nextVar.compare("print") == 0 ||
 		nextVar.compare("list") == 0 || nextVar.compare("False") == 0 || nextVar.compare("class") == 0 ||
-		nextVar.compare("is") == 0 || nextVar.compare("return") == 0 || nextVar.compare("None") == 0 ||
+		nextVar.compare("is") == 0 || nextVar.compare("None") == 0 ||
 		nextVar.compare("True") == 0 || nextVar.compare("from") == 0 || nextVar.compare("in") == 0 ||
 		nextVar.compare("lambda") == 0 || nextVar.compare("try") == 0 || nextVar.compare("nonlocal") == 0 ||
 		nextVar.compare("while") == 0 || nextVar.compare("and") == 0 || nextVar.compare("or") == 0 ||
 		nextVar.compare("del") == 0 || nextVar.compare("global") == 0 || nextVar.compare("not") == 0 ||
 		nextVar.compare("with") == 0 || nextVar.compare("as") == 0 || nextVar.compare("elif") == 0 ||
 		nextVar.compare("yield") == 0 || nextVar.compare("assert") == 0 || nextVar.compare("import") == 0 ||
-		nextVar.compare("pass") == 0 || nextVar.compare("return") == 0 || nextVar.compare("break") == 0 ||
+		nextVar.compare("pass") == 0 || nextVar.compare("break") == 0 ||
 		nextVar.compare("except") == 0 || nextVar.compare("raise") == 0) {
 		cout << "ERROR: Trying to name variable a reserved word" << endl;
+		cout << "Bad Name = " << nextVar << endl;
 		return;
 	}
 
