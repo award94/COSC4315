@@ -60,6 +60,7 @@ void processstatement(int & lineNum, string line, int lastLine,
 	cout << "inside processstatement: " << line<< " ("<<lineNum<< ")"<<endl;
 	cout << "lineNum = " << lineNum << endl;
 	cout << fileLines[lineNum] << endl;
+	cout << "scopename=" << scopename << endl;
 
 	int i = 0;							//char index of the statement
 	string nextVar;

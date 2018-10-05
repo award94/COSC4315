@@ -22,7 +22,7 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 	cout << "if start line Num=" << iflineNum << endl;
 	cout << "else start line=" << elseline << endl;
 	cout << "if/else last line=" << lastline << endl;
-	cout << "function last line" << funclastline << endl;
+	cout << "function last line=" << funclastline << endl;
 	
 	
 
@@ -37,25 +37,25 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 	if (iftruth == 1) {
 		if (elseline == -1) {
 			int i = iflineNum + 1;
-			for (; i < lastline; i++) {
-				//cout << "i=" << i <<endl;
+			for (; i <= lastline; i++) {
+				cout << "i=" << i <<endl;
 				string currentLine = fileLines[i];
 				processstatement(i, currentLine, funclastline, currentscope, scopename);
 			}
 			iflineNum = i;
-			//cout << "iflineNum=" << iflineNum << endl;
-			//cout << "done1" << endl;
+			cout << "iflineNum=" << iflineNum << endl;
+			cout << "done1" << endl;
 		}
 		else {
 			int i = iflineNum + 1;
-			for (; i < elseline; i++) {
-				//cout << "i=" << i << endl;
+			for (; i <= elseline; i++) {
+				cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
 				processstatement(i, currentLine, funclastline, currentscope, scopename);
 			}
 			iflineNum = i;
-			//cout << "iflineNum=" << iflineNum << endl;
-			//cout << "done2" << endl;
+			cout << "iflineNum=" << iflineNum << endl;
+			cout << "done2" << endl;
 		}
 	}
 	else {
@@ -65,20 +65,19 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 		}
 		else {
 			int i = elseline;
-			for (; i < lastline; i++) {
-				//cout << "i=" << i << endl;
+			for (; i <= lastline; i++) {
+				cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
 				processstatement(i, currentLine, funclastline, currentscope, scopename);
 			}
 			iflineNum = i;
 			
-			//cout << "done4" << endl;
+			cout << "done4" << endl;
 		}
 	}
 
-	if (iflineNum < lastline - 1)
-		iflineNum = lastline-1;
-	//cout << "lineNum=" << iflineNum << endl;
+	iflineNum = lastline;
+	cout << "lineNum=" << iflineNum << endl;
 	cout << "============IF ELSE SCOPE END==========" << endl;
 	
 }
@@ -87,8 +86,9 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 	cout << "findlastline" << endl;
 	cout << "currentscope=" << currentscope << endl;
 
-	int i = startLineNum + 1;
+	int i = startLineNum;
 	while (i < fileLines.size()) {
+		i++;
 		string currentLine = fileLines[i];
 
 		int k = 0;
@@ -104,6 +104,7 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 		if (!fileLines[i].empty() && (commentCheck[0] != '#')) {
 			string currentLine = fileLines[i];
 			cout << currentLine << endl;
+			cout << "i=" << i << endl;
 
 			bool checkscope = 1;
 			for (int j = 0; j < 3 * currentscope; j++) {
@@ -128,19 +129,20 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 					elseline = i;
 				}
 				else
-					break;
+					return i - 1;
 			}
 		}
-		i++;
-
+		cout << "here" << endl;
+		
 	}
-	cout << i << endl;
-	return i;
+	cout << "there" << endl;
+	cout << i-1 << endl;
+	return i-1;
 }
 
 //returns string of argument
 string getarg(string ifline) {
-	//cout << "inside getarg" << endl;
+	cout << "inside getarg" << endl;
 	string arg;
 	int i = 0;
 	while (ifline[i] != '(')
@@ -156,7 +158,7 @@ string getarg(string ifline) {
 }
 
 string parseexpr(string line) {
-	//cout << "inside parseexpr" << endl;
+	cout << "inside parseexpr" << endl;
 	string newexpr;
 
 	string tempterm;
@@ -169,7 +171,7 @@ string parseexpr(string line) {
 		i++;
 	}
 
-	//cout << "tempterm=" << tempterm << endl;
+	cout << "tempterm=" << tempterm << endl;
 	if ((i + 2) <= line.length()) {
 		//cout << "next 2:" << line[i] << line[i + 1] << endl;
 		if (line[i] == '(' && line[i + 1] == ')') {
@@ -178,15 +180,15 @@ string parseexpr(string line) {
 		}
 	}
 
-	//cout << "tempterm=" << tempterm << endl;
+	cout << "tempterm=" << tempterm << endl;
 
 	if (checkifconst(tempterm)) {
-		//cout << "is a constant: " << tempterm << ";" << endl;
+		cout << "is a constant: " << tempterm << ";" << endl;
 		newexpr.append(tempterm);
 		newexpr += ' ';
 	}
 	else {
-		//cout << "variable:" << tempterm << endl;
+		cout << "variable:" << tempterm << endl;
 		variable * grabValue = getvariable(tempterm, Variables);
 		if (grabValue == NULL)
 			cout << "error: " << tempterm << " is undefined at this point" << endl;
