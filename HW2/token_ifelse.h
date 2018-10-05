@@ -36,6 +36,7 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 
 	if (iftruth == 1) {
 		if (elseline == -1) {
+			cout << "start1" << endl;
 			int i = iflineNum + 1;
 			for (; i <= lastline; i++) {
 				cout << "i=" << i <<endl;
@@ -48,7 +49,8 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 		}
 		else {
 			int i = iflineNum + 1;
-			for (; i <= elseline; i++) {
+			cout << "start2" << endl;
+			for (; i < elseline; i++) {
 				cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
 				processstatement(i, currentLine, funclastline, currentscope, scopename);
@@ -60,11 +62,13 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 	}
 	else {
 		if (elseline == -1) {
+			cout << "start3" << endl;
 			iflineNum = lastline;
-			//cout << "done3" << endl;
+			cout << "done3" << endl;
 		}
 		else {
 			int i = elseline;
+			cout << "start4" << endl;
 			for (; i <= lastline; i++) {
 				cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
