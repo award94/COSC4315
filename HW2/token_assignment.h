@@ -76,7 +76,13 @@ void convertToConstants(string & line, string & RHS,
 
 	//Finding First term in RHS
 	string tempterm;
-	while (isalnum(line[i]) || line[i] == '-') {
+
+	if (line[i] == '-') {
+		tempterm += line[i];
+		i++;
+	}
+
+	while (isalnum(line[i])) {
 		//cout << line[i] << endl;
 		tempterm.append(line, i, 1);
 		i++;

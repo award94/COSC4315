@@ -87,29 +87,7 @@ void processstatement(int & lineNum, string line, int lastLine,
 		}
 		else if (nextVar.compare("if") == 0) {
 			//cout << "If/Else statement" << endl;
-
-
 			ifelse(line, lineNum, lastLine, scopelevel, scopename);
-			/*
-			cout << "linestoskip=" << linestoskip << endl;
-
-			cin.clear();
-			cin.seekg(0, cin.beg);
-			for (int i = 0; i < lineNum + linestoskip; i++) {
-				getline(cin, line);
-			}
-			*/
-			/*
-			cout << "branchdata" << endl;
-			for (list<string>::iterator it = branch.begin(); it != branch.end(); it++)
-				cout << (*it) << endl;
-			cout << "end branchdata" << endl;
-			for (list<string>::iterator it = branch.begin(); it != branch.end(); it++) {
-				processstatement(lineNum, (*it), scopelevel);
-			}
-			*/
-			
-			cout << endl;
 		}
 		else if (nextVar.compare("else") == 0) {
 			cout << "ERROR: No if for this else" << endl;
@@ -149,51 +127,3 @@ void processstatement(int & lineNum, string line, int lastLine,
 //ALSO COMMENTS #
 //Comments at the start of line
 //Comments in the middle of a line
-
-/*
-if (nextVar.compare("def") == 0) {
-createNewFunc(line, i, Variables);
-}
-else if()
-
-else if (isalnum(line[i])) {
-while (isalnum(line[i]) && i < line.length()) {
-cout << "i=" << i << ", line[i]=" << line[i] << endl;
-nextVar.append(line, i, 1);
-i++;
-}
-
-
-
-if (checkifconst(nextVar) == true) {
-cout << "nextVar is constant" << endl;
-}
-else {
-//Search for if the variable exists already
-//if so add it's value the string in place of variable name
-//if not create a new one
-createNewVar(nextVar, Variables);
-}
-
-cout << "nextVar=" << nextVar << endl;
-}
-
-else if (line[i] == '=' || line[i] == '+') {
-cout << "next var is an arithmetic operator" << endl;
-
-while (line[i] == '=' || line[i] == '+') {
-cout << "i=" << i << ", line[i]=" << line[i] << endl;
-nextVar.append(line, i, 1);
-i++;
-}
-
-cout << "nextVar=" << nextVar << endl;
-if (nextVar.compare("=") == 0) {
-cout << "Assignment" << endl;
-
-assignment(line);
-
-}
-
-}
-*/
