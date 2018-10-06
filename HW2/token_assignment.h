@@ -25,7 +25,7 @@ void assignment(string line, int scopelevel, string scopename) {
 	float result = computeresult(pfxRHS);
 	//cout << "result computed" << endl;
 	//assigns result to LHS Variable
-	variable * lhsvar = getvariable(LHS, Variables);
+	variable * lhsvar = getvariablescope(LHS, Variables, scopelevel);
 	lhsvar->value = result;
 	cout << lhsvar->name << '=' << lhsvar->value << endl;
 	lhsvar = NULL;
@@ -47,13 +47,15 @@ void convertToConstants(string & line, string & RHS,
 		i++;
 	}
 
-	
-
 	//Check if LHS Var has been declared yet
 	//If not, declare it
-	if (!checkforvariable(LHS, Variables)) {
+	if (!checkforvariableinscope(LHS, Variables, scopelevel)) {
+		cout << "creating new variables in scope" << scopelevel << endl;
 		createNewVar(LHS, Variables, scopelevel);
+		printVariables(Variables);
 	}
+	else
+		cout << "found new variable in scope" << scopelevel << endl;
 	//cout << "LHS Found or declared" << endl;
 
 	//Skipping whitespaces
@@ -97,15 +99,19 @@ void convertToConstants(string & line, string & RHS,
 		RHS += ' ';
 	}
 	else {
-		//cout << "variable:" << tempterm<<endl;
-		variable * grabValue = getvariable(tempterm, Variables);
-		if (grabValue == NULL)
-			cout << "error: " << tempterm << " is undefined at this point" << endl;
-		else {
-			//cout << to_string(grabValue->value) << endl;
-			RHS.append(to_string(grabValue->value));
-			RHS += ' ';
-			grabValue = NULL;
+		cout << "variable:" << tempterm<<endl;
+		for (int j = scopelevel; j >= 0; j--) {
+			cout << "scope=" << j << endl;
+			if (checkforvariableinscope(tempterm, Variables, j)) {
+				cout << "found variable in this scope:" << j << endl;
+				variable * temp = getvariablescope(tempterm, Variables, j);
+				RHS += to_string(temp->value);
+				RHS += ' ';
+				temp = NULL;
+				break;
+			}
+			else
+				cout << "error: variable does not exist:" << tempterm << endl;
 		}
 	}
 
@@ -170,14 +176,18 @@ void convertToConstants(string & line, string & RHS,
 			RHS += ' ';
 		}
 		else {
-			//cout << "variable" << endl;
-			variable * grabValue = getvariable(tempterm, Variables);
-			if (grabValue == NULL)
-				cout << "error: " << tempterm << " is undefined at this point" << endl;
-			else {
-				RHS.append(to_string(grabValue->value));
-				RHS += ' ';
-				grabValue = NULL;
+			for (int j = scopelevel; j >= 0; j--) {
+				cout << "scope=" << j << endl;
+				if (checkforvariableinscope(tempterm, Variables, j)) {
+					cout << "found variable in this scope:" << j << endl;
+					variable * temp = getvariablescope(tempterm, Variables, j);
+					RHS += to_string(temp->value);
+					RHS += ' ';
+					temp = NULL;
+					break;
+				}
+				else
+					cout << "error: variable does not exist:" << tempterm << endl;
 			}
 		}
 
