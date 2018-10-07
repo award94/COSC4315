@@ -136,9 +136,9 @@ void convertToConstants(string & line, string & RHS,
 		while (line[i] == ' ') {
 			i++;
 		}
-		//cout << line[i] << endl;
+		cout << line[i] << endl;
 
-		while (line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/') {
+		if (line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/') {
 			tempterm.append(line, i, 1);
 			i++;
 		}
@@ -156,6 +156,11 @@ void convertToConstants(string & line, string & RHS,
 			i++;
 
 		tempterm = "";
+
+		if (line[i] == '-') {
+			tempterm += line[i];
+			i++;
+		}
 
 		while (isalnum(line[i])) {
 			//cout << line[i] << endl;

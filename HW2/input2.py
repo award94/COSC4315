@@ -1,20 +1,14 @@
-def func():
-   y = 2
-   return y - 3
+#File: t1.py
+# Content: test source code
 
-def func2():
-   b = 18
-   return b / 6
+# simple function f
+def f():
+   x=1
+   y=2
+   if(x==1):
+      t=x+y
+   return t
 
-x2 = func2()
-x3 = func()
-x4 = x3
 
-if(func() != func2()):
-   x1 = 1
-   x4 = x1
-
-else:
-   x4 = 2
-
-#comment
+x=1+3*100/2+f()
+y=x*100+10*3

@@ -89,12 +89,11 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 	cout << "findlastline" << endl;
 	cout << "currentscope=" << currentscope << endl;
-
-	int i = startLineNum;
-	while (i < fileLines.size()) {
-		i++;
+	cout << "filesize=" << fileLines.size() << endl;
+	int i = startLineNum+1;
+	for(; i < fileLines.size(); i++){
 		string currentLine = fileLines[i];
-
+		
 		int k = 0;
 		string commentCheck;
 		while (currentLine[k] == ' ' && k < currentLine.length()) {
@@ -106,7 +105,6 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 		}
 
 		if (!fileLines[i].empty() && (commentCheck[0] != '#')) {
-			string currentLine = fileLines[i];
 			cout << currentLine << endl;
 			cout << "i=" << i << endl;
 
@@ -132,12 +130,13 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 					cout << "found an else" << endl;
 					elseline = i;
 				}
-				else
+				else {
+					cout << "returning" << endl;
 					return i - 1;
+				}
 			}
 		}
 		cout << "here" << endl;
-		
 	}
 	cout << "there" << endl;
 	cout << i-1 << endl;
@@ -163,13 +162,21 @@ string getarg(string ifline) {
 
 string parseexpr(string line) {
 	cout << "inside parseexpr" << endl;
+	cout << "line=" << line << endl;
 	string newexpr;
 
 	string tempterm;
 	int i = 0;	
 
+	while (line[i] == ' ')
+		i++;
 
-	while (isalnum(line[i]) || line[i] == '-') {
+	if (line[i] == '-') {
+		tempterm += line[i];
+		i++;
+	}
+
+	while (isalnum(line[i])) {
 		//cout << line[i] << endl;
 		tempterm.append(line, i, 1);
 		i++;
@@ -214,9 +221,12 @@ string parseexpr(string line) {
 		}
 		//cout << line[i] << endl;
 
-		while (line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/') {
+		if (line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/') {
 			tempterm.append(line, i, 1);
 			i++;
+		}
+		else {
+			cout << "operator missing" << endl;
 		}
 		//cout << i << " tempterm=" << tempterm << 'a' << endl;
 		//cout << tempterm.compare("-") << endl;
@@ -232,6 +242,11 @@ string parseexpr(string line) {
 			i++;
 
 		tempterm = "";
+
+		if (line[i] == '-') {
+			tempterm += line[i];
+			i++;
+		}
 
 		while (isalnum(line[i])) {
 			//cout << line[i] << endl;
@@ -306,8 +321,14 @@ bool evaluatearg(string arg) {
 
 	postfixconverter converter;
 
+	cout << "rawexpr1=" << rawexpr1 << endl;
+	cout << "rawexpr2=" << rawexpr2 << endl;
+
 	string expr1 = parseexpr(rawexpr1);
 	string expr2 = parseexpr(rawexpr2);
+
+	cout << "expr1=" << expr1 << endl;
+	cout << "expr2=" << expr2 << endl;
 
 	expr1 = converter.convertToPostfix(expr1);
 	expr2 = converter.convertToPostfix(expr2);
@@ -315,11 +336,11 @@ bool evaluatearg(string arg) {
 	float term1f = computeresult(expr1);
 	float term2f = computeresult(expr2);
 
-	//cout << "expr1=" << expr1 << endl;
-	//cout << "term1=" << term1f << endl;
-	//cout << "expr2=" << expr2 << endl;
-	//cout << "term2=" << term2f << endl;
-	//cout << "compoper=" << compoper << endl;
+	cout << "expr1=" << expr1 << endl;
+	cout << "term1=" << term1f << endl;
+	cout << "expr2=" << expr2 << endl;
+	cout << "term2=" << term2f << endl;
+	cout << "compoper=" << compoper << endl;
 	
 	if (compoper.compare("==") == 0) {
 		//cout << "is equal to" << endl;
