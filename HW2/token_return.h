@@ -2,8 +2,7 @@ using namespace std;
 
 float setreturnvalue(string line, string funcName, int funcscope);
 
-void setreturn(string line, int & lineNum, int lastline, int scopelevel,
-	string funcname) {
+void setreturn(string line, int & lineNum, int lastline, int scopelevel, string funcname) {
 	cout << "inside setreturn" << endl;
 	cout << line << endl;
 	cout << "lineNum=" << lineNum << endl;

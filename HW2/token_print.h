@@ -7,6 +7,7 @@ void print(string line) {
 	string finalOutput;
 	
 	cout << "Inside token_print" << endl;
+	cout << "this is the line:"<<line << endl;
 
 	int i = 0;
 	while (i < line.length()) {
@@ -56,10 +57,11 @@ void print(string line) {
 	if (checkifconst(argument) == 1){
 	finalOutput += argument;
 	}
-	if (checkforvariable(argument, Variables) == 1){
-	for (list<variable*>::iterator it = Variables.begin(); it != Variables.end(); it++){
-		if (argument == (*it)->name){
-			finalOutput += (*it)->value;
+	if (checkforvariable(argument, Variables) == 1) {
+		for (list<variable*>::iterator it = Variables.begin(); it != Variables.end(); it++) {
+			if (argument == (*it)->name) {
+				finalOutput += (*it)->value;
+			}
 		}
 	}
 	finalOutput += argument;

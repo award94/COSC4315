@@ -148,15 +148,24 @@ string getarg(string ifline) {
 	cout << "inside getarg" << endl;
 	string arg;
 	int i = 0;
-	while (ifline[i] != '(')
+
+	while (isalnum(ifline[i]))
 		i++;
-	i++;
+
+	while (ifline[i] == '(' || ifline[i] == ' ')
+		i++;
+
 	while (ifline[i] != ':') {
 		arg += ifline[i];
 		i++;
 	}
 
-	arg.erase(arg.length() - 1);
+
+	if (arg[arg.length() - 1] == ':')
+		arg.erase(arg.length() - 1);
+	if (arg[arg.length() - 1] == ')' && arg[arg.length()-2] != '(')
+		arg.erase(arg.length() - 1);
+
 	return arg;
 }
 
