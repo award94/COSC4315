@@ -5,6 +5,8 @@ void print(string line) {
 	// When the delimiter is reached, the strings are checked and appended to finalOutputt
 	string argument;
 	string finalOutput;
+	
+	cout << "Inside token_print" << endl;
 
 	int i = 0;
 	while (i < line.length()) {
@@ -21,12 +23,20 @@ void print(string line) {
 		while (line[i] == ',') {
 			//Testing for const or variable
 			if (checkifconst(argument) == 1){
+			// If value is a constant, append to finaloutput
+			cout << "Inside tokenprint, found a constant" << endl;	
 			finalOutput += argument;
 			}
 			// I'm not entirely sure how to get the value that variables<argument> is 
 			// Pointing to in inrder to append the value associated with argument
 			if (checkforvariable(argument, Variables) == 1){
-			finalOutput += argument;
+			cout << "Inside tokenprint, found a variable" << endl;
+			// Create iterator to iterate through list and find the desired variable 
+				for (list<variable*>::iterator it = Variables.begin(); it != Variables.end(); it++)
+					if (argument == (*it)->name) {
+						// Append theh value of the desired variable  to the finaloutput string
+						finalOutput += (*it)->value;
+					}
 			}
 			// I need to add in a check to see if it's an arithmetic operation
 			// wasn't sure whichh function to call, so i just left a comment for now
@@ -41,6 +51,19 @@ void print(string line) {
 			}
 		} 
 	}
+	// Printing the final part of the print statement that get's read after the final ,
+	// appending the final value of argument to finalOutput
+	if (checkifconst(argument) == 1){
+	finalOutput += argument;
+	}
+	if (checkforvariable(argument, Variables) == 1){
+	for (list<variable*>::iterator it = Variables.begin(); it != Variables.end(); it++){
+		if (argument == (*it)->name){
+			finalOutput += (*it)->value;
+		}
+	}
+	finalOutput += argument;
+	argument.clear();
 cout << "Final output is: " << finalOutput << endl;
 }
 
