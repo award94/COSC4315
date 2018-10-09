@@ -1,14 +1,57 @@
 using namespace std;
 
 void print(string line) {
-	// Argument is used as a temporary variable to hold the contents before the delimiter
+// Argument is used as a temporary variable to hold the contents before the delimiter
 	// When the delimiter is reached, the strings are checked and appended to finalOutputt
 	string argument;
 	string finalOutput;
-	
-	cout << "Inside token_print" << endl;
 	cout << "this is the line:"<<line << endl;
 
+	// try string streaming until you hit the comma
+
+	int i = 0;
+	while (i < line.length()) {
+			while (line[i] != '(') {
+				if (i < line.length())
+				{
+					i++;
+				}
+			}
+			while (line[i] == ' ') {
+				if (i < line.length())
+				{
+					i++;
+				}
+			}
+			while (line[i] != ',') {
+				argument += line[i];
+				if (i < line.length())
+				{
+					i++;
+				}
+			}
+			while (line[i] == ',') {
+				finalOutput += argument;
+				if (i < line.length())
+				{
+					i++;
+				}
+				argument.clear();
+			}
+			while (line[i] == ')') {
+				finalOutput += argument;
+				if (i < line.length())
+				{
+					i++;
+				}
+				argument.clear();
+			}
+	break;
+	}
+	cout << "Line is: " << line << endl;
+	cout << "Final output is: " << finalOutput << endl;
+}
+	/*
 	int i = 0;
 	while (i < line.length()) {
 		while (line[i] != ',') {
@@ -52,6 +95,26 @@ void print(string line) {
 			}
 		} 
 	}
+<<<<<<< .mine
+	cout << "Final output is: " << finalOutput << endl;
+*/
+||||||| .r69
+	// Printing the final part of the print statement that get's read after the final ,
+	// appending the final value of argument to finalOutput
+	if (checkifconst(argument) == 1){
+	finalOutput += argument;
+	}
+	if (checkforvariable(argument, Variables) == 1){
+	for (list<variable*>::iterator it = Variables.begin(); it != Variables.end(); it++){
+		if (argument == (*it)->name){
+			finalOutput += (*it)->value;
+		}
+	}
+	finalOutput += argument;
+	argument.clear();
+cout << "Final output is: " << finalOutput << endl;
+}
+=======
 	// Printing the final part of the print statement that get's read after the final ,
 	// appending the final value of argument to finalOutput
 	if (checkifconst(argument) == 1){
@@ -68,6 +131,7 @@ void print(string line) {
 	argument.clear();
 cout << "Final output is: " << finalOutput << endl;
 }
+>>>>>>> .r70
 
 /*
 SUGGESTION FOR PARSING OUT WHAT YOU'RE PRINTING
