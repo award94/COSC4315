@@ -10,7 +10,8 @@ void print(string line) {
 	cout << "this is the line:"<<line << endl;
 
 	// try string streaming until you hit the comma
-
+	
+	int i = 0;
 	int parenthesis1;
 	int parenthesis2;
 	string arg;
@@ -18,6 +19,31 @@ void print(string line) {
 	findargument(line, parenthesis1, parenthesis2);
 	
 	arg.append(line, parenthesis1+1, parenthesis2 - parenthesis1-1);
+	
+	do {
+		cout << "Inside the do statement, doing the dew" << endl;
+		cout << "i is: " << i << endl;
+		// Remove whitespace
+		if (arg[i] == ' ') {
+			cout << "Whitespace rermoved" << endl;
+			i++;
+		}
+		if (arg[i] == '"') {
+			cout << "First quote encountered " << endl;
+			i++;
+			while (arg[i] != '"') {
+				cout << "Searching for second quote " << endl;
+				argument += arg[i];
+				i++;
+			}
+			finalOutput += argument;
+		}
+		// I'll remove this increment eventually, only need to add check for if something is a variable and the arithmetic shit afterwards 
+		i++;
+
+	} while (i < arg.length());
+
+
 	cout << "Line is: " << line << endl;
 	cout << "arg=" << arg << endl;
 	cout << "Final output is: " << finalOutput << endl;
