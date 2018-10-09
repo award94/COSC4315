@@ -1,5 +1,7 @@
 using namespace std;
 
+void findargument(string line, int & parenthesis1, int & parenthesis2);
+
 void print(string line) {
 // Argument is used as a temporary variable to hold the contents before the delimiter
 	// When the delimiter is reached, the strings are checked and appended to finalOutputt
@@ -9,48 +11,45 @@ void print(string line) {
 
 	// try string streaming until you hit the comma
 
-	int i = 0;
-	while (i < line.length()) {
-			while (line[i] != '(') {
-				if (i < line.length())
-				{
-					i++;
-				}
-			}
-			while (line[i] == ' ') {
-				if (i < line.length())
-				{
-					i++;
-				}
-			}
-			while (line[i] != ',') {
-				argument += line[i];
-				if (i < line.length())
-				{
-					i++;
-				}
-			}
-			while (line[i] == ',') {
-				finalOutput += argument;
-				if (i < line.length())
-				{
-					i++;
-				}
-				argument.clear();
-			}
-			while (line[i] == ')') {
-				finalOutput += argument;
-				if (i < line.length())
-				{
-					i++;
-				}
-				argument.clear();
-			}
-	break;
-	}
+	int parenthesis1;
+	int parenthesis2;
+	string arg;
+
+	findargument(line, parenthesis1, parenthesis2);
+	
+	arg.append(line, parenthesis1+1, parenthesis2 - parenthesis1-1);
 	cout << "Line is: " << line << endl;
+	cout << "arg=" << arg << endl;
 	cout << "Final output is: " << finalOutput << endl;
 }
+
+void findargument(string line, int & parenthesis1, int & parenthesis2) {
+	int i = 0;
+	while (i < line.length()) {
+		while (line[i] != '(' && i < line.length())
+			i++;
+		if (line[i] == '(' && line[i + 1] != ')') {
+			parenthesis1 = i;
+			break;
+		}
+		else
+			i++;
+	}
+	i = 0;
+	while (i < line.length()) {
+		while (line[i] != ')' && i < line.length()) {
+			i++;
+		}
+		if (line[i] == ')' && line[i - 1] != '(') {
+			parenthesis2 = i;
+			break;
+		}
+		else
+			i++;
+	}
+	cout << "p1=" << parenthesis1 << " p2=" << parenthesis2 << endl;
+}
+
 	/*
 	int i = 0;
 	while (i < line.length()) {
@@ -98,6 +97,7 @@ void print(string line) {
 <<<<<<< .mine
 	cout << "Final output is: " << finalOutput << endl;
 */
+/*
 ||||||| .r69
 	// Printing the final part of the print statement that get's read after the final ,
 	// appending the final value of argument to finalOutput
@@ -132,7 +132,7 @@ cout << "Final output is: " << finalOutput << endl;
 cout << "Final output is: " << finalOutput << endl;
 }
 >>>>>>> .r70
-
+*/
 /*
 SUGGESTION FOR PARSING OUT WHAT YOU'RE PRINTING
 line = "print(this, is, what, you, want, to, grab)";
