@@ -22,12 +22,12 @@ void print(string line) {
 	
 	do {
 		cout << "Inside the do statement, doing the dew" << endl;
-		cout << "i is: " << i << endl;
 		// Remove whitespace
 		if (arg[i] == ' ') {
-			cout << "Whitespace rermoved" << endl;
+			cout << "Whitespace removed" << endl;
 			i++;
 		}
+		// Takes care of constants
 		if (arg[i] == '"') {
 			cout << "First quote encountered " << endl;
 			i++;
@@ -37,9 +37,34 @@ void print(string line) {
 				i++;
 			}
 			finalOutput += argument;
+			argument.clear();
+			// Need a second increment to skip over the comma
+			i++;
+		} 
+		// Starting the chheck to see if arg is a variable
+		if (arg[i] != ',') {
+			cout << "Searching for a comma " << endl;
+			argument += arg[i];
+			i++;
+		}	
+		// argument being read is a comma
+		if (arg[i] == ',') {
+			cout << "Found a comma" << endl;
+			cout << "Argument is: " << argument << endl;
+			// Check if arg is a variable
+
+			// Couldn't figure out how to check if it's a variable
+			// Could you take a look at this when you're bored?
+			if (checkforvariable(argument, Variables) == true)
+				cout << "Found is a variable " << endl;
+			
+				
+			// End of testing for variabe segment
+			// Add in arithmetic check and print will be functioning	
+			finalOutput += argument;
+			argument.clear();
+			i++;
 		}
-		// I'll remove this increment eventually, only need to add check for if something is a variable and the arithmetic shit afterwards 
-		i++;
 
 	} while (i < arg.length());
 
