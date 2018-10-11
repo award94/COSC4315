@@ -1,9 +1,8 @@
-#t2.py#
-def f23():
-   a = 5
-   b = 4
-   c = a * b
-   return c
+def f():
+   x = 1
+   y = 2
+   if (y==2):
+      z = x * y + 10
+   return z
 
-if f23() == f23():
-   d = 2
+a = 5 + 8 * 9 / 3 + f()

@@ -3,13 +3,14 @@ using namespace std;
 class func_type{
 	public:
 		string name;
-		int returnvalue;
+		
 		int startline;
 		int endline;
 		int scope;
 
 		string defline;
 
+		int returnvalue;
 		bool doesreturn;
 		int returnline;
 
@@ -26,8 +27,64 @@ class func_type{
 
 void func_type::execute() {
 	cout << "inside execute()" << endl;
+	cout << "startline=" << startline << endl;
+	cout << "returnline=" << returnline << endl;
+	cout << "endline=" << endline << endl;
 
+	int i = startline + 1;
+	string currentLine;
 
+	if (returnline != -1) {
+		for (; i < returnline; i++) {
+			currentLine = fileLines[i];
+			cout << currentLine << endl;
+			
+			if (!currentLine.empty()) {
+				bool lineinscope = 1;
+				for (int j = 0; j < scope * 3; j++) {
+					if (currentLine[j] != ' ')
+						lineinscope = 0;
+				}
+				cout << "lineinscope=" << lineinscope << endl;
+				if (currentLine[(scope * 3)] == ' ') {
+					//cout << "funcscope=" << funcscope << endl;
+					//cout << currentLine[(funcscope * 3)] << endl;
+					lineinscope = 0;
+				}
+				//cout << "lineinscope=" << lineinscope << endl;
+				cout << "isthisline in scope=" << lineinscope << endl;
+				if (lineinscope)
+					processstatement(i, currentLine, endline, scope, name);
+			}
+
+		}
+	}
+	else {
+		for (; i < endline; i++) {
+			currentLine = fileLines[i];
+			cout << currentLine << endl;
+
+			if (!currentLine.empty()) {
+				bool lineinscope = 1;
+				for (int j = 0; j < scope * 3; j++) {
+					if (currentLine[j] != ' ')
+						lineinscope = 0;
+				}
+				cout << "lineinscope=" << lineinscope << endl;
+				if (currentLine[(scope * 3)] == ' ') {
+					//cout << "funcscope=" << funcscope << endl;
+					//cout << currentLine[(funcscope * 3)] << endl;
+					lineinscope = 0;
+				}
+				//cout << "lineinscope=" << lineinscope << endl;
+				cout << "isthisline in scope=" << lineinscope << endl;
+				if (lineinscope)
+					processstatement(i, currentLine, endline, scope, name);
+			}
+		}
+	}
+
+	deleteScope(Variables, scope);
 }
 
 void func_type::checkreturn() {
@@ -297,6 +354,7 @@ int func_type::findlastline() {
 }
 
 func_type::func_type() {
+	returnline = -1;
 }
 
 void printFunctions(list<func_type*> & Functions) {
