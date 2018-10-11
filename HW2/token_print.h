@@ -15,7 +15,8 @@ void print(string line) {
 	int parenthesis1;
 	int parenthesis2;
 	string arg;
-
+	
+	
 	findargument(line, parenthesis1, parenthesis2);
 	
 	arg.append(line, parenthesis1+1, parenthesis2 - parenthesis1-1);
@@ -37,6 +38,10 @@ void print(string line) {
 				i++;
 			}
 			finalOutput += argument;
+			// If this works keep  otherwise delete
+			finalOutput += ' ';
+			// Delete to here
+
 			argument.clear();
 			// Need a second increment to skip over the comma
 			i++;
@@ -48,7 +53,7 @@ void print(string line) {
 			i++;
 		}	
 		// argument being read is a comma
-		if (arg[i] == ',') {
+		if (arg[i] == ',' || i == arg.length()) {
 			cout << "Found a comma" << endl;
 			cout << "Argument is: " << argument << endl;
 			// Check if arg is a variable
@@ -56,14 +61,32 @@ void print(string line) {
 			// Couldn't figure out how to check if it's a variable
 			// Could you take a look at this when you're bored?
 			if (checkforvariable(argument, Variables) == true)
+				{
 				cout << "Found is a variable " << endl;
-			
+				variable* temp;
+				//Printing all variables
+				printVariables(Variables);
 				
+
+				temp = getvariable(argument, Variables);
+				cout << "Temp value is: " << temp->value << endl;
+				finalOutput += temp->value;
+				// Testing
+				finalOutput += ' ';
+				// Delete 
+				temp = NULL;
+			}
+			else{
+				cout << "Variable doesn't have a value" << endl;
+			}
 			// End of testing for variabe segment
 			// Add in arithmetic check and print will be functioning	
-			finalOutput += argument;
-			argument.clear();
-			i++;
+		finalOutput += argument;
+			// Delete 
+		finalOutput += ' ';
+			// Delete
+		argument.clear();
+		i++;
 		}
 
 	} while (i < arg.length());
