@@ -2,7 +2,6 @@ using namespace std;
 
 void convertToConstants(string & line, string & RHS,
 	string & LHS, int scopelevel);
-float computeresult(string exp);
 
 void assignment(string line, int scopelevel, string scopename) {
 	cout <<endl<< "==========ASSIGNMENT SCOPE BEGIN============" << endl;
@@ -92,7 +91,6 @@ void convertToConstants(string & line, string & RHS,
 	if ((i + 2) <= line.length()) {
 		//cout << "next 2:"<<line[i] << line[i + 1] << endl;
 		if (line[i] == '(' && line[i + 1] == ')') {
-			tempterm += "()";
 			i += 2;
 		}
 	}
@@ -106,18 +104,31 @@ void convertToConstants(string & line, string & RHS,
 	}
 	else {
 		cout << "variable:" << tempterm<<endl;
-		for (int j = scopelevel; j >= 0; j--) {
-			cout << "scope=" << j << endl;
-			if (checkforvariableinscope(tempterm, Variables, j)) {
-				cout << "found variable in this scope:" << j << endl;
-				variable * temp = getvariablescope(tempterm, Variables, j);
-				RHS += to_string(temp->value);
-				RHS += ' ';
-				temp = NULL;
-				break;
+		if (checkforfunction(tempterm, Functions)) {
+			cout << "found function" << endl;
+			func_type * temp = getFunction(tempterm, Functions);
+			cout << temp->returnvalue << endl;
+
+			RHS += to_string(temp->returnvalue);
+			RHS += ' ';
+
+			temp = NULL;
+		}
+		else {
+			for (int j = scopelevel; j >= 0; j--) {
+				cout << "scope=" << j << endl;
+
+				if (checkforvariableinscope(tempterm, Variables, j)) {
+					cout << "found variable in this scope:" << j << endl;
+					variable * temp = getvariablescope(tempterm, Variables, j);
+					RHS += to_string(temp->value);
+					RHS += ' ';
+					temp = NULL;
+					break;
+				}
+				else
+					cout << "error: variable does not exist:" << tempterm << endl;
 			}
-			else
-				cout << "error: variable does not exist:" << tempterm << endl;
 		}
 	}
 
@@ -171,7 +182,6 @@ void convertToConstants(string & line, string & RHS,
 		if ((i + 2) <= line.length()) {
 			//cout << "next 2:"<<line[i] << line[i + 1] << endl;
 			if (line[i] == '(' && line[i + 1] == ')') {
-				tempterm += "()";
 				i += 2;
 			}
 		}
@@ -187,18 +197,32 @@ void convertToConstants(string & line, string & RHS,
 			RHS += ' ';
 		}
 		else {
-			for (int j = scopelevel; j >= 0; j--) {
-				cout << "scope=" << j << endl;
-				if (checkforvariableinscope(tempterm, Variables, j)) {
-					cout << "found variable in this scope:" << j << endl;
-					variable * temp = getvariablescope(tempterm, Variables, j);
-					RHS += to_string(temp->value);
-					RHS += ' ';
-					temp = NULL;
-					break;
+			cout << "variable:" << tempterm << endl;
+			if (checkforfunction(tempterm, Functions)) {
+				cout << "found function" << endl;
+				func_type * temp = getFunction(tempterm, Functions);
+				cout << temp->returnvalue << endl;
+
+				RHS += to_string(temp->returnvalue);
+				RHS += ' ';
+
+				temp = NULL;
+			}
+			else {
+				for (int j = scopelevel; j >= 0; j--) {
+					cout << "scope=" << j << endl;
+
+					if (checkforvariableinscope(tempterm, Variables, j)) {
+						cout << "found variable in this scope:" << j << endl;
+						variable * temp = getvariablescope(tempterm, Variables, j);
+						RHS += to_string(temp->value);
+						RHS += ' ';
+						temp = NULL;
+						break;
+					}
+					else
+						cout << "error: variable does not exist:" << tempterm << endl;
 				}
-				else
-					cout << "error: variable does not exist:" << tempterm << endl;
 			}
 		}
 
@@ -206,75 +230,3 @@ void convertToConstants(string & line, string & RHS,
 	}
 }
 
-float computeresult(string exp) {
-	//cout << "inside computeresult" << endl;
-	//cout <<"expression="<< exp << endl;
-
-	list<string> explist;
-	int i = 0;
-	while (exp[i] == ' ')
-		i++; 
-
-	while (i < exp.length()) {
-		string toadd = "";
-		while (i < exp.length() && exp[i] != ' ') {
-			toadd += exp[i];
-			i++;
-		}
-		//cout << toadd << endl;
-		while (exp[i] == ' ')
-			i++;
-		explist.push_back(toadd);
-	}
-
-	stack<float> numbers;
-
-	while (explist.size() != 0) {
-		if (explist.front().compare("+") != 0 && explist.front().compare("-") != 0 &&
-			explist.front().compare("*") != 0 && explist.front().compare("/") != 0) {
-			//cout << "number found" << endl;
-			float tempfloat = stof(explist.front());
-			numbers.push(tempfloat);
-			explist.pop_front();
-		}
-		else {
-			//cout << "operator found" << endl;
-			char op = explist.front()[0];
-			explist.pop_front();
-
-			float term2 = numbers.top();
-			numbers.pop();
-			float term1 = numbers.top();
-			numbers.pop();
-			float term3;
-
-			//cout << "term1=" << term1 << " term2=" << term2 << endl;
-
-			switch (op) {
-			case('+'):
-				term3 = term1 + term2;
-				break;
-			case('-'):
-				//cout << "subtraction" << endl;
-				term3 = term1 - term2;
-				break;
-			case('*'):
-				//cout << "multiplication" << endl;
-				term3 = term1 * term2;
-				break;
-			case('/'):
-				//cout << "division" << endl;
-				term3 = term1 / term2;
-				break;
-			default:
-				//cout << "error" << endl;
-				break;
-			}
-
-			//cout << "term3 = " << term3 << endl;
-			numbers.push(term3);
-		}
-	}
-
-	return numbers.top();
-}

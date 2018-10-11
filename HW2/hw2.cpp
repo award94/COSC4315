@@ -7,15 +7,22 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <iomanip>
+#include "postfixconverter.h"
 
 #include "variable.h"
 list<variable*> Variables;
 vector<string> fileLines;
 
+
+
 void processstatement(int & lineNum, string line, int lastLine,
 	int scopelevel, string scopename);
+float computeresult(string exp);
+#include "function_type.h"
 
-#include "postfixconverter.h"
+list<func_type*> Functions;
+
+
 #include "token_assignment.h"
 #include "token_function.h"
 #include "token_ifelse.h"
@@ -49,6 +56,7 @@ int main(int argc, char* argv[]){
 		cout << "==================MAIN SCOPE END=====================" << endl;
 	}
 
+	printFunctions(Functions);
 	printVariables(Variables);
 	deleteVariables(Variables);
 	
@@ -75,7 +83,7 @@ void processstatement(int & lineNum, string line, int lastLine,
 
 	if (!line.empty() && !(nextVar[0] == '#')) {
 		
-		//cout << "nextVar = " << nextVar << endl;
+		cout << "nextVar = " << nextVar << endl;
 
 		if (nextVar.compare("def") == 0) {
 			//cout << "Function definition" << endl;
@@ -95,6 +103,14 @@ void processstatement(int & lineNum, string line, int lastLine,
 		else if (nextVar.compare("return") == 0) {
 			cout << "return found" << endl;
 			setreturn(line, lineNum, lastLine, scopelevel, scopename);
+		}
+		else if (line[i] == '(' && line[i + 1] == ')') {
+			cout << "function found" << endl;
+			func_type * temp = getFunction(nextVar, Functions);
+			cout << "temp=" << temp->name << endl;
+
+			temp->execute();
+				
 		}
 		else {
 			//cout << "Variable Assignment/Arithmetic" << endl;
@@ -127,3 +143,77 @@ void processstatement(int & lineNum, string line, int lastLine,
 //ALSO COMMENTS #
 //Comments at the start of line
 //Comments in the middle of a line
+
+
+float computeresult(string exp) {
+	//cout << "inside computeresult" << endl;
+	//cout <<"expression="<< exp << endl;
+
+	list<string> explist;
+	int i = 0;
+	while (exp[i] == ' ')
+		i++;
+
+	while (i < exp.length()) {
+		string toadd = "";
+		while (i < exp.length() && exp[i] != ' ') {
+			toadd += exp[i];
+			i++;
+		}
+		//cout << toadd << endl;
+		while (exp[i] == ' ')
+			i++;
+		explist.push_back(toadd);
+	}
+
+	stack<float> numbers;
+
+	while (explist.size() != 0) {
+		if (explist.front().compare("+") != 0 && explist.front().compare("-") != 0 &&
+			explist.front().compare("*") != 0 && explist.front().compare("/") != 0) {
+			//cout << "number found" << endl;
+			float tempfloat = stof(explist.front());
+			numbers.push(tempfloat);
+			explist.pop_front();
+		}
+		else {
+			//cout << "operator found" << endl;
+			char op = explist.front()[0];
+			explist.pop_front();
+
+			float term2 = numbers.top();
+			numbers.pop();
+			float term1 = numbers.top();
+			numbers.pop();
+			float term3;
+
+			//cout << "term1=" << term1 << " term2=" << term2 << endl;
+
+			switch (op) {
+			case('+'):
+				term3 = term1 + term2;
+				break;
+			case('-'):
+				//cout << "subtraction" << endl;
+				term3 = term1 - term2;
+				break;
+			case('*'):
+				//cout << "multiplication" << endl;
+				term3 = term1 * term2;
+				break;
+			case('/'):
+				//cout << "division" << endl;
+				term3 = term1 / term2;
+				break;
+			default:
+				//cout << "error" << endl;
+				break;
+			}
+
+			//cout << "term3 = " << term3 << endl;
+			numbers.push(term3);
+		}
+	}
+
+	return numbers.top();
+}

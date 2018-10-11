@@ -149,6 +149,9 @@ string getarg(string ifline) {
 	string arg;
 	int i = 0;
 
+	while (ifline[i] == ' ')
+		i++;
+
 	while (isalnum(ifline[i]))
 		i++;
 
@@ -195,7 +198,6 @@ string parseexpr(string line) {
 	if ((i + 2) <= line.length()) {
 		//cout << "next 2:" << line[i] << line[i + 1] << endl;
 		if (line[i] == '(' && line[i + 1] == ')') {
-			tempterm += "()";
 			i += 2;
 		}
 	}
@@ -209,14 +211,25 @@ string parseexpr(string line) {
 	}
 	else {
 		cout << "variable:" << tempterm << endl;
-		variable * grabValue = getvariable(tempterm, Variables);
-		if (grabValue == NULL)
-			cout << "error: " << tempterm << " is undefined at this point" << endl;
-		else {
-			// << to_string(grabValue->value) << endl;
-			newexpr.append(to_string(grabValue->value));
+		if (checkforfunction(tempterm, Functions)) {
+			cout << "found function" << endl;
+			func_type * temp = getFunction(tempterm, Functions);
+			cout << temp->returnvalue << endl;
+
+			newexpr += to_string(temp->returnvalue);
 			newexpr += ' ';
-			grabValue = NULL;
+			temp = NULL;
+		}
+		else {
+			variable * grabValue = getvariable(tempterm, Variables);
+			if (grabValue == NULL)
+				cout << "error: " << tempterm << " is undefined at this point" << endl;
+			else {
+				// << to_string(grabValue->value) << endl;
+				newexpr.append(to_string(grabValue->value));
+				newexpr += ' ';
+				grabValue = NULL;
+			}
 		}
 	}
 
@@ -265,7 +278,6 @@ string parseexpr(string line) {
 		if ((i + 2) <= line.length()) {
 			//cout << "next 2:" << line[i] << line[i + 1] << endl;
 			if (line[i] == '(' && line[i + 1] == ')') {
-				tempterm += "()";
 				i += 2;
 			}
 		}
@@ -282,14 +294,26 @@ string parseexpr(string line) {
 			newexpr += ' ';
 		}
 		else {
-			//cout << "variable" << endl;
-			variable * grabValue = getvariable(tempterm, Variables);
-			if (grabValue == NULL)
-				cout << "error: " << tempterm << " is undefined at this point" << endl;
-			else {
-				newexpr.append(to_string(grabValue->value));
+			cout << "variable:" << tempterm << endl;
+			if (checkforfunction(tempterm, Functions)) {
+				cout << "found function" << endl;
+				func_type * temp = getFunction(tempterm, Functions);
+				cout << temp->returnvalue << endl;
+
+				newexpr += to_string(temp->returnvalue);
 				newexpr += ' ';
-				grabValue = NULL;
+				temp = NULL;
+			}
+			else {
+				variable * grabValue = getvariable(tempterm, Variables);
+				if (grabValue == NULL)
+					cout << "error: " << tempterm << " is undefined at this point" << endl;
+				else {
+					// << to_string(grabValue->value) << endl;
+					newexpr.append(to_string(grabValue->value));
+					newexpr += ' ';
+					grabValue = NULL;
+				}
 			}
 		}
 
