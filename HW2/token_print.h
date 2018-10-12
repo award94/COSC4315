@@ -66,18 +66,30 @@ void print(string line) {
 				variable* temp;
 				//Printing all variables
 				printVariables(Variables);
-				
-
 				temp = getvariable(argument, Variables);
 				cout << "Temp value is: " << temp->value << endl;
 				finalOutput += temp->value;
-				// Testing
-				finalOutput += ' ';
-				// Delete 
+				finalOutput += ' '; 
 				temp = NULL;
 			}
+			// Checking if argument is a function
 			else{
-				cout << "Variable doesn't have a value" << endl;
+				if (checkifconst(argument)){
+					finalOutput.append(argument);
+					finalOutput += ' ';
+					argument.clear();
+				}
+				else{
+					cout << "Variable: " << argument << endl;
+					if (checkforfunction(argument, Functions)){
+					cout << "found function" << endl;
+					func_type * temp = getFunction(argument, Functions);
+					cout << temp->returnvalue << endl;
+
+					finalOutput += to_string(temp->returnvalue);
+					finalOutput += ' ';
+					}
+					}
 			}
 			// End of testing for variabe segment
 			// Add in arithmetic check and print will be functioning	
