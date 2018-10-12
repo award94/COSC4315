@@ -22,15 +22,15 @@ void print(string line) {
 	arg.append(line, parenthesis1+1, parenthesis2 - parenthesis1-1);
 	
 	do {
-		cout << "Inside the do statement, doing the dew" << endl;
+		//cout << "Inside the do statement, doing the dew" << endl;
 		// Remove whitespace
 		if (arg[i] == ' ') {
-			cout << "Whitespace removed" << endl;
+			//cout << "Whitespace removed" << endl;
 			i++;
 		}
 		// Takes care of constants
 		if (arg[i] == '"') {
-			cout << "First quote encountered " << endl;
+			//cout << "First quote encountered " << endl;
 			i++;
 			while (arg[i] != '"') {
 				cout << "Searching for second quote " << endl;
@@ -48,14 +48,14 @@ void print(string line) {
 		} 
 		// Starting the chheck to see if arg is a variable
 		if (arg[i] != ',') {
-			cout << "Searching for a comma " << endl;
+			//cout << "Searching for a comma " << endl;
 			argument += arg[i];
 			i++;
 		}	
 		// argument being read is a comma
 		if (arg[i] == ',' || i == arg.length()) {
-			cout << "Found a comma" << endl;
-			cout << "Argument is: " << argument << endl;
+			//cout << "Found a comma" << endl;
+			//cout << "Argument is: " << argument << endl;
 			// Check if arg is a variable
 
 			// Couldn't figure out how to check if it's a variable
