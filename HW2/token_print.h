@@ -22,7 +22,6 @@ void print(string line) {
 	arg.append(line, parenthesis1+1, parenthesis2 - parenthesis1-1);
 	
 	do {
-		//cout << "Inside the do statement, doing the dew" << endl;
 		// Remove whitespace
 		if (arg[i] == ' ') {
 			//cout << "Whitespace removed" << endl;
@@ -38,29 +37,158 @@ void print(string line) {
 				i++;
 			}
 			finalOutput += argument;
-			// If this works keep  otherwise delete
 			finalOutput += ' ';
-			// Delete to here
-
 			argument.clear();
 			// Need a second increment to skip over the comma
 			i++;
 		} 
-		// Starting the chheck to see if arg is a variable
+		// Starting the check to see if arg is a variable
 		if (arg[i] != ',') {
 			//cout << "Searching for a comma " << endl;
 			argument += arg[i];
 			i++;
 		}	
-		// argument being read is a comma
 		if (arg[i] == ',' || i == arg.length()) {
-			//cout << "Found a comma" << endl;
-			//cout << "Argument is: " << argument << endl;
-			// Check if arg is a variable
+		// Testing
+			//If constant append it to RHS
+	//If variable lookup value and append it to RHS
+	if (checkifconst(argument)) {
+		cout << "is a constant: " << argument <<";"<< endl;
+		finalOutput.append(argument);
+		finalOutput += ' ';
+		// Hope this works
+		i++;
+	}
+	else {
+		cout << "variable:" << argument <<endl;
+		if (checkforfunction(argument, Functions)) {
+			cout << "found function" << endl;
+			func_type * temp = getFunction(argument, Functions);
+			cout << temp->returnvalue << endl;
 
-			// Couldn't figure out how to check if it's a variable
-			// Could you take a look at this when you're bored?
-			if (checkforvariable(argument, Variables) == true)
+			finalOutput += to_string(temp->returnvalue);
+			finalOutput += ' ';
+
+			temp = NULL;
+		}
+		else {
+			for (int j = 3; j >= 0; j--){
+			//for (int j = scopelevel; j >= 0; j--) {
+				cout << "scope=" << j << endl;
+
+				if (checkforvariableinscope(argument, Variables, j)) {
+					cout << "found variable in this scope:" << j << endl;
+					variable * temp = getvariablescope(argument, Variables, j);
+					finalOutput += to_string(temp->value);
+					finalOutput += ' ';
+					temp = NULL;
+					break;
+				}
+				else
+					cout << "error: variable does not exist:" << argument << endl;
+			}
+		}
+	}
+
+	//RHS After first time is appended
+	//cout << "RHS=" << RHS << endl;
+	//cout << i << ' ' << line.length() << endl;
+
+	//Loops through rest of RHS
+	//Finds Opertator and appends to RHS
+	//Then finds Constant and appends to RHS
+	while (i < line.length()) {
+		argument = "";
+		//cout << line[i] << endl;
+
+		//cout << "inside loop" << endl;
+		while (line[i] == ' ') {
+			i++;
+		}
+		cout << line[i] << endl;
+
+		if (line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/') {
+			argument.append(line, i, 1);
+			i++;
+		}
+		//cout << i<<" tempterm=" << tempterm << 'a'<<endl;
+		//cout << tempterm.compare("-") << endl;
+
+		if ((argument.compare("+") == 0) || (argument.compare("-") == 0 ||
+			argument.compare("*") == 0) || (argument.compare("/") == 0)) {
+			cout << "operator=" << argument << endl;
+			finalOutput.append(argument);
+			finalOutput += ' ';
+		}
+
+		while (line[i] == ' ')
+			i++;
+
+		argument = "";
+
+		if (line[i] == '-') {
+			argument += line[i];
+			i++;
+		}
+
+		while (isalnum(line[i])) {
+			//cout << line[i] << endl;
+			argument.append(line, i, 1);
+			i++;
+		}
+
+		if ((i + 2) <= line.length()) {
+			//cout << "next 2:"<<line[i] << line[i + 1] << endl;
+			if (line[i] == '(' && line[i + 1] == ')') {
+				i += 2;
+			}
+		}
+
+		while (line[i] == ' ')
+			i++;
+
+		//cout << tempterm << endl;
+
+		if (checkifconst(argument)) {
+			cout << "is a constant:" << argument <<";"<< endl;
+			finalOutput.append(argument);
+			finalOutput += ' ';
+		}
+		else {
+			cout << "variable:" << argument << endl;
+			if (checkforfunction(argument, Functions)) {
+				cout << "found function" << endl;
+				func_type * temp = getFunction(argument, Functions);
+				cout << temp->returnvalue << endl;
+
+				finalOutput += to_string(temp->returnvalue);
+				finalOutput += ' ';
+
+				temp = NULL;
+			}
+			else {
+				for (int j = 3; j >= 0; j--) {
+				// for (int j = scopelevel; j >= 0; j--) {
+					cout << "scope=" << j << endl;
+
+					if (checkforvariableinscope(argument, Variables, j)) {
+						cout << "found variable in this scope:" << j << endl;
+						variable * temp = getvariablescope(argument, Variables, j);
+						finalOutput += to_string(temp->value);
+						finalOutput += ' ';
+						temp = NULL;
+						break;
+					}
+					else
+						cout << "error: variable does not exist:" << argument << endl;
+				}
+			}
+		}
+		// Testing
+
+		// argument being read is a comma
+		/*
+		if (checkforvariable(argument, Variables) == true)
 				{
 				cout << "Found is a variable " << endl;
 				variable* temp;
@@ -89,7 +217,7 @@ void print(string line) {
 					finalOutput += to_string(temp->returnvalue);
 					finalOutput += ' ';
 					}
-					}
+			}
 			}
 			// End of testing for variabe segment
 			// Add in arithmetic check and print will be functioning	
@@ -99,7 +227,9 @@ void print(string line) {
 			// Delete
 		argument.clear();
 		i++;
+		*/
 		}
+	} // Added in
 
 	} while (i < arg.length());
 
