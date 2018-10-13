@@ -7,10 +7,7 @@ void print(string line) {
 	// When the delimiter is reached, the strings are checked and appended to finalOutputt
 	string argument;
 	string finalOutput;
-	cout << "this is the line:"<<line << endl;
-
-	// try string streaming until you hit the comma
-	
+		
 	int i = 0;
 	int parenthesis1;
 	int parenthesis2;
@@ -32,7 +29,7 @@ void print(string line) {
 			//cout << "First quote encountered " << endl;
 			i++;
 			while (arg[i] != '"') {
-				cout << "Searching for second quote " << endl;
+				//cout << "Searching for second quote " << endl;
 				argument += arg[i];
 				i++;
 			}
@@ -49,14 +46,72 @@ void print(string line) {
 			i++;
 		}	
 		if (arg[i] == ',' || i == arg.length()) {
-		// Testing
+		// Seems like this block of code is repeated later
+		
+		// Testing for duplicate
+	while (i < arg.length()) {
+		//cout << line[i] << endl;
+
+		//cout << "inside loop" << endl;
+		
+		while (arg[i] == ' ') {
+			i++;
+		}
+		cout << "inside arithmetic check" << endl;
+		cout << arg[i] << endl;
+
+		if (arg[i] == '+' || arg[i] == '-' || arg[i] == '*' || arg[i] == '/') {
+			argument.append(arg, i, 1);
+			i++;
+		}
+		//cout << i<<" tempterm=" << tempterm << 'a'<<endl;
+		//cout << tempterm.compare("-") << endl;
+
+		if ((argument.compare("+") == 0) || (argument.compare("-") == 0 ||
+			argument.compare("*") == 0) || (argument.compare("/") == 0)) {
+			cout << "operator=" << argument << endl;
+			finalOutput.append(argument);
+			finalOutput += ' ';
+			// Testing
+			argument.clear();
+			i++;
+		}
+
+		while (arg[i] == ' ')
+			i++;
+
+		//argument = "";
+
+		if (arg[i] == '-') {
+			argument += arg[i];
+			i++;
+		}
+
+		while (isalnum(arg[i])) {
+			//cout << line[i] << endl;
+			argument.append(arg, i, 1);
+			i++;
+		}
+
+		if ((i + 2) <= arg.length()) {
+			//cout << "next 2:"<<line[i] << line[i + 1] << endl;
+			if (arg[i] == '(' && arg[i + 1] == ')') {
+				i += 2;
+			}
+		}
+
+		while (arg[i] == ' ')
+			i++;
+// End of insertion		
+
 			//If constant append it to RHS
-	//If variable lookup value and append it to RHS
+	// Changed the argument//If variable lookup value and append it to RHS
 	if (checkifconst(argument)) {
 		cout << "is a constant: " << argument <<";"<< endl;
 		finalOutput.append(argument);
 		finalOutput += ' ';
-		// Hope this works
+		//Testing
+		argument.clear();
 		i++;
 	}
 	else {
@@ -70,9 +125,11 @@ void print(string line) {
 			finalOutput += ' ';
 
 			temp = NULL;
+			// Testing
+			i++;
 		}
 		else {
-			for (int j = 3; j >= 0; j--){
+			for (int j = 2; j >= 0; j--){
 			//for (int j = scopelevel; j >= 0; j--) {
 				cout << "scope=" << j << endl;
 
@@ -82,6 +139,9 @@ void print(string line) {
 					finalOutput += to_string(temp->value);
 					finalOutput += ' ';
 					temp = NULL;
+					// Testing
+					i++;
+					argument.clear();
 					break;
 				}
 				else
@@ -89,6 +149,7 @@ void print(string line) {
 			}
 		}
 	}
+	
 
 	//RHS After first time is appended
 	//cout << "RHS=" << RHS << endl;
@@ -97,137 +158,14 @@ void print(string line) {
 	//Loops through rest of RHS
 	//Finds Opertator and appends to RHS
 	//Then finds Constant and appends to RHS
-	while (i < line.length()) {
-		argument = "";
-		//cout << line[i] << endl;
-
-		//cout << "inside loop" << endl;
-		while (line[i] == ' ') {
-			i++;
-		}
-		cout << line[i] << endl;
-
-		if (line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/') {
-			argument.append(line, i, 1);
-			i++;
-		}
-		//cout << i<<" tempterm=" << tempterm << 'a'<<endl;
-		//cout << tempterm.compare("-") << endl;
-
-		if ((argument.compare("+") == 0) || (argument.compare("-") == 0 ||
-			argument.compare("*") == 0) || (argument.compare("/") == 0)) {
-			cout << "operator=" << argument << endl;
-			finalOutput.append(argument);
-			finalOutput += ' ';
-		}
-
-		while (line[i] == ' ')
-			i++;
-
-		argument = "";
-
-		if (line[i] == '-') {
-			argument += line[i];
-			i++;
-		}
-
-		while (isalnum(line[i])) {
-			//cout << line[i] << endl;
-			argument.append(line, i, 1);
-			i++;
-		}
-
-		if ((i + 2) <= line.length()) {
-			//cout << "next 2:"<<line[i] << line[i + 1] << endl;
-			if (line[i] == '(' && line[i + 1] == ')') {
-				i += 2;
-			}
-		}
-
-		while (line[i] == ' ')
-			i++;
-
-		//cout << tempterm << endl;
-
-		if (checkifconst(argument)) {
-			cout << "is a constant:" << argument <<";"<< endl;
-			finalOutput.append(argument);
-			finalOutput += ' ';
-		}
-		else {
-			cout << "variable:" << argument << endl;
-			if (checkforfunction(argument, Functions)) {
-				cout << "found function" << endl;
-				func_type * temp = getFunction(argument, Functions);
-				cout << temp->returnvalue << endl;
-
-				finalOutput += to_string(temp->returnvalue);
-				finalOutput += ' ';
-
-				temp = NULL;
-			}
-			else {
-				for (int j = 3; j >= 0; j--) {
-				// for (int j = scopelevel; j >= 0; j--) {
-					cout << "scope=" << j << endl;
-
-					if (checkforvariableinscope(argument, Variables, j)) {
-						cout << "found variable in this scope:" << j << endl;
-						variable * temp = getvariablescope(argument, Variables, j);
-						finalOutput += to_string(temp->value);
-						finalOutput += ' ';
-						temp = NULL;
-						break;
-					}
-					else
-						cout << "error: variable does not exist:" << argument << endl;
-				}
-			}
-		}
-		// Testing
-
-		// argument being read is a comma
-		/*
-		if (checkforvariable(argument, Variables) == true)
-				{
-				cout << "Found is a variable " << endl;
-				variable* temp;
-				//Printing all variables
-				printVariables(Variables);
-				temp = getvariable(argument, Variables);
-				cout << "Temp value is: " << temp->value << endl;
-				finalOutput += temp->value;
-				finalOutput += ' '; 
-				temp = NULL;
-			}
-			// Checking if argument is a function
-			else{
-				if (checkifconst(argument)){
-					finalOutput.append(argument);
-					finalOutput += ' ';
-					argument.clear();
-				}
-				else{
-					cout << "Variable: " << argument << endl;
-					if (checkforfunction(argument, Functions)){
-					cout << "found function" << endl;
-					func_type * temp = getFunction(argument, Functions);
-					cout << temp->returnvalue << endl;
-
-					finalOutput += to_string(temp->returnvalue);
-					finalOutput += ' ';
-					}
-			}
-			}
-			// End of testing for variabe segment
-			// Add in arithmetic check and print will be functioning	
+				
 		finalOutput += argument;
 			// Delete 
 		finalOutput += ' ';
 			// Delete
 		argument.clear();
 		i++;
-		*/
+		
 		}
 	} // Added in
 
