@@ -3,14 +3,14 @@ using namespace std;
 float setreturnvalue(string line, string funcName, int funcscope);
 
 void setreturn(string line, int & lineNum, int lastline, int scopelevel, string funcname) {
-	cout << "inside setreturn" << endl;
-	cout << line << endl;
-	cout << "lineNum=" << lineNum << endl;
-	cout << "lastline=" << lastline << endl;
-	cout << "scopelevel=" << scopelevel << endl;
-	cout << "funcname=" << funcname << endl;
+	//cout << "inside setreturn" << endl;
+	//cout << line << endl;
+	//cout << "lineNum=" << lineNum << endl;
+	//cout << "lastline=" << lastline << endl;
+	//cout << "scopelevel=" << scopelevel << endl;
+	//cout << "funcname=" << funcname << endl;
 
-	printVariables(Variables);
+	//printVariables(Variables);
 
 	createNewVar(funcname, Variables, scopelevel-1);
 
@@ -23,10 +23,10 @@ void setreturn(string line, int & lineNum, int lastline, int scopelevel, string 
 }
 
 float setreturnvalue(string line, string funcName, int funcscope) {
-	cout << "inside setreturnvalue" << endl;
-	cout << "line:" << line << endl;
-	cout << "funcName:" << funcName << endl;
-	cout << "scope=" << funcscope << endl;
+	//cout << "inside setreturnvalue" << endl;
+	//cout << "line:" << line << endl;
+	//cout << "funcName:" << funcName << endl;
+	//cout << "scope=" << funcscope << endl;
 
 	string alreadypassed;
 	string RHS;
@@ -72,13 +72,13 @@ float setreturnvalue(string line, string funcName, int funcscope) {
 		RHS += ' ';
 	}
 	else {
-		cout << "not a constant value" << endl;
+		//cout << "not a constant value" << endl;
 		for (int j = funcscope; j >= 0; j--){
-			cout << "scope=" << j << endl;
+			//cout << "scope=" << j << endl;
 			if (checkforvariableinscope(tempTerm, Variables, j)) {
-				cout << "found variable in this scope:" << j<< endl;
+				//cout << "found variable in this scope:" << j<< endl;
 				variable * temp = getvariablescope(tempTerm, Variables, j);
-				cout << "value=" << temp->value << endl;
+				//cout << "value=" << temp->value << endl;
 				RHS += to_string(temp->value);
 				RHS += ' ';
 				temp = NULL;
@@ -138,11 +138,11 @@ float setreturnvalue(string line, string funcName, int funcscope) {
 		}
 		else {
 			for (int j = funcscope; j >= 0; j--) {
-				cout << "scope=" << j << endl;
+				//cout << "scope=" << j << endl;
 				if (checkforvariableinscope(tempTerm, Variables, j)) {
-					cout << "found variable in this scope:" << j << endl;
+					//cout << "found variable in this scope:" << j << endl;
 					variable * temp = getvariablescope(tempTerm, Variables, j);
-					cout << "value=" << temp->value << endl;
+					//cout << "value=" << temp->value << endl;
 					RHS += to_string(temp->value);
 					RHS += ' ';
 					temp = NULL;

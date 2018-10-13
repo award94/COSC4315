@@ -9,20 +9,20 @@ string parseexpr(string line);
 
 void ifelse(string ifline, int & iflineNum, int funclastline, 
 	int prevscope, string scopename) {
-	cout << endl<<"============IF ELSE SCOPE BEGIN==========" << endl;
+	//cout << endl<<"============IF ELSE SCOPE BEGIN==========" << endl;
 	
 
 	int currentscope = prevscope;
-	cout << "scopelevel=" << currentscope << endl;
-	cout << "scopename=" << scopename << endl;
+	//cout << "scopelevel=" << currentscope << endl;
+	//cout << "scopename=" << scopename << endl;
 
 	int elseline = -1;
 	int lastline = findlastlineifelse(iflineNum, elseline, currentscope+1);
 	
-	cout << "if start line Num=" << iflineNum << endl;
-	cout << "else start line=" << elseline << endl;
-	cout << "if/else last line=" << lastline << endl;
-	cout << "function last line=" << funclastline << endl;
+	//cout << "if start line Num=" << iflineNum << endl;
+	//cout << "else start line=" << elseline << endl;
+	//cout << "if/else last line=" << lastline << endl;
+	//cout << "function last line=" << funclastline << endl;
 	
 	
 
@@ -30,66 +30,66 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 	string firstWord;
 
 	string arg = getarg(ifline);
-	cout << "arg=" << arg << endl;
+	//cout << "arg=" << arg << endl;
 	bool iftruth = evaluatearg(arg);
-	cout << "iftruth=" << iftruth << endl;
+	//cout << "iftruth=" << iftruth << endl;
 
 	if (iftruth == 1) {
 		if (elseline == -1) {
-			cout << "start1" << endl;
+			//cout << "start1" << endl;
 			int i = iflineNum + 1;
 			for (; i <= lastline; i++) {
-				cout << "i=" << i <<endl;
+				//cout << "i=" << i <<endl;
 				string currentLine = fileLines[i];
 				processstatement(i, currentLine, funclastline, currentscope, scopename);
 			}
 			iflineNum = i;
-			cout << "iflineNum=" << iflineNum << endl;
-			cout << "done1" << endl;
+			//cout << "iflineNum=" << iflineNum << endl;
+			//cout << "done1" << endl;
 		}
 		else {
 			int i = iflineNum + 1;
-			cout << "start2" << endl;
+			//cout << "start2" << endl;
 			for (; i < elseline; i++) {
-				cout << "i=" << i << endl;
+				//cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
 				processstatement(i, currentLine, funclastline, currentscope, scopename);
 			}
 			iflineNum = i;
-			cout << "iflineNum=" << iflineNum << endl;
-			cout << "done2" << endl;
+			//cout << "iflineNum=" << iflineNum << endl;
+			//cout << "done2" << endl;
 		}
 	}
 	else {
 		if (elseline == -1) {
-			cout << "start3" << endl;
+			//cout << "start3" << endl;
 			iflineNum = lastline;
-			cout << "done3" << endl;
+			//cout << "done3" << endl;
 		}
 		else {
 			int i = elseline;
-			cout << "start4" << endl;
+			//cout << "start4" << endl;
 			for (; i <= lastline; i++) {
-				cout << "i=" << i << endl;
+				//cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
 				processstatement(i, currentLine, funclastline, currentscope, scopename);
 			}
 			iflineNum = i;
 			
-			cout << "done4" << endl;
+			//cout << "done4" << endl;
 		}
 	}
 
 	iflineNum = lastline;
-	cout << "lineNum=" << iflineNum << endl;
-	cout << "============IF ELSE SCOPE END==========" << endl;
+	//cout << "lineNum=" << iflineNum << endl;
+	//cout << "============IF ELSE SCOPE END==========" << endl;
 	
 }
 
 int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
-	cout << "findlastline" << endl;
-	cout << "currentscope=" << currentscope << endl;
-	cout << "filesize=" << fileLines.size() << endl;
+	//cout << "findlastline" << endl;
+	//cout << "currentscope=" << currentscope << endl;
+	//cout << "filesize=" << fileLines.size() << endl;
 	int i = startLineNum+1;
 	for(; i < fileLines.size(); i++){
 		string currentLine = fileLines[i];
@@ -105,15 +105,15 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 		}
 
 		if (!fileLines[i].empty() && (commentCheck[0] != '#')) {
-			cout << currentLine << endl;
-			cout << "i=" << i << endl;
+			//cout << currentLine << endl;
+			//cout << "i=" << i << endl;
 
 			bool checkscope = 1;
 			for (int j = 0; j < 3 * currentscope; j++) {
 				if (currentLine[j] != ' ')
 					checkscope = 0;
 			}
-			cout << "checkscope=" << checkscope << endl;
+			//cout << "checkscope=" << checkscope << endl;
 			if (checkscope == 0) {
 				int j = 0;
 				while (currentLine[j] == ' ')
@@ -124,28 +124,28 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 				while (currentLine[j] != ' ' && j < currentLine.length())
 					nextvar += currentLine[j++];
 
-				cout << "nextvar=" << nextvar << ';' << endl;
+				//cout << "nextvar=" << nextvar << ';' << endl;
 
 				if (nextvar.compare("else:") == 0) {
-					cout << "found an else" << endl;
+					//cout << "found an else" << endl;
 					elseline = i;
 				}
 				else {
-					cout << "returning" << endl;
+					//cout << "returning" << endl;
 					return i - 1;
 				}
 			}
 		}
-		cout << "here" << endl;
+		//cout << "here" << endl;
 	}
-	cout << "there" << endl;
-	cout << i-1 << endl;
+	//cout << "there" << endl;
+	//cout << i-1 << endl;
 	return i-1;
 }
 
 //returns string of argument
 string getarg(string ifline) {
-	cout << "inside getarg" << endl;
+	//cout << "inside getarg" << endl;
 	string arg;
 	int i = 0;
 
@@ -173,8 +173,8 @@ string getarg(string ifline) {
 }
 
 string parseexpr(string line) {
-	cout << "inside parseexpr" << endl;
-	cout << "line=" << line << endl;
+	//cout << "inside parseexpr" << endl;
+	//cout << "line=" << line << endl;
 	string newexpr;
 
 	string tempterm;
@@ -194,7 +194,7 @@ string parseexpr(string line) {
 		i++;
 	}
 
-	cout << "tempterm=" << tempterm << endl;
+	//cout << "tempterm=" << tempterm << endl;
 	if ((i + 2) <= line.length()) {
 		//cout << "next 2:" << line[i] << line[i + 1] << endl;
 		if (line[i] == '(' && line[i + 1] == ')') {
@@ -202,22 +202,30 @@ string parseexpr(string line) {
 		}
 	}
 
-	cout << "tempterm=" << tempterm << endl;
+	//cout << "tempterm=" << tempterm << endl;
 
 	if (checkifconst(tempterm)) {
-		cout << "is a constant: " << tempterm << ";" << endl;
+		//cout << "is a constant: " << tempterm << ";" << endl;
 		newexpr.append(tempterm);
 		newexpr += ' ';
 	}
 	else {
-		cout << "variable:" << tempterm << endl;
+		//cout << "variable:" << tempterm << endl;
 		if (checkforfunction(tempterm, Functions)) {
-			cout << "found function" << endl;
+			//cout << "found function" << endl;
 			func_type * temp = getFunction(tempterm, Functions);
-			cout << temp->returnvalue << endl;
+
+			temp->execute();
+
+			if (temp->doesreturn) {
+			//cout << temp->returnvalue << endl;
 
 			newexpr += to_string(temp->returnvalue);
 			newexpr += ' ';
+			}
+			else {
+				cout << "ERROR: Function does not return a value" << endl;
+			}
 			temp = NULL;
 		}
 		else {
@@ -248,7 +256,7 @@ string parseexpr(string line) {
 			i++;
 		}
 		else {
-			cout << "operator missing" << endl;
+			//cout << "operator missing" << endl;
 		}
 		//cout << i << " tempterm=" << tempterm << 'a' << endl;
 		//cout << tempterm.compare("-") << endl;
@@ -294,14 +302,23 @@ string parseexpr(string line) {
 			newexpr += ' ';
 		}
 		else {
-			cout << "variable:" << tempterm << endl;
+			//cout << "variable:" << tempterm << endl;
 			if (checkforfunction(tempterm, Functions)) {
-				cout << "found function" << endl;
+				//cout << "found function" << endl;
 				func_type * temp = getFunction(tempterm, Functions);
-				cout << temp->returnvalue << endl;
 
-				newexpr += to_string(temp->returnvalue);
-				newexpr += ' ';
+				temp->execute();
+
+				if (temp->doesreturn) {
+					//cout << temp->returnvalue << endl;
+
+					newexpr += to_string(temp->returnvalue);
+					newexpr += ' ';
+				}
+				else {
+					cout << "ERROR: Function does not return a value" << endl;
+				}
+
 				temp = NULL;
 			}
 			else {
@@ -354,14 +371,14 @@ bool evaluatearg(string arg) {
 
 	postfixconverter converter;
 
-	cout << "rawexpr1=" << rawexpr1 << endl;
-	cout << "rawexpr2=" << rawexpr2 << endl;
+	//cout << "rawexpr1=" << rawexpr1 << endl;
+	//cout << "rawexpr2=" << rawexpr2 << endl;
 
 	string expr1 = parseexpr(rawexpr1);
 	string expr2 = parseexpr(rawexpr2);
 
-	cout << "expr1=" << expr1 << endl;
-	cout << "expr2=" << expr2 << endl;
+	//cout << "expr1=" << expr1 << endl;
+	//cout << "expr2=" << expr2 << endl;
 
 	expr1 = converter.convertToPostfix(expr1);
 	expr2 = converter.convertToPostfix(expr2);
@@ -369,11 +386,11 @@ bool evaluatearg(string arg) {
 	float term1f = computeresult(expr1);
 	float term2f = computeresult(expr2);
 
-	cout << "expr1=" << expr1 << endl;
-	cout << "term1=" << term1f << endl;
-	cout << "expr2=" << expr2 << endl;
-	cout << "term2=" << term2f << endl;
-	cout << "compoper=" << compoper << endl;
+	//cout << "expr1=" << expr1 << endl;
+	//cout << "term1=" << term1f << endl;
+	//cout << "expr2=" << expr2 << endl;
+	//cout << "term2=" << term2f << endl;
+	//cout << "compoper=" << compoper << endl;
 	
 	if (compoper.compare("==") == 0) {
 		//cout << "is equal to" << endl;

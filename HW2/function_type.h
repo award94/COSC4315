@@ -26,10 +26,10 @@ class func_type{
 };
 
 void func_type::execute() {
-	cout << "inside execute()" << endl;
-	cout << "startline=" << startline << endl;
-	cout << "returnline=" << returnline << endl;
-	cout << "endline=" << endline << endl;
+	//cout << "inside execute()" << endl;
+	//cout << "startline=" << startline << endl;
+	//cout << "returnline=" << returnline << endl;
+	//cout << "endline=" << endline << endl;
 
 	int i = startline + 1;
 	string currentLine;
@@ -37,7 +37,7 @@ void func_type::execute() {
 	if (returnline != -1) {
 		for (; i < returnline; i++) {
 			currentLine = fileLines[i];
-			cout << currentLine << endl;
+			//cout << currentLine << endl;
 			
 			if (!currentLine.empty()) {
 				bool lineinscope = 1;
@@ -45,14 +45,14 @@ void func_type::execute() {
 					if (currentLine[j] != ' ')
 						lineinscope = 0;
 				}
-				cout << "lineinscope=" << lineinscope << endl;
+				//cout << "lineinscope=" << lineinscope << endl;
 				if (currentLine[(scope * 3)] == ' ') {
 					//cout << "funcscope=" << funcscope << endl;
 					//cout << currentLine[(funcscope * 3)] << endl;
 					lineinscope = 0;
 				}
 				//cout << "lineinscope=" << lineinscope << endl;
-				cout << "isthisline in scope=" << lineinscope << endl;
+				//cout << "isthisline in scope=" << lineinscope << endl;
 				if (lineinscope)
 					processstatement(i, currentLine, endline, scope, name);
 			}
@@ -62,7 +62,7 @@ void func_type::execute() {
 	else {
 		for (; i < endline; i++) {
 			currentLine = fileLines[i];
-			cout << currentLine << endl;
+			//cout << currentLine << endl;
 
 			if (!currentLine.empty()) {
 				bool lineinscope = 1;
@@ -70,14 +70,14 @@ void func_type::execute() {
 					if (currentLine[j] != ' ')
 						lineinscope = 0;
 				}
-				cout << "lineinscope=" << lineinscope << endl;
+				//cout << "lineinscope=" << lineinscope << endl;
 				if (currentLine[(scope * 3)] == ' ') {
 					//cout << "funcscope=" << funcscope << endl;
 					//cout << currentLine[(funcscope * 3)] << endl;
 					lineinscope = 0;
 				}
 				//cout << "lineinscope=" << lineinscope << endl;
-				cout << "isthisline in scope=" << lineinscope << endl;
+				//cout << "isthisline in scope=" << lineinscope << endl;
 				if (lineinscope)
 					processstatement(i, currentLine, endline, scope, name);
 			}
@@ -109,11 +109,11 @@ void func_type::checkreturn() {
 }
 
 void func_type::setreturn() {
-	cout << "inside setreturn()" << endl;
-	cout << "returnline=" << returnline << endl;
+	//cout << "inside setreturn()" << endl;
+	//cout << "returnline=" << returnline << endl;
 
 	for (int i = startline; i < returnline; i++) {
-		cout << fileLines[i] << endl;
+		//cout << fileLines[i] << endl;
 		string currentLine = fileLines[i];
 
 		if (!currentLine.empty()) {
@@ -122,20 +122,31 @@ void func_type::setreturn() {
 				if (currentLine[j] != ' ')
 					lineinscope = 0;
 			}
-			cout << "lineinscope=" << lineinscope << endl;
+			//cout << "lineinscope=" << lineinscope << endl;
 			if (currentLine[(scope * 3)] == ' ') {
 				//cout << "funcscope=" << funcscope << endl;
 				//cout << currentLine[(funcscope * 3)] << endl;
 				lineinscope = 0;
 			}
 			//cout << "lineinscope=" << lineinscope << endl;
-			cout << "isthisline in scope=" << lineinscope << endl;
-			if (lineinscope)
-				processstatement(i, currentLine, endline, scope, name);
+			//cout << "isthisline in scope=" << lineinscope << endl;
+			if (lineinscope) {
+				string nextvar;
+				int k = 0;
+				while (currentLine[k] == ' ') {
+					k++;
+				}
+				while (isalnum(currentLine[k])) {
+					nextvar += currentLine[k];
+					k++;
+				}
+				if(!(nextvar.compare("print") == 0))
+					processstatement(i, currentLine, endline, scope, name);
+			}
 		}
 	}
 
-	cout << "computing return value now" << endl;
+	//cout << "computing return value now" << endl;
 
 	string alreadypassed;
 	string RHS;
@@ -183,13 +194,13 @@ void func_type::setreturn() {
 		RHS += ' ';
 	}
 	else {
-		cout << "not a constant value" << endl;
+		//cout << "not a constant value" << endl;
 		for (int j = scope; j >= 0; j--) {
-			cout << "scope=" << j << endl;
+			//cout << "scope=" << j << endl;
 			if (checkforvariableinscope(tempTerm, Variables, j)) {
-				cout << "found variable in this scope:" << j << endl;
+				//cout << "found variable in this scope:" << j << endl;
 				variable * temp = getvariablescope(tempTerm, Variables, j);
-				cout << "value=" << temp->value << endl;
+				//cout << "value=" << temp->value << endl;
 				RHS += to_string(temp->value);
 				RHS += ' ';
 				temp = NULL;
@@ -251,9 +262,9 @@ void func_type::setreturn() {
 			for (int j = scope; j >= 0; j--) {
 				//cout << "scope=" << j << endl;
 				if (checkforvariableinscope(tempTerm, Variables, j)) {
-					cout << "found variable in this scope:" << j << endl;
+					//cout << "found variable in this scope:" << j << endl;
 					variable * temp = getvariablescope(tempTerm, Variables, j);
-					cout << "value=" << temp->value << endl;
+					//cout << "value=" << temp->value << endl;
 					RHS += to_string(temp->value);
 					RHS += ' ';
 					temp = NULL;
@@ -283,11 +294,11 @@ void func_type::setreturn() {
 }
 
 void func_type::getreturn() {
-	cout << "inside getreturn()" << endl;
+	//cout << "inside getreturn()" << endl;
 }
 
 void func_type::findfuncname() {
-	cout << "inside findfuncname()" << endl;
+	//cout << "inside findfuncname()" << endl;
 
 	int i = 0;
 
@@ -305,15 +316,15 @@ void func_type::findfuncname() {
 		i++;
 	}
 
-	cout << "name=" << name << endl;
+	//cout << "name=" << name << endl;
 }
 
 int func_type::findlastline() {
-	cout << "inside findlastline()" << endl;
+	//cout << "inside findlastline()" << endl;
 
 	
-	cout << "findlastline" << endl;
-	cout << startline << endl;
+	//cout << "findlastline" << endl;
+	//cout << startline << endl;
 	//cout << "filesize=" << fileLines.size() << endl;
 
 	int i = startline;
@@ -358,7 +369,7 @@ func_type::func_type() {
 }
 
 void printFunctions(list<func_type*> & Functions) {
-	cout << "All functions in system" << endl;
+	//cout << "All functions in system" << endl;
 
 	func_type * temp = NULL;
 	for (list<func_type*>::iterator it = Functions.begin();
@@ -369,11 +380,11 @@ void printFunctions(list<func_type*> & Functions) {
 }
 
 bool checkforfunction(string name, list<func_type*> & Functions) {
-	cout << "inside checkforFunction()" << endl;
-	cout << name << endl;
+	//cout << "inside checkforFunction()" << endl;
+	//cout << name << endl;
 	for (list<func_type*>::iterator it = Functions.begin();
 		it != Functions.end(); it++) {
-		cout << (*it)->name << endl;
+		//cout << (*it)->name << endl;
 		if ((*it)->name.compare(name) == 0) {
 			return true;
 		}
@@ -382,14 +393,14 @@ bool checkforfunction(string name, list<func_type*> & Functions) {
 }
 
 func_type * getFunction(string name, list<func_type*> & Functions) {
-	cout << "inside getFunction" << endl;
-	cout << "funcname=" << name << endl;
+	//cout << "inside getFunction" << endl;
+	//cout << "funcname=" << name << endl;
 
 	func_type * temp = NULL;
 	for (list<func_type*>::iterator it = Functions.begin();
 		it != Functions.end(); it++) {
 		if ((*it)->name == name) {
-			cout << "found the function" << endl;
+			//cout << "found the function" << endl;
 			temp = (*it);
 			return temp;
 		}

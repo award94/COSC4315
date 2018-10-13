@@ -5,23 +5,23 @@ int findlastlinefunc(int startLineNum, int funcscope);
 
 
 void createNewFunc(string line, int & lineNum, int scopelevel){
-	cout << endl << "==========FUNCTION SCOPE BEGIN============" << endl;
+	//cout << endl << "==========FUNCTION SCOPE BEGIN============" << endl;
 
 	func_type * newFunc = new func_type();
 	newFunc->defline = line;
-	cout << "defline=" << newFunc->defline << endl;
+	//cout << "defline=" << newFunc->defline << endl;
 	newFunc->scope = scopelevel + 1;
 	newFunc->findfuncname();
 	newFunc->startline = lineNum;
-	cout << "startline=" << newFunc->startline	<< endl;
+	//cout << "startline=" << newFunc->startline	<< endl;
 	newFunc->findlastline();
-	cout << "endline=" << newFunc->endline << endl;
+	//cout << "endline=" << newFunc->endline << endl;
 
 	newFunc->checkreturn();
-	cout << "doesreturn=" << newFunc->doesreturn << endl;
+	//cout << "doesreturn=" << newFunc->doesreturn << endl;
 	if (newFunc->doesreturn) {
 		newFunc->setreturn();
-		cout << "returnvalue=" << newFunc->returnvalue << endl;
+		//cout << "returnvalue=" << newFunc->returnvalue << endl;
 	}
 	
 	lineNum = newFunc->endline;
@@ -29,7 +29,7 @@ void createNewFunc(string line, int & lineNum, int scopelevel){
 	Functions.push_back(newFunc);
 	newFunc = NULL;
 
-	cout << "==========FUNCTION SCOPE END============" << endl;
+	//cout << "==========FUNCTION SCOPE END============" << endl;
 
 	/*
 	

@@ -91,7 +91,7 @@ void createNewVar(string nextVar, list<variable*> & Variables, int scopelevel) {
 }
 
 void printVariables(list<variable*> & Variables) {
-	cout << "All Variables in system" << endl;
+	//cout << "All Variables in system" << endl;
 
 	for (list<variable*>::iterator it = Variables.begin(); it != Variables.end(); it++)
 		cout << "name=" << (*it)->name << " value=" << (*it)->value
@@ -99,7 +99,7 @@ void printVariables(list<variable*> & Variables) {
 }
 
 void deleteVariables(list<variable*> & Variables) {
-	cout << "inside deleteVariables" << endl;
+	//cout << "inside deleteVariables" << endl;
 
 	variable * temp = NULL;
 	while (Variables.size() != 0) {
@@ -110,7 +110,7 @@ void deleteVariables(list<variable*> & Variables) {
 }
 
 void deleteScope(list<variable*> & Variables, int scopelevel) {
-	cout << "inside deleteScope" << endl;
+	//cout << "inside deleteScope" << endl;
 
 	for (list<variable*>::iterator it = Variables.begin(); it != Variables.end();) {
 		if ((*it)->scope == scopelevel) {

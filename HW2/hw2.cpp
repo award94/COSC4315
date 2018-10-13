@@ -34,7 +34,7 @@ using namespace std;
 
 
 int main(int argc, char* argv[]){
-	cout<< "Homework 2"<<endl;
+	//cout<< "Homework 2"<<endl;
 
 	string line;
 	
@@ -45,19 +45,19 @@ int main(int argc, char* argv[]){
 		fileLines.push_back(line);
 	}
 
-	cout << "Size of File=" << fileLines.size() << endl;
+	//cout << "Size of File=" << fileLines.size() << endl;
 	int lastLine = fileLines.size() - 1;
-	cout << "lastLine = " << lastLine << endl;
+	//cout << "lastLine = " << lastLine << endl;
 
 	for (int lineNum = 0; lineNum < fileLines.size(); lineNum++) {
-		cout << "==================MAIN SCOPE BEGIN=====================" << endl;
+		//cout << "==================MAIN SCOPE BEGIN=====================" << endl;
 		processstatement(lineNum, fileLines[lineNum], lastLine, 0, "main");
-		cout << "lineNum after = " << lineNum << endl;
-		cout << "==================MAIN SCOPE END=====================" << endl;
+		//cout << "lineNum after = " << lineNum << endl;
+		//cout << "==================MAIN SCOPE END=====================" << endl;
 	}
 
-	printFunctions(Functions);
-	printVariables(Variables);
+	//printFunctions(Functions);
+	//printVariables(Variables);
 	deleteVariables(Variables);
 	
 	return 0;	
@@ -65,10 +65,10 @@ int main(int argc, char* argv[]){
 
 void processstatement(int & lineNum, string line, int lastLine, 
 	int scopelevel, string scopename) {
-	cout << "inside processstatement: " << line<< " ("<<lineNum<< ")"<<endl;
-	cout << "lineNum = " << lineNum << endl;
-	cout << fileLines[lineNum] << endl;
-	cout << "scopename=" << scopename << endl;
+	//cout << "inside processstatement: " << line<< " ("<<lineNum<< ")"<<endl;
+	//cout << "lineNum = " << lineNum << endl;
+	//cout << fileLines[lineNum] << endl;
+	//cout << "scopename=" << scopename << endl;
 
 	int i = 0;							//char index of the statement
 	string nextVar;
@@ -83,7 +83,7 @@ void processstatement(int & lineNum, string line, int lastLine,
 
 	if (!line.empty() && !(nextVar[0] == '#')) {
 		
-		cout << "nextVar = " << nextVar << endl;
+		//cout << "nextVar = " << nextVar << endl;
 
 		if (nextVar.compare("def") == 0) {
 			//cout << "Function definition" << endl;
@@ -91,7 +91,7 @@ void processstatement(int & lineNum, string line, int lastLine,
 		}
 		else if (nextVar.compare("print") == 0) {
 			//cout << "Print statement" << endl;
-			print(line);
+			print(line, scopelevel);
 		}
 		else if (nextVar.compare("if") == 0) {
 			//cout << "If/Else statement" << endl;
@@ -101,13 +101,13 @@ void processstatement(int & lineNum, string line, int lastLine,
 			cout << "ERROR: No if for this else" << endl;
 		}
 		else if (nextVar.compare("return") == 0) {
-			cout << "return found" << endl;
+			//cout << "return found" << endl;
 			setreturn(line, lineNum, lastLine, scopelevel, scopename);
 		}
 		else if (line[i] == '(' && line[i + 1] == ')') {
-			cout << "function found" << endl;
+			//cout << "function found" << endl;
 			func_type * temp = getFunction(nextVar, Functions);
-			cout << "temp=" << temp->name << endl;
+			//cout << "temp=" << temp->name << endl;
 
 			temp->execute();
 				
@@ -118,9 +118,9 @@ void processstatement(int & lineNum, string line, int lastLine,
 		}
 	}
 	else {
-		cout << "Line empty or comment" << endl;
+		//cout << "Line empty or comment" << endl;
 	}
-	cout << endl;
+	//cout << endl;
 }
 
 //IDENTIFY WHAT KIND OF STATEMENT THIS IS

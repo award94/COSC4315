@@ -4,21 +4,21 @@ void convertToConstants(string & line, string & RHS,
 	string & LHS, int scopelevel);
 
 void assignment(string line, int scopelevel, string scopename) {
-	cout <<endl<< "==========ASSIGNMENT SCOPE BEGIN============" << endl;
+	//cout <<endl<< "==========ASSIGNMENT SCOPE BEGIN============" << endl;
 	//cout << "scope = " << scopelevel << endl;
-	printVariables(Variables);
+	//printVariables(Variables);
 	string RHS;
 	string LHS;
 	string pfxRHS;
 
 	//converts RHS to a series of constants
 	convertToConstants(line, RHS, LHS, scopelevel);
-	cout << "convertToConstants done" << endl;
+	//cout << "convertToConstants done" << endl;
 	//converts RHS to postfix notation
 	postfixconverter converter;
-	cout << "RHS:" << RHS << endl;
+	//cout << "RHS:" << RHS << endl;
 	pfxRHS = converter.convertToPostfix(RHS);
-	cout << "postfixconversion done" << endl;
+	//cout << "postfixconversion done" << endl;
 
 	//computes result
 	float result = computeresult(pfxRHS);
@@ -26,9 +26,9 @@ void assignment(string line, int scopelevel, string scopename) {
 	//assigns result to LHS Variable
 	variable * lhsvar = getvariablescope(LHS, Variables, scopelevel);
 	lhsvar->value = result;
-	cout << lhsvar->name << '=' << lhsvar->value << endl;
+	//cout << lhsvar->name << '=' << lhsvar->value << endl;
 	lhsvar = NULL;
-	cout << "==========ASSIGNMENT SCOPE END============" << endl;
+	//cout << "==========ASSIGNMENT SCOPE END============" << endl;
 }
 
 void convertToConstants(string & line, string & RHS,
@@ -49,12 +49,14 @@ void convertToConstants(string & line, string & RHS,
 	//Check if LHS Var has been declared yet
 	//If not, declare it
 	if (!checkforvariableinscope(LHS, Variables, scopelevel)) {
-		cout << "creating new variables in scope" << scopelevel << endl;
+		//cout << "creating new variables in scope" << scopelevel << endl;
 		createNewVar(LHS, Variables, scopelevel);
-		printVariables(Variables);
+		//printVariables(Variables);
 	}
-	else
-		cout << "found new variable in scope" << scopelevel << endl;
+	else {
+		string nothing = "nothing";
+		//cout << "found new variable in scope" << scopelevel << endl;
+	}
 	//cout << "LHS Found or declared" << endl;
 
 	//Skipping whitespaces
@@ -103,23 +105,31 @@ void convertToConstants(string & line, string & RHS,
 		RHS += ' ';
 	}
 	else {
-		cout << "variable:" << tempterm<<endl;
+		//cout << "variable:" << tempterm<<endl;
 		if (checkforfunction(tempterm, Functions)) {
-			cout << "found function" << endl;
+			//cout << "found function" << endl;
 			func_type * temp = getFunction(tempterm, Functions);
-			cout << temp->returnvalue << endl;
 
-			RHS += to_string(temp->returnvalue);
-			RHS += ' ';
+			temp->execute();
+
+			if (temp->doesreturn) {
+				//cout << temp->returnvalue << endl;
+
+				RHS += to_string(temp->returnvalue);
+				RHS += ' ';
+			}
+			else {
+				cout << "ERROR: Function does not return a value" << endl;
+			}
 
 			temp = NULL;
 		}
 		else {
 			for (int j = scopelevel; j >= 0; j--) {
-				cout << "scope=" << j << endl;
+				//cout << "scope=" << j << endl;
 
 				if (checkforvariableinscope(tempterm, Variables, j)) {
-					cout << "found variable in this scope:" << j << endl;
+					//cout << "found variable in this scope:" << j << endl;
 					variable * temp = getvariablescope(tempterm, Variables, j);
 					RHS += to_string(temp->value);
 					RHS += ' ';
@@ -147,7 +157,7 @@ void convertToConstants(string & line, string & RHS,
 		while (line[i] == ' ') {
 			i++;
 		}
-		cout << line[i] << endl;
+		//cout << line[i] << endl;
 
 		if (line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/') {
 			tempterm.append(line, i, 1);
@@ -197,23 +207,29 @@ void convertToConstants(string & line, string & RHS,
 			RHS += ' ';
 		}
 		else {
-			cout << "variable:" << tempterm << endl;
+			//cout << "variable:" << tempterm << endl;
 			if (checkforfunction(tempterm, Functions)) {
-				cout << "found function" << endl;
+				//cout << "found function" << endl;
 				func_type * temp = getFunction(tempterm, Functions);
-				cout << temp->returnvalue << endl;
+				//cout << temp->returnvalue << endl;
 
-				RHS += to_string(temp->returnvalue);
-				RHS += ' ';
+				temp->execute();
+
+				if (temp->doesreturn) {
+					RHS += to_string(temp->returnvalue);
+					RHS += ' ';
+				}
+				else
+					cout << "ERROR: Function does not return" << endl;
 
 				temp = NULL;
 			}
 			else {
 				for (int j = scopelevel; j >= 0; j--) {
-					cout << "scope=" << j << endl;
+					//cout << "scope=" << j << endl;
 
 					if (checkforvariableinscope(tempterm, Variables, j)) {
-						cout << "found variable in this scope:" << j << endl;
+						//cout << "found variable in this scope:" << j << endl;
 						variable * temp = getvariablescope(tempterm, Variables, j);
 						RHS += to_string(temp->value);
 						RHS += ' ';

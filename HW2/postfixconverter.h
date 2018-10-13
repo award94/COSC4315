@@ -31,8 +31,8 @@ bool postfixconverter::precedence(char opr1, char opr2){
 }
 
 string postfixconverter::convertToPostfix(string expression) {
-	cout << "inside convertToPostfix()" << endl;
-	cout << "expression=" << expression << ';' << endl;
+	//cout << "inside convertToPostfix()" << endl;
+	//cout << "expression=" << expression << ';' << endl;
 
 	string pfxexpression = "";
 
@@ -97,7 +97,7 @@ string postfixconverter::convertToPostfix(string expression) {
 		pfxexpression += ' ';
 		operstack.pop();
 	}
-	cout << endl;
+	//cout << endl;
 
 	//cout << "pfxexpression=" << pfxexpression << endl;
 	return pfxexpression;
