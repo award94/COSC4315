@@ -35,7 +35,7 @@ void func_type::execute() {
 	string currentLine;
 
 	if (returnline != -1) {
-		for (; i < returnline; i++) {
+		for (; i <= returnline; i++) {
 			currentLine = fileLines[i];
 			//cout << currentLine << endl;
 			
@@ -60,7 +60,7 @@ void func_type::execute() {
 		}
 	}
 	else {
-		for (; i < endline; i++) {
+		for (; i <= endline; i++) {
 			currentLine = fileLines[i];
 			//cout << currentLine << endl;
 
@@ -89,7 +89,7 @@ void func_type::execute() {
 
 void func_type::checkreturn() {
 	//cout << "inside checkreturn()" << endl;
-	for (int i = startline; i < endline; i++) {
+	for (int i = startline; i <= endline; i++) {
 		//cout << fileLines[i] << endl;
 		string currentline = fileLines[i];
 
@@ -106,6 +106,7 @@ void func_type::checkreturn() {
 			return;
 		}
 	}
+	doesreturn = false;
 }
 
 void func_type::setreturn() {
@@ -359,13 +360,14 @@ int func_type::findlastline() {
 			}
 		}
 	}
-
+	//cout << "endline=" << i << endl;
 	endline = i;
 	
 }
 
 func_type::func_type() {
 	returnline = -1;
+	doesreturn = false;
 }
 
 void printFunctions(list<func_type*> & Functions) {
@@ -394,7 +396,7 @@ bool checkforfunction(string name, list<func_type*> & Functions) {
 
 func_type * getFunction(string name, list<func_type*> & Functions) {
 	//cout << "inside getFunction" << endl;
-	//cout << "funcname=" << name << endl;
+	//cout << "funcname=" << name << ";"<<endl;
 
 	func_type * temp = NULL;
 	for (list<func_type*>::iterator it = Functions.begin();
@@ -404,11 +406,9 @@ func_type * getFunction(string name, list<func_type*> & Functions) {
 			temp = (*it);
 			return temp;
 		}
-		else {
-			cout << "Function is not defined" << endl;
-			return NULL;
-		}
 	}
+	cout << "Function is not define" << endl;
+	return NULL;
 	
 
 

@@ -91,7 +91,11 @@ void processstatement(int & lineNum, string line, int lastLine,
 
 		if (nextVar.compare("def") == 0) {
 			//cout << "Function definition" << endl;
+			//cout << "before" << endl;
+			//printFunctions(Functions);
 			createNewFunc(line, lineNum, scopelevel);
+			//cout << "after" << endl;
+			//printFunctions(Functions);
 		}
 		else if (nextVar.compare("print") == 0) {
 			//cout << "Print statement" << endl;
@@ -110,6 +114,7 @@ void processstatement(int & lineNum, string line, int lastLine,
 		}
 		else if (line[i] == '(' && line[i + 1] == ')') {
 			//cout << "function found" << endl;
+			//printFunctions(Functions);
 			func_type * temp = getFunction(nextVar, Functions);
 			//cout << "temp=" << temp->name << endl;
 
