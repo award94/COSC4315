@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <iomanip>
+#include <fstream>
 #include "postfixconverter.h"
 
 #include "variable.h"
@@ -37,10 +38,13 @@ int main(int argc, char* argv[]){
 	//cout<< "Homework 2"<<endl;
 
 	string line;
-	
+	ifstream inFile;
+	string filename = argv[1];
+	inFile.open(filename);
+
 	int lineNum = 0;
 
-	while (getline(cin, line) && !cin.eof()) {			//Iterate through each statement
+	while (getline(inFile, line) && !inFile.eof()) {			//Iterate through each statement
 		lineNum++;
 		fileLines.push_back(line);
 	}
@@ -66,8 +70,8 @@ int main(int argc, char* argv[]){
 void processstatement(int & lineNum, string line, int lastLine, 
 	int scopelevel, string scopename) {
 	//cout << "inside processstatement: " << line<< " ("<<lineNum<< ")"<<endl;
-	//cout << "lineNum = " << lineNum << endl;
-	//cout << fileLines[lineNum] << endl;
+	//cout << "lineNum = " << lineNum << ";"<<endl;
+	//cout << "line="<<fileLines[lineNum] <<";"<< endl;
 	//cout << "scopename=" << scopename << endl;
 
 	int i = 0;							//char index of the statement

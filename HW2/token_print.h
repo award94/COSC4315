@@ -424,7 +424,7 @@ i++;
 else {
 cout << "variable:" << argument <<endl;
 if (checkforfunction(argument, Functions)) {
-cout << "found function" << endl;
+cout << "found function" << endl;ss
 func_type * temp = getFunction(argument, Functions);
 cout << temp->returnvalue << endl;
 

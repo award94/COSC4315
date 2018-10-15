@@ -5,6 +5,7 @@ void convertToConstants(string & line, string & RHS,
 
 void assignment(string line, int scopelevel, string scopename) {
 	//cout <<endl<< "==========ASSIGNMENT SCOPE BEGIN============" << endl;
+	//cout << line << endl;
 	//cout << "scope = " << scopelevel << endl;
 	//printVariables(Variables);
 	string RHS;
