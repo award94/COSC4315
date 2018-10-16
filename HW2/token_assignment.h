@@ -111,10 +111,9 @@ void convertToConstants(string & line, string & RHS,
 			//cout << "found function" << endl;
 			func_type * temp = getFunction(tempterm, Functions);
 
-			temp->execute();
-
 			if (temp->doesreturn) {
 				//cout << temp->returnvalue << endl;
+				temp->setreturn();
 
 				RHS += to_string(temp->returnvalue);
 				RHS += ' ';
@@ -214,9 +213,10 @@ void convertToConstants(string & line, string & RHS,
 				func_type * temp = getFunction(tempterm, Functions);
 				//cout << temp->returnvalue << endl;
 
-				temp->execute();
+				
 
 				if (temp->doesreturn) {
+					temp->setreturn();
 					RHS += to_string(temp->returnvalue);
 					RHS += ' ';
 				}

@@ -18,7 +18,7 @@ class func_type{
 		int findlastline();
 		func_type();
 
-		void execute();
+		void execute();	
 		void checkreturn();
 		void setreturn();
 		void getreturn();

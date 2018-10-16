@@ -148,10 +148,11 @@ string evaluatenewterm(string newterm, int scope) {
 		//cout << "variable" << endl;
 		if (checkforfunction(newterm, Functions)) {
 			func_type * temp = getFunction(newterm, Functions);
-			temp->execute();
+			
 			//cout << "checkreturn=" << temp->doesreturn << endl;
 			if (temp->doesreturn) {
 				//cout << "returnvalue=" << temp->returnvalue << ';' << endl;
+				temp->setreturn();
 				string tempvalue = to_string(temp->returnvalue);
 				returnstring += tempvalue;
 				returnstring += ' ';

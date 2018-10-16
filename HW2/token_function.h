@@ -19,10 +19,10 @@ void createNewFunc(string line, int & lineNum, int scopelevel){
 
 	newFunc->checkreturn();
 	//cout << "doesreturn=" << newFunc->doesreturn << endl;
-	if (newFunc->doesreturn) {
-		newFunc->setreturn();
+	//if (newFunc->doesreturn) {
+	//	newFunc->setreturn();
 		//cout << "returnvalue=" << newFunc->returnvalue << endl;
-	}
+	//}
 	
 	lineNum = newFunc->endline;
 

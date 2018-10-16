@@ -67,7 +67,7 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 			//cout << "done3" << endl;
 		}
 		else {
-			int i = elseline;
+			int i = elseline + 1;
 			//cout << "start4" << endl;
 			for (; i <= lastline; i++) {
 				//cout << "i=" << i << endl;
@@ -215,13 +215,13 @@ string parseexpr(string line) {
 			//cout << "found function" << endl;
 			func_type * temp = getFunction(tempterm, Functions);
 
-			temp->execute();
+			
 
 			if (temp->doesreturn) {
-			//cout << temp->returnvalue << endl;
-
-			newexpr += to_string(temp->returnvalue);
-			newexpr += ' ';
+				//cout << temp->returnvalue << endl;
+				temp->setreturn();
+				newexpr += to_string(temp->returnvalue);
+				newexpr += ' ';
 			}
 			else {
 				cout << "ERROR: Function does not return a value" << endl;
@@ -307,11 +307,9 @@ string parseexpr(string line) {
 				//cout << "found function" << endl;
 				func_type * temp = getFunction(tempterm, Functions);
 
-				temp->execute();
-
 				if (temp->doesreturn) {
 					//cout << temp->returnvalue << endl;
-
+					temp->setreturn();
 					newexpr += to_string(temp->returnvalue);
 					newexpr += ' ';
 				}
