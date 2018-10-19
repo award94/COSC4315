@@ -44,9 +44,18 @@ int main(int argc, char* argv[]){
 
 	int lineNum = 0;
 
-	while (getline(inFile, line) && !inFile.eof()) {			//Iterate through each statement
+	while (getline(inFile, line)) {			//Iterate through each statement
+		//cout << "line=" << line << endl;
+		string linetopush;
+		for (int i = 0; i < line.length(); i++) {
+			if (line[i] != char(10) && line[i] != char(13))
+				linetopush += line[i];
+		}
 		lineNum++;
-		fileLines.push_back(line);
+		//cout << "pushing:" << linetopush << endl;
+		fileLines.push_back(linetopush);
+		if (inFile.eof())
+			break;
 	}
 
 	//cout << "Size of File=" << fileLines.size() << endl;
@@ -73,6 +82,11 @@ void processstatement(int & lineNum, string line, int lastLine,
 	//cout << "lineNum = " << lineNum << ";"<<endl;
 	//cout << "line="<<fileLines[lineNum] <<";"<< endl;
 	//cout << "scopename=" << scopename << endl;
+
+	//cout << "line info" << endl;
+	//for (int m = 0; m < line.length(); m++) {
+	//	cout << int(line[m]) << endl;
+	//}
 
 	int i = 0;							//char index of the statement
 	string nextVar;

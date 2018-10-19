@@ -35,6 +35,7 @@ void assignment(string line, int scopelevel, string scopename) {
 void convertToConstants(string & line, string & RHS,
 	string & LHS, int scopelevel) {
 	//cout << "inside convertToConstants" << endl;
+	//cout << "line=" << line << endl;
 	int i = 0;
 
 	//parse LHS variable
@@ -46,6 +47,7 @@ void convertToConstants(string & line, string & RHS,
 		LHS.append(line, i, 1);
 		i++;
 	}
+	//cout << "LHS=" << LHS << ';' << endl;
 
 	//Check if LHS Var has been declared yet
 	//If not, declare it
@@ -60,10 +62,12 @@ void convertToConstants(string & line, string & RHS,
 	}
 	//cout << "LHS Found or declared" << endl;
 
+	//cout << "line[i]=" << line[i] << ';' << int(line[i])<<';'<<endl;
 	//Skipping whitespaces
 	while (line[i] == ' ')
 		i++;
 
+	//cout << "line[i]=" << line[i] << ';' << endl;
 
 	//Error checking for '='
 	if (line[i] != '=')
@@ -97,6 +101,8 @@ void convertToConstants(string & line, string & RHS,
 			i += 2;
 		}
 	}
+
+	//cout << "tempterm=" << tempterm << ';' << endl;
 
 	//If constant append it to RHS
 	//If variable lookup value and append it to RHS

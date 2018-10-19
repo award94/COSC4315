@@ -45,7 +45,7 @@ void print(string line, int scope) {
 	}
 
 
-	//cout << "finalOutput=" << finalOutput << endl;
+	////cout << "finalOutput=" << finalOutput << endl;
 	cout << finalOutput << endl;
 
 	
@@ -64,10 +64,25 @@ void createtermlist(vector<string> & termlist, string arg) {
 		while (arg[i] == ' ' && i < arg.length())
 			i++;
 
-		while (arg[i] != ',' && i < arg.length()) {
+		if (arg[i] == '"') {
+			//cout << "string found" << endl;
+			newterm += arg[i];
+			i++;
+			while (arg[i] != '"') {
+				newterm += arg[i];
+				i++;
+			}
 			newterm += arg[i];
 			i++;
 		}
+		else {
+			while (arg[i] != ',' && i < arg.length()) {
+				newterm += arg[i];
+				i++;
+			}
+		}
+
+		//cout << "newterm=" << newterm << endl;
 
 		termlist.push_back(newterm);
 	}
@@ -81,6 +96,8 @@ void parsetermlist(vector<string> & termlist, int scope) {
 		string currentexpr = termlist[i];
 		string parsedexpr;
 
+		//cout << currentexpr[0] << ' ' << currentexpr[currentexpr.length() - 1] << endl;
+
 		if (currentexpr[0] == '"' && currentexpr[currentexpr.length() - 1] == '"')
 			parsedexpr.append(currentexpr, 1, currentexpr.length() - 2);
 
@@ -88,6 +105,7 @@ void parsetermlist(vector<string> & termlist, int scope) {
 			int j = 0;
 			while (j < currentexpr.length()) {
 				string newterm;
+
 
 				while (currentexpr[j] == ' ' && j < currentexpr.length())
 					j++;
@@ -97,13 +115,13 @@ void parsetermlist(vector<string> & termlist, int scope) {
 					j++;
 				}
 
-				//cout << "newterm=" << newterm << ";" << endl;
+				////cout << "newterm=" << newterm << ";" << endl;
 
 				parsedexpr += evaluatenewterm(newterm, scope);
 				if (currentexpr[j] == '(' && currentexpr[j + 1] == ')')
 					j += 2;
 
-				//cout << "parsedexpr=" << parsedexpr << ';' << endl;
+				////cout << "parsedexpr=" << parsedexpr << ';' << endl;
 
 				newterm = "";
 
@@ -116,13 +134,13 @@ void parsetermlist(vector<string> & termlist, int scope) {
 					j++;
 				}
 
-				//cout << "newterm=" << newterm << ";" << endl;
+				////cout << "newterm=" << newterm << ";" << endl;
 
 				parsedexpr += newterm;
 				parsedexpr += ' ';
 
-				//cout << "parsedexpr=" << parsedexpr << ';' << endl;
-				//cout << "j=" << currentexpr[j] << endl;
+				////cout << "parsedexpr=" << parsedexpr << ';' << endl;
+				////cout << "j=" << currentexpr[j] << endl;
 				//sleep(2);
 			}
 		}
@@ -135,8 +153,8 @@ void parsetermlist(vector<string> & termlist, int scope) {
 }
 
 string evaluatenewterm(string newterm, int scope) {
-	//cout << "inside evaluateterm()" << endl;
-	//cout << "newterm=" << newterm << endl;
+	////cout << "inside evaluateterm()" << endl;
+	////cout << "newterm=" << newterm << endl;
 
 	string returnstring;
 
@@ -145,13 +163,13 @@ string evaluatenewterm(string newterm, int scope) {
 		returnstring += ' ';
 	}
 	else {
-		//cout << "variable" << endl;
+		////cout << "variable" << endl;
 		if (checkforfunction(newterm, Functions)) {
 			func_type * temp = getFunction(newterm, Functions);
 			
-			//cout << "checkreturn=" << temp->doesreturn << endl;
+			////cout << "checkreturn=" << temp->doesreturn << endl;
 			if (temp->doesreturn) {
-				//cout << "returnvalue=" << temp->returnvalue << ';' << endl;
+				////cout << "returnvalue=" << temp->returnvalue << ';' << endl;
 				temp->setreturn();
 				string tempvalue = to_string(temp->returnvalue);
 				returnstring += tempvalue;
@@ -164,10 +182,10 @@ string evaluatenewterm(string newterm, int scope) {
 		}
 		else {
 			for (int j = scope; j >= 0; j--) {
-				//cout << "scope=" << j << endl;
+				////cout << "scope=" << j << endl;
 
 				if (checkforvariableinscope(newterm, Variables, j)) {
-					//cout << "variable found in this scope:" << j << endl;
+					////cout << "variable found in this scope:" << j << endl;
 					variable * temp2 = getvariablescope(newterm, Variables, j);
 					returnstring += to_string(temp2->value);
 					returnstring += ' ';
@@ -180,7 +198,7 @@ string evaluatenewterm(string newterm, int scope) {
 		}
 	}
 
-	//cout << "returnstring=" << returnstring << endl;
+	////cout << "returnstring=" << returnstring << endl;
 	return returnstring;
 }
 
@@ -228,13 +246,13 @@ void findargument(string line, int & parenthesis1, int & parenthesis2) {
 			//Testing for const or variable
 			if (checkifconst(argument) == 1){
 			// If value is a constant, append to finaloutput
-			cout << "Inside tokenprint, found a constant" << endl;	
+			//cout << "Inside tokenprint, found a constant" << endl;	
 			finalOutput += argument;
 			}
 			// I'm not entirely sure how to get the value that variables<argument> is 
 			// Pointing to in inrder to append the value associated with argument
 			if (checkforvariable(argument, Variables) == 1){
-			cout << "Inside tokenprint, found a variable" << endl;
+			//cout << "Inside tokenprint, found a variable" << endl;
 			// Create iterator to iterate through list and find the desired variable 
 				for (list<variable*>::iterator it = Variables.begin(); it != Variables.end(); it++)
 					if (argument == (*it)->name) {
@@ -256,7 +274,7 @@ void findargument(string line, int & parenthesis1, int & parenthesis2) {
 		} 
 	}
 <<<<<<< .mine
-	cout << "Final output is: " << finalOutput << endl;
+	//cout << "Final output is: " << finalOutput << endl;
 */
 /*
 ||||||| .r69
@@ -273,7 +291,7 @@ void findargument(string line, int & parenthesis1, int & parenthesis2) {
 	}
 	finalOutput += argument;
 	argument.clear();
-cout << "Final output is: " << finalOutput << endl;
+//cout << "Final output is: " << finalOutput << endl;
 }
 =======
 	// Printing the final part of the print statement that get's read after the final ,
@@ -290,7 +308,7 @@ cout << "Final output is: " << finalOutput << endl;
 	}
 	finalOutput += argument;
 	argument.clear();
-cout << "Final output is: " << finalOutput << endl;
+//cout << "Final output is: " << finalOutput << endl;
 }
 >>>>>>> .r70
 */
@@ -329,15 +347,15 @@ argument += ' ';
 do {
 // Remove whitespace
 if (arg[i] == ' ') {
-//cout << "Whitespace removed" << endl;
+////cout << "Whitespace removed" << endl;
 i++;
 }
 // Takes care of constants
 if (arg[i] == '"') {
-//cout << "First quote encountered " << endl;
+////cout << "First quote encountered " << endl;
 i++;
 while (arg[i] != '"') {
-//cout << "Searching for second quote " << endl;
+////cout << "Searching for second quote " << endl;
 argument += arg[i];
 i++;
 }
@@ -349,7 +367,7 @@ i++;
 }
 // Starting the check to see if arg is a variable
 if (arg[i] != ',') {
-//cout << "Searching for a comma " << endl;
+////cout << "Searching for a comma " << endl;
 argument += arg[i];
 i++;
 }
@@ -358,26 +376,26 @@ if (arg[i] == ',' || i == arg.length()) {
 
 // Testing for duplicate
 while (i < arg.length()) {
-//cout << line[i] << endl;
+////cout << line[i] << endl;
 
-//cout << "inside loop" << endl;
+////cout << "inside loop" << endl;
 
 while (arg[i] == ' ') {
 i++;
 }
-cout << "inside arithmetic check" << endl;
-cout << arg[i] << endl;
+//cout << "inside arithmetic check" << endl;
+//cout << arg[i] << endl;
 
 if (arg[i] == '+' || arg[i] == '-' || arg[i] == '*' || arg[i] == '/') {
 argument.append(arg, i, 1);
 i++;
 }
-//cout << i<<" tempterm=" << tempterm << 'a'<<endl;
-//cout << tempterm.compare("-") << endl;
+////cout << i<<" tempterm=" << tempterm << 'a'<<endl;
+////cout << tempterm.compare("-") << endl;
 
 if ((argument.compare("+") == 0) || (argument.compare("-") == 0 ||
 argument.compare("*") == 0) || (argument.compare("/") == 0)) {
-cout << "operator=" << argument << endl;
+//cout << "operator=" << argument << endl;
 finalOutput.append(argument);
 finalOutput += ' ';
 // Testing
@@ -396,13 +414,13 @@ i++;
 }
 
 while (isalnum(arg[i])) {
-//cout << line[i] << endl;
+////cout << line[i] << endl;
 argument.append(arg, i, 1);
 i++;
 }
 
 if ((i + 2) <= arg.length()) {
-//cout << "next 2:"<<line[i] << line[i + 1] << endl;
+////cout << "next 2:"<<line[i] << line[i + 1] << endl;
 if (arg[i] == '(' && arg[i + 1] == ')') {
 i += 2;
 }
@@ -415,7 +433,7 @@ i++;
 //If constant append it to RHS
 // Changed the argument//If variable lookup value and append it to RHS
 if (checkifconst(argument)) {
-cout << "is a constant: " << argument <<";"<< endl;
+//cout << "is a constant: " << argument <<";"<< endl;
 finalOutput.append(argument);
 finalOutput += ' ';
 //Testing
@@ -423,11 +441,11 @@ argument.clear();
 i++;
 }
 else {
-cout << "variable:" << argument <<endl;
+//cout << "variable:" << argument <<endl;
 if (checkforfunction(argument, Functions)) {
-cout << "found function" << endl;ss
+//cout << "found function" << endl;ss
 func_type * temp = getFunction(argument, Functions);
-cout << temp->returnvalue << endl;
+//cout << temp->returnvalue << endl;
 
 finalOutput += to_string(temp->returnvalue);
 finalOutput += ' ';
@@ -439,10 +457,10 @@ i++;
 else {
 for (int j = 2; j >= 0; j--){
 //for (int j = scopelevel; j >= 0; j--) {
-cout << "scope=" << j << endl;
+//cout << "scope=" << j << endl;
 
 if (checkforvariableinscope(argument, Variables, j)) {
-cout << "found variable in this scope:" << j << endl;
+//cout << "found variable in this scope:" << j << endl;
 variable * temp = getvariablescope(argument, Variables, j);
 finalOutput += to_string(temp->value);
 finalOutput += ' ';
@@ -453,15 +471,15 @@ argument.clear();
 break;
 }
 else
-cout << "error: variable does not exist:" << argument << endl;
+//cout << "error: variable does not exist:" << argument << endl;
 }
 }
 }
 
 
 //RHS After first time is appended
-//cout << "RHS=" << RHS << endl;
-//cout << i << ' ' << line.length() << endl;
+////cout << "RHS=" << RHS << endl;
+////cout << i << ' ' << line.length() << endl;
 
 //Loops through rest of RHS
 //Finds Opertator and appends to RHS
@@ -480,7 +498,7 @@ i++;
 } while (i < arg.length());
 
 
-cout << "Line is: " << line << endl;
-cout << "arg=" << arg << endl;
-cout << "Final output is: " << finalOutput << endl;
+//cout << "Line is: " << line << endl;
+//cout << "arg=" << arg << endl;
+//cout << "Final output is: " << finalOutput << endl;
 */
