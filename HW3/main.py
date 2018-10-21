@@ -1,4 +1,5 @@
 import sys
+import inputhandler
 from compute import *
 
 print('hw3')
@@ -14,15 +15,15 @@ lines = list(open(str(temp), 'r'))
 print("DPN=",digitsPerNode)
 j = lines.__len__()
 
-def main(i):
+def main(i, digitsPerNode):
     if (i > 0):
         # getline
         input = lines[j - i]
         input = input.replace('\n', '')
-        print('\n')
-        result = str(compute(input, 0, input.__len__()))
+        #print('\n')
+        result = str(compute(input, 0, input.__len__(), digitsPerNode))
         print(input+'='+result)
-        print('\n')
-        main(i - 1)
+        #print('\n')
+        main(i - 1, digitsPerNode)
 
-main(j)
+main(j, digitsPerNode)
