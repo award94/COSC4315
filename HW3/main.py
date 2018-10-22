@@ -2,7 +2,7 @@ import sys
 import inputhandler
 from compute import *
 
-print('hw3')
+#print('hw3')
 
 digitsPerNode = int(str.split(sys.argv[1], '=')[2])
 temp = (str.split(sys.argv[1], '=')[1])
@@ -12,7 +12,7 @@ temp = temp.split(';')[0]
 #digitsPerNode = int(sys.argv[2])
 lines = list(open(str(temp), 'r'))
 
-print("DPN=",digitsPerNode)
+#print("DPN=",digitsPerNode)
 j = lines.__len__()
 
 def main(i, digitsPerNode):
@@ -22,7 +22,10 @@ def main(i, digitsPerNode):
         input = input.replace('\n', '')
         #print('\n')
         result = str(compute(input, 0, input.__len__(), digitsPerNode))
-        print(input+'='+result)
+        if int(result) >= 0:
+            print(input+'='+result)
+        else:
+            print(input + '=' + "ERROR: Invalid input")
         #print('\n')
         main(i - 1, digitsPerNode)
 
