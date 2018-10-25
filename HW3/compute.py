@@ -59,14 +59,12 @@ def compute(rawinput, start, end, digitsPerNode):
     oper = parseoper(rawinput, 0)
     argstart = oper.__len__()
 
-    parenstack = ['(']
-    argend = findargend(rawinput, argstart+1, parenstack)
+    argend = findargend(rawinput, argstart+1, list(['(']))
 
     parenstart = argstart+1
     parenend = argend-1
 
-    parenstack2 = []
-    commaindex = parsecomma(rawinput, parenstart, parenend, parenstack2)
+    commaindex = parsecomma(rawinput, parenstart, parenend, list([]))
 
     term1 = rawinput[parenstart:commaindex]
     term2 = rawinput[commaindex+1:parenend]
