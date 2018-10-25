@@ -1,2 +1,2 @@
 compile:
-python main.py "input=input.txt;digitsPerNode=3"
+python infinitearithmetic.py "input=input.txt;digitsPerNode=3"

@@ -17,16 +17,12 @@ j = lines.__len__()
 
 def main(i, digitsPerNode):
     if (i > 0):
-        # getline
-        input = lines[j - i]
-        input = input.replace('\n', '')
-        #print('\n')
+        input = lines[j - i].replace('\n', '')
         result = str(compute(input, 0, input.__len__(), digitsPerNode))
         if int(result) >= 0:
             print(input+'='+result)
         else:
             print(input + '=' + "ERROR: Invalid input")
-        #print('\n')
         main(i - 1, digitsPerNode)
 
 main(j, digitsPerNode)
