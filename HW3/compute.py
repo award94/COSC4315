@@ -1,19 +1,18 @@
 import inputhandler
 
-#Read the first word to find which operator it is (add or multiply)
+#Precondition: input is a string, i is an index in the string
+#Postcondition: if the ith index of input is a letter, return that character and the recursive call
+#               if not, return nothing
+
 def parseoper(input, i):
-    #if this index is a character, keep going
     if(str(input[i]).isalpha()):
-        #return value = this char + recursive call result
         return str(input[i]) + parseoper(input, i+1)
 
-    #if this index isn't a character, return
     return ''
 
-#add(add(2,2),3)
-
-#Finding the end index of the argument add(2,3)
-#                                      -------^
+#Precondition: argument is a stirng, i is an index in the string, parenstack is a parenthesis stack
+#Postcondition: if the stack is empty, return i
+#               if the stack is not empty, return a recursive call with i+=1
 def findargend(argument, i, parenstack):
     if(parenstack.__len__() == 0):
         return i
@@ -26,6 +25,10 @@ def findargend(argument, i, parenstack):
 
     return findargend(argument, i+1, parenstack)
 
+#Precondition: rawinput is a string, i is an index, parenend is an index, parenstack is a parenthesis stack
+#Postcondition: if i >= parenend, the function exits with an error
+#               if the stack is empty and a comma is in the ith index, return i
+#               else return recursive call i+=1
 def parsecomma(rawinput, i, parenend, parenstack):
     if(i >= parenend):
         return -1
@@ -40,13 +43,18 @@ def parsecomma(rawinput, i, parenend, parenstack):
 
     return parsecomma(rawinput, i+1, parenend, parenstack)
 
+#Precondition: term is a string, start and end are indexes, digitsPerNode is a positive integer
+#Postcondition: if term.isdigit() return term
+#               else return compute()'s integer value
 def findtermvalue(term, start, end, digitsPerNode):
     if(term.isdigit()):
         return term
     else:
         return compute(term, start, end, digitsPerNode)
-    return 0
 
+#Precondition: rawinput is a string, start and end are indexes, digitsPerNode is a positive integer
+#Postcondition: if the input is valid, return an integer
+#               if the input is invalid, return -1
 def compute(rawinput, start, end, digitsPerNode):
     oper = parseoper(rawinput, 0)
     argstart = oper.__len__()
@@ -77,6 +85,7 @@ def compute(rawinput, start, end, digitsPerNode):
     if oper == 'multiply':
         expression = str(term1value) + "*" + str(term2value)
 
+    #HOMEWORK 1 CODE
     ih = inputhandler.inputhandler(expression, digitsPerNode)
     errorCode = 2
     if (ih.dpn == 0):
