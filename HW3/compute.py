@@ -1,4 +1,4 @@
-import inputhandler
+import lib.HW1CODE as inputhandler
 
 #Precondition: input is a string, i is an index in the string
 #Postcondition: if the ith index of input is a letter, return that character and the recursive call
@@ -58,12 +58,9 @@ def findtermvalue(term, start, end, digitsPerNode):
 def compute(rawinput, start, end, digitsPerNode):
     oper = parseoper(rawinput, 0)
     argstart = oper.__len__()
-
     argend = findargend(rawinput, argstart+1, list(['(']))
-
     parenstart = argstart+1
     parenend = argend-1
-
     commaindex = parsecomma(rawinput, parenstart, parenend, list([]))
 
     term1 = rawinput[parenstart:commaindex]
