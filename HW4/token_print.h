@@ -3,6 +3,7 @@ using namespace std;
 void findargument(string line, int & parenthesis1, int & parenthesis2);
 void createtermlist(vector<string> & termlist, string arg);
 void parsetermlist(vector<string> & termlist, int scope);
+string parsefunctionargument(string newterm, int scope);
 string evaluatenewterm(string newterm, int scope);
 
 void print(string line, int scope) {
@@ -112,6 +113,73 @@ void parsetermlist(vector<string> & termlist, int scope) {
 			parsedexpr.append(currentexpr, 1, currentexpr.length() - 2);
 
 		else {
+
+			cout << "currentexpr=" << currentexpr << endl;
+
+			stack<char> parenstack;
+			string newterm;
+
+			int j = 0;
+			while (j < currentexpr.length()) {
+				
+				if (currentexpr[j] == '(')
+					parenstack.push('(');
+				if (currentexpr[j] == ')')
+					parenstack.pop();
+
+				if ((currentexpr[j] == '+' || currentexpr[j] == '-' || currentexpr[j] == '*' || currentexpr[j] == '/') && parenstack.empty())
+					break;
+
+				newterm += currentexpr[j];
+				j++;
+			}
+
+			cout << "---------------------------------------" << endl;
+			cout << "newterm=" << newterm << endl;
+			parsedexpr += evaluatenewterm(newterm, scope);
+			cout << "parsedexpr=" << parsedexpr << endl;
+			cout << "---------------------------------------" << endl;
+
+			cout << "index after parsing first term=" << j<<' '<<currentexpr[j] << endl;
+
+			while (j < currentexpr.length()) {
+				while (currentexpr[j] == '+' || currentexpr[j] == '-' || currentexpr[j] == '*' || currentexpr[j] == '/') {
+					parsedexpr += currentexpr[j];
+					j++;
+				}
+				parsedexpr += ' ';
+				j++;
+
+				cout << "index after finding first operator=" << j << currentexpr[j] << endl;
+				cout << "parsedexpr=" << parsedexpr << endl;
+
+				stack<char> parenstack2;
+				newterm = "";
+
+				while (j < currentexpr.length()) {
+					cout << currentexpr[j] << endl;
+					if (currentexpr[j] == '(')
+						parenstack2.push('(');
+					if (currentexpr[j] == ')')
+						parenstack2.pop();
+
+					if ((currentexpr[j] == '+' || currentexpr[j] == '-' || currentexpr[j] == '*' || currentexpr[j] == '/') && parenstack2.empty())
+						break;
+
+					newterm += currentexpr[j];
+					j++;
+				}
+
+				cout << "---------------------------------------" << endl;
+				cout << "newterm=" << newterm << endl;
+				parsedexpr += evaluatenewterm(newterm, scope);
+				cout << "parsedexpr=" << parsedexpr << endl;
+				cout << "---------------------------------------" << endl;
+			}
+
+			cout << "parsedexpr=" << parsedexpr << endl;
+			//sleep(5);
+			/*
 			int j = 0;
 			while (j < currentexpr.length()) {
 				string newterm;
@@ -120,10 +188,10 @@ void parsetermlist(vector<string> & termlist, int scope) {
 				while (currentexpr[j] == ' ' && j < currentexpr.length())
 					j++;
 
-				/*while (isalnum(currentexpr[j]) && j < currentexpr.length()) {
-					newterm += currentexpr[j];
-					j++;
-				}*/
+				//while (isalnum(currentexpr[j]) && j < currentexpr.length()) {
+				//	newterm += currentexpr[j];
+				//	j++;
+				//}
 				while (currentexpr[j] != '+' && currentexpr[j] != '-' && currentexpr[j] != '*' && currentexpr[j] != '/' && j < currentexpr.length()) {
 					newterm += currentexpr[j];
 					j++;
@@ -156,7 +224,9 @@ void parsetermlist(vector<string> & termlist, int scope) {
 				cout << "parsedexpr=" << parsedexpr << ';' << endl;
 				cout << "j=" << currentexpr[j] << endl;
 				//sleep(2);
+				
 			}
+			*/
 		}
 		cout << "parsedexpr=" << parsedexpr << ';' << endl;
 		termlist[i] = parsedexpr;
@@ -167,9 +237,14 @@ void parsetermlist(vector<string> & termlist, int scope) {
 }
 
 string evaluatenewterm(string newterm, int scope) {
-	cout << "inside evaluateterm()" << endl;
-	cout << "newterm=" << newterm << endl;
-	
+	cout << "inside evaluatenewterm()" << endl;
+	cout << "newterm=" << newterm << ';'<<endl;
+	string deletingspaces = newterm;
+	newterm = "";
+	for (int i = 0; i < deletingspaces.length(); i++) {
+		if (deletingspaces[i] != ' ')
+			newterm += deletingspaces[i];
+	}
 
 	string returnstring;
 
@@ -187,14 +262,17 @@ string evaluatenewterm(string newterm, int scope) {
 		}
 		cout << "getfuncname=" << getfuncname << endl;
 		if (checkforfunction(getfuncname, Functions)) {
-			cout << "func does exist" << endl;
+			//cout << "func does exist" << endl;
+
+			string functionargument = parsefunctionargument(newterm, scope);
+			cout << "functionargument=" << functionargument << endl;
 
 			func_type * temp = getFunction(getfuncname, Functions);
 			
-			cout << "checkreturn=" << temp->doesreturn << endl;
+			//cout << "checkreturn=" << temp->doesreturn << endl;
 			if (temp->doesreturn) {
 				////cout << "returnvalue=" << temp->returnvalue << ';' << endl;
-				temp->setreturn(newterm);
+				temp->setreturn(functionargument);
 				string tempvalue = to_string(temp->returnvalue);
 				returnstring += tempvalue;
 				returnstring += ' ';
@@ -222,9 +300,68 @@ string evaluatenewterm(string newterm, int scope) {
 		}
 	}
 
-	//cout << "returnstring=" << returnstring << endl;
-	//sleep(5);
+	cout << "returnstring=" << returnstring << endl;
+	//sleep(2);
 	return returnstring;
+}
+
+string parsefunctionargument(string newterm, int scope) {
+	cout << "inside parsefunctionargument()" << endl;
+	cout << "newterm=" << newterm << endl;
+	string funcwithconstargs;
+
+	int i = 0;
+	while (newterm[i] != '(')
+		i++;
+	i++;
+	cout << i << ' '<<newterm[i]<<endl;
+
+	stack<char> parenstack;
+	string wholeargument;
+	while (i < newterm.length()) {
+		if (newterm[i] == ')' && parenstack.empty())
+			break;
+		if (newterm[i] == '(')
+			parenstack.push('(');
+		if (newterm[i] == ')')
+			parenstack.pop();
+		wholeargument += newterm[i];
+		i++;
+	}
+	//cout << "wholeargument=" << wholeargument << ';'<<endl;
+
+	vector<string> argumentterms;
+
+	while (!parenstack.empty())
+		parenstack.pop();
+
+	i = 0;
+	string temp;
+	while (i < wholeargument.length()) {
+		if (wholeargument[i] == ',' && parenstack.empty()) {
+			argumentterms.push_back(temp);
+			temp = "";
+			i++;
+		}
+		if (wholeargument[i] == '(') {
+			parenstack.push('(');
+		}
+		if (wholeargument[i] == ')') {
+			parenstack.pop();
+		}
+		temp += wholeargument[i];
+		i++;
+	}
+	argumentterms.push_back(temp);
+
+	for (int j = 0; j < argumentterms.size(); j++) {
+		cout << argumentterms[j] << endl;
+		funcwithconstargs += evaluatenewterm(argumentterms[j], scope);
+		if(j < argumentterms.size() -1)
+			funcwithconstargs += ',';
+	}
+	cout << "funcwithconstargs=" << funcwithconstargs << endl;
+	return funcwithconstargs;
 }
 
 void findargument(string line, int & parenthesis1, int & parenthesis2) {

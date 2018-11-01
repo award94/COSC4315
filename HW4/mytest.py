@@ -1,5 +1,9 @@
-def func(a, b):
-   x = 2
-   return 2
+def f2():
+   return 5
 
-print(func(1, 2) + 1)
+def func(a, b):
+   x = a + b
+   return x
+
+print(func(func(1,2),2) + f2())
+#print(func(func(1,1) + 1, 2) + 1)

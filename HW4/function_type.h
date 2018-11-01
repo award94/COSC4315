@@ -27,7 +27,6 @@ class func_type{
 		void getreturn();
 
 		vector<string> parsedfuncparam(string funccall);
-
 };
 
 void func_type::createarglist() {
@@ -156,30 +155,36 @@ void func_type::checkreturn() {
 }
 
 vector<string> func_type::parsedfuncparam(string funccall) {
-	//cout << "inside parsedfuncparam()" << endl;
-	//cout << "funccall=" << funccall << endl;
+	
+	cout << "inside parsedfuncparam()" << endl;
+	cout << "funccall=" << funccall << endl;
 	vector<string> parameters;
-
+	
 	int i = 0;
 	stack<char> parenstack2;
 	string temp;
-
+	/*
 	string funccallargument;
 	while (funccall[i] != '(')
 		i++;
 	i++;
 	while (i < funccall.length()) {
+		if (funccall[i] == ')' && parenstack2.empty())
+			break;
 		if (funccall[i] == '(')
 			parenstack2.push('(');
 		if (funccall[i] == ')' && !parenstack2.empty())
 			parenstack2.pop();
-		if (funccall[i] == ')' && parenstack2.empty())
-			break;
+
+		cout << funccall[i] << ' ' << parenstack2.empty()<<endl;
+
+		
 		funccallargument += funccall[i];
 		i++;
 	}
-
-	//cout << "funccallargument=" << funccallargument << endl;
+	*/
+	string funccallargument = funccall;
+	cout << "funccallargument=" << funccallargument << endl;
 
 	i = 0;
 	stack<char> parenstack;
@@ -189,7 +194,7 @@ vector<string> func_type::parsedfuncparam(string funccall) {
 		if (funccallargument[i] == ')')
 			parenstack.pop();
 		if (funccallargument[i] == ',' && parenstack.empty()) {
-			//cout << "pushing temp=" << temp << endl;
+			cout << "pushing temp=" << temp << endl;
 			parameters.push_back(temp);
 			temp = "";
 			i++;
@@ -201,34 +206,45 @@ vector<string> func_type::parsedfuncparam(string funccall) {
 			i++;
 		}
 	}
-	parameters.push_back(temp);
-
+	cout << "pushing to parameters=" << temp << ';' << endl;
+	if(temp.compare("") != 0)
+		parameters.push_back(temp);
+	
 	return parameters;
+	
 }
 
 void func_type::setreturn(string funccall) {
 	cout << "inside setreturn()" << endl;
 	cout << "returnline=" << returnline << endl;
 	cout << "funccall=" << funccall << endl;
-	cout << "arglist:" << endl;
 	
+	vector<string> parameters = parsedfuncparam(funccall);
+
+	if (parameters.size() != arglist.size()) {
+		cout << "ERROR: Parameters don't match function arguments; " << funccall << endl;
+		cout << parameters.size() << ' ' << arglist.size() << endl;
+	}
+
+	cout << "arglist:" << endl;
 	for (int k = 0; k < arglist.size(); k++) {
 		cout << arglist[k] << endl;
 	}
-
-	vector<string> parameters = parsedfuncparam(funccall);
-	
 	cout << "parameters:" << endl;
-	for (int k = 0; k < arglist.size(); k++) {
+	for (int k = 0; k < parameters.size(); k++) {
 		cout << parameters[k] << endl;
 	}
 
 	for (int i = 0; i < parameters.size(); i++) {
 		createNewVar(arglist[i], Variables, scope);
 		variable * temp = getvariablescope(arglist[i], Variables, scope);
-		temp->value = 0;
+		temp->value = stof(parameters[i]);
 		temp = NULL;
 	}
+
+	cout << "assigned parameters" << endl;
+
+	printVariables(Variables);
 
 	for (int i = startline; i < returnline; i++) {
 		//cout << fileLines[i] << endl;
@@ -525,9 +541,5 @@ func_type * getFunction(string name, list<func_type*> & Functions) {
 		}
 	}
 	cout << "Function is not define" << endl;
-	return NULL;
-	
-
-
-	
+	return NULL;	
 }
