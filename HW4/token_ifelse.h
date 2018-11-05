@@ -1,11 +1,11 @@
 using namespace std;
 
 string getarg(string ifline);
-bool evaluatearg(string arg);
+bool evaluatearg(string arg, int scope);
 list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestoskip);
 int findlastlineifelse(int startLineNum, int & elseline, int currentscope);
 
-string parseexpr(string line);
+string parseexpr(string line, int scope);
 
 void ifelse(string ifline, int & iflineNum, int funclastline, 
 	int prevscope, string scopename) {
@@ -31,7 +31,7 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 
 	string arg = getarg(ifline);
 	//cout << "arg=" << arg << endl;
-	bool iftruth = evaluatearg(arg);
+	bool iftruth = evaluatearg(arg, currentscope);
 	//cout << "iftruth=" << iftruth << endl;
 
 	if (iftruth == 1) {
@@ -172,7 +172,7 @@ string getarg(string ifline) {
 	return arg;
 }
 
-string parseexpr(string line) {
+string parseexpr(string line, int scope) {
 	//cout << "inside parseexpr" << endl;
 	//cout << "line=" << line << endl;
 	string newexpr;
@@ -188,22 +188,26 @@ string parseexpr(string line) {
 		i++;
 	}
 
-	while (isalnum(line[i])) {
-		//cout << line[i] << endl;
-		tempterm.append(line, i, 1);
+	stack<char> parenstack;
+	while (i < line.length()) {
+		if ((line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/' ||
+			line[i] == ' ') && parenstack.empty()) {
+			break;
+		}
+		if (line[i] == '(') {
+			parenstack.push('(');
+		}
+		if (line[i] == ')') {
+			parenstack.pop();
+		}
+		tempterm += line[i];
 		i++;
 	}
 
 	//cout << "tempterm=" << tempterm << endl;
-	if ((i + 2) <= line.length()) {
-		//cout << "next 2:" << line[i] << line[i + 1] << endl;
-		if (line[i] == '(' && line[i + 1] == ')') {
-			i += 2;
-		}
-	}
 
-	//cout << "tempterm=" << tempterm << endl;
-
+	newexpr += evaluatenewterm(tempterm, scope);
+	/*
 	if (checkifconst(tempterm)) {
 		//cout << "is a constant: " << tempterm << ";" << endl;
 		newexpr.append(tempterm);
@@ -248,6 +252,7 @@ string parseexpr(string line) {
 			}
 		}
 	}
+	*/
 
 	while (i < line.length()) {
 		tempterm = "";
@@ -286,16 +291,20 @@ string parseexpr(string line) {
 			i++;
 		}
 
-		while (isalnum(line[i])) {
-			//cout << line[i] << endl;
-			tempterm.append(line, i, 1);
-			i++;
-		}
-		if ((i + 2) <= line.length()) {
-			//cout << "next 2:" << line[i] << line[i + 1] << endl;
-			if (line[i] == '(' && line[i + 1] == ')') {
-				i += 2;
+		stack<char> parenstack2;
+		while (i < line.length()) {
+			if ((line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/' ||
+				line[i] == ' ') && parenstack2.empty()) {
+				break;
 			}
+			if (line[i] == '(') {
+				parenstack2.push('(');
+			}
+			if (line[i] == ')') {
+				parenstack2.pop();
+			}
+			tempterm += line[i];
+			i++;
 		}
 
 
@@ -304,6 +313,9 @@ string parseexpr(string line) {
 
 		//cout << tempterm << endl;
 
+		newexpr += evaluatenewterm(tempterm, scope);
+
+		/*
 		if (checkifconst(tempterm)) {
 			//cout << "is a constant:" << tempterm << ";" << endl;
 			newexpr.append(tempterm);
@@ -347,6 +359,7 @@ string parseexpr(string line) {
 				}
 			}
 		}
+		*/
 
 		//cout << "newexpr=" << newexpr << endl;
 	}
@@ -355,7 +368,7 @@ string parseexpr(string line) {
 }
 
 //parses out the values from the argument and determines the truth of it
-bool evaluatearg(string arg) {
+bool evaluatearg(string arg, int scope) {
 	string rawexpr1;
 	string rawexpr2;
 	string compoper;
@@ -388,8 +401,8 @@ bool evaluatearg(string arg) {
 	//cout << "rawexpr1=" << rawexpr1 << endl;
 	//cout << "rawexpr2=" << rawexpr2 << endl;
 
-	string expr1 = parseexpr(rawexpr1);
-	string expr2 = parseexpr(rawexpr2);
+	string expr1 = parseexpr(rawexpr1, scope);
+	string expr2 = parseexpr(rawexpr2, scope);
 
 	//cout << "expr1=" << expr1 << endl;
 	//cout << "expr2=" << expr2 << endl;

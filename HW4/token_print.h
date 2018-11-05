@@ -8,16 +8,15 @@ string evaluatenewterm(string newterm, int scope);
 
 void print(string line, int scope) {
 // Argument is used as a temporary variable to hold the contents before the delimiter
-	// When the delimiter is reached, the strings are checked and appended to finalOutputt
+	// When the delimiter is reached, the strings are checked and appended to finalOutput
 	string finalOutput;
 		
-	cout << "inside print" << endl;
+	//cout << "inside print" << endl;
 
 	int i = 0;
 	int parenthesis1;
 	int parenthesis2;
 	string arg;
-	
 	
 	findargument(line, parenthesis1, parenthesis2);
 	
@@ -26,16 +25,14 @@ void print(string line, int scope) {
 	vector<string> termlist;
 	createtermlist(termlist, arg);
 	parsetermlist(termlist, scope);
-	cout << "PARSED TERMS" << endl;
+	//cout << "PARSED TERMS" << endl;
 	for (int i = 0; i < termlist.size(); i++) {
 		cout << termlist[i] << endl;
 		if (isalpha(termlist[i][0])) {
-			//cout << "string" << endl;
 			finalOutput += termlist[i];
 			finalOutput += ' ';
 		}
 		else {
-			//cout << "number" << endl;
 			postfixconverter pfxconv;
 			string pfx = pfxconv.convertToPostfix(termlist[i]);
 			int finalresult = computeresult(pfx);
@@ -45,16 +42,13 @@ void print(string line, int scope) {
 		}
 	}
 
-
-	////cout << "finalOutput=" << finalOutput << endl;
-	cout << finalOutput << endl;
-
-	
+	//cout << "finalOutput=" << finalOutput << endl;
+	cout << finalOutput << endl;	
 }
 
 void createtermlist(vector<string> & termlist, string arg) {
-	cout << "inside createtermlist()" << endl;
-	cout << "arg=" << arg << endl;
+	//cout << "inside createtermlist()" << endl;
+	//cout << "arg=" << arg << endl;
 
 	for (int i = 0; i < arg.length(); i++) {
 
@@ -93,28 +87,28 @@ void createtermlist(vector<string> & termlist, string arg) {
 		}
 		//}
 
-		cout << "newterm=" << newterm << endl;
+		//cout << "newterm=" << newterm << endl;
 
 		termlist.push_back(newterm);
 	}
 }
 
 void parsetermlist(vector<string> & termlist, int scope) {
-	cout << "inside parsetermlist()" << endl;
+	//cout << "inside parsetermlist()" << endl;
 
 	for (int i = 0; i < termlist.size(); i++) {
-		cout << "termlist[" << i << "]=" << termlist[i] << ";" << endl;
+		//cout << "termlist[" << i << "]=" << termlist[i] << ";" << endl;
 		string currentexpr = termlist[i];
 		string parsedexpr;
 
-		cout << currentexpr[0] << ' ' << currentexpr[currentexpr.length() - 1] << endl;
+		//cout << currentexpr[0] << ' ' << currentexpr[currentexpr.length() - 1] << endl;
 
 		if (currentexpr[0] == '"' && currentexpr[currentexpr.length() - 1] == '"')
 			parsedexpr.append(currentexpr, 1, currentexpr.length() - 2);
 
 		else {
 
-			cout << "currentexpr=" << currentexpr << endl;
+			//cout << "currentexpr=" << currentexpr << endl;
 
 			stack<char> parenstack;
 			string newterm;
@@ -134,13 +128,13 @@ void parsetermlist(vector<string> & termlist, int scope) {
 				j++;
 			}
 
-			cout << "---------------------------------------" << endl;
-			cout << "newterm=" << newterm << endl;
+			//cout << "---------------------------------------" << endl;
+			//cout << "newterm=" << newterm << endl;
 			parsedexpr += evaluatenewterm(newterm, scope);
-			cout << "parsedexpr=" << parsedexpr << endl;
-			cout << "---------------------------------------" << endl;
+			//cout << "parsedexpr=" << parsedexpr << endl;
+			//cout << "---------------------------------------" << endl;
 
-			cout << "index after parsing first term=" << j<<' '<<currentexpr[j] << endl;
+			//cout << "index after parsing first term=" << j<<' '<<currentexpr[j] << endl;
 
 			while (j < currentexpr.length()) {
 				while (currentexpr[j] == '+' || currentexpr[j] == '-' || currentexpr[j] == '*' || currentexpr[j] == '/') {
@@ -150,14 +144,14 @@ void parsetermlist(vector<string> & termlist, int scope) {
 				parsedexpr += ' ';
 				j++;
 
-				cout << "index after finding first operator=" << j << currentexpr[j] << endl;
-				cout << "parsedexpr=" << parsedexpr << endl;
+				//cout << "index after finding first operator=" << j << currentexpr[j] << endl;
+				//cout << "parsedexpr=" << parsedexpr << endl;
 
 				stack<char> parenstack2;
 				newterm = "";
 
 				while (j < currentexpr.length()) {
-					cout << currentexpr[j] << endl;
+					//cout << currentexpr[j] << endl;
 					if (currentexpr[j] == '(')
 						parenstack2.push('(');
 					if (currentexpr[j] == ')')
@@ -170,72 +164,23 @@ void parsetermlist(vector<string> & termlist, int scope) {
 					j++;
 				}
 
-				cout << "---------------------------------------" << endl;
-				cout << "newterm=" << newterm << endl;
+				//cout << "---------------------------------------" << endl;
+				//cout << "newterm=" << newterm << endl;
 				parsedexpr += evaluatenewterm(newterm, scope);
-				cout << "parsedexpr=" << parsedexpr << endl;
-				cout << "---------------------------------------" << endl;
+				//cout << "parsedexpr=" << parsedexpr << endl;
+				//cout << "---------------------------------------" << endl;
 			}
 
-			cout << "parsedexpr=" << parsedexpr << endl;
+			//cout << "parsedexpr=" << parsedexpr << endl;
 			//sleep(5);
-			/*
-			int j = 0;
-			while (j < currentexpr.length()) {
-				string newterm;
-
-
-				while (currentexpr[j] == ' ' && j < currentexpr.length())
-					j++;
-
-				//while (isalnum(currentexpr[j]) && j < currentexpr.length()) {
-				//	newterm += currentexpr[j];
-				//	j++;
-				//}
-				while (currentexpr[j] != '+' && currentexpr[j] != '-' && currentexpr[j] != '*' && currentexpr[j] != '/' && j < currentexpr.length()) {
-					newterm += currentexpr[j];
-					j++;
-				}
-
-				cout << "newterm=" << newterm << ";" << endl;
-
-				parsedexpr += evaluatenewterm(newterm, scope);
-				if (currentexpr[j] == '(' && currentexpr[j + 1] == ')')
-					j += 2;
-
-				cout << "parsedexpr=" << parsedexpr << ';' << endl;
-
-				newterm = "";
-
-				while (currentexpr[j] == ' ' && j < currentexpr.length())
-					j++;
-
-				while ((currentexpr[j] == '*' || currentexpr[j] == '/' ||
-					currentexpr[j] == '+' || currentexpr[j] == '-') && j < currentexpr.length()) {
-					newterm += currentexpr[j];
-					j++;
-				}
-
-				cout << "newterm=" << newterm << ";" << endl;
-
-				parsedexpr += newterm;
-				parsedexpr += ' ';
-
-				cout << "parsedexpr=" << parsedexpr << ';' << endl;
-				cout << "j=" << currentexpr[j] << endl;
-				//sleep(2);
-				
-			}
-			*/
 		}
-		cout << "parsedexpr=" << parsedexpr << ';' << endl;
+		//cout << "parsedexpr=" << parsedexpr << ';' << endl;
 		termlist[i] = parsedexpr;
-		cout << "termlist[i]=" << termlist[i] << endl;
+		//cout << "termlist[i]=" << termlist[i] << endl;
 	}
-
-
 }
 
+/*
 string evaluatenewterm(string newterm, int scope) {
 	cout << "inside evaluatenewterm()" << endl;
 	cout << "newterm=" << newterm << ';'<<endl;
@@ -304,17 +249,18 @@ string evaluatenewterm(string newterm, int scope) {
 	//sleep(2);
 	return returnstring;
 }
+*/
 
 string parsefunctionargument(string newterm, int scope) {
-	cout << "inside parsefunctionargument()" << endl;
-	cout << "newterm=" << newterm << endl;
+	//cout << "inside parsefunctionargument()" << endl;
+	//cout << "newterm=" << newterm << endl;
 	string funcwithconstargs;
 
 	int i = 0;
 	while (newterm[i] != '(')
 		i++;
 	i++;
-	cout << i << ' '<<newterm[i]<<endl;
+	//cout << i << ' '<<newterm[i]<<endl;
 
 	stack<char> parenstack;
 	string wholeargument;
@@ -355,12 +301,12 @@ string parsefunctionargument(string newterm, int scope) {
 	argumentterms.push_back(temp);
 
 	for (int j = 0; j < argumentterms.size(); j++) {
-		cout << argumentterms[j] << endl;
+		//cout << argumentterms[j] << endl;
 		funcwithconstargs += evaluatenewterm(argumentterms[j], scope);
 		if(j < argumentterms.size() -1)
 			funcwithconstargs += ',';
 	}
-	cout << "funcwithconstargs=" << funcwithconstargs << endl;
+	//cout << "funcwithconstargs=" << funcwithconstargs << endl;
 	return funcwithconstargs;
 }
 

@@ -30,8 +30,8 @@ class func_type{
 };
 
 void func_type::createarglist() {
-	cout << "inside createarglist()" << endl;
-	cout << "defline=" << defline << endl;
+	//cout << "inside createarglist()" << endl;
+	//cout << "defline=" << defline << endl;
 	int i = 0;
 	while (defline[i] != '(')
 		i++;
@@ -51,7 +51,7 @@ void func_type::createarglist() {
 
 	string argument;
 	argument.append(defline, argstart, i-argstart);
-	cout << "argument=" << argument << ';'<<endl;
+	//cout << "argument=" << argument << ';'<<endl;
 
 	i = 0;
 	while (i < argument.length()) {
@@ -66,8 +66,9 @@ void func_type::createarglist() {
 			i++;
 		arglist.push_back(temp);
 	}
-	for (int j = 0; j < arglist.size(); j++)
-		cout << arglist[j] << endl;
+	for (int j = 0; j < arglist.size(); j++) {
+		//cout << arglist[j] << endl;
+	}
 }
 
 void func_type::execute() {
@@ -156,8 +157,8 @@ void func_type::checkreturn() {
 
 vector<string> func_type::parsedfuncparam(string funccall) {
 	
-	cout << "inside parsedfuncparam()" << endl;
-	cout << "funccall=" << funccall << endl;
+	//cout << "inside parsedfuncparam()" << endl;
+	//cout << "funccall=" << funccall << endl;
 	vector<string> parameters;
 	
 	int i = 0;
@@ -184,7 +185,7 @@ vector<string> func_type::parsedfuncparam(string funccall) {
 	}
 	*/
 	string funccallargument = funccall;
-	cout << "funccallargument=" << funccallargument << endl;
+	//cout << "funccallargument=" << funccallargument << endl;
 
 	i = 0;
 	stack<char> parenstack;
@@ -194,7 +195,7 @@ vector<string> func_type::parsedfuncparam(string funccall) {
 		if (funccallargument[i] == ')')
 			parenstack.pop();
 		if (funccallargument[i] == ',' && parenstack.empty()) {
-			cout << "pushing temp=" << temp << endl;
+			//cout << "pushing temp=" << temp << endl;
 			parameters.push_back(temp);
 			temp = "";
 			i++;
@@ -206,7 +207,7 @@ vector<string> func_type::parsedfuncparam(string funccall) {
 			i++;
 		}
 	}
-	cout << "pushing to parameters=" << temp << ';' << endl;
+	//cout << "pushing to parameters=" << temp << ';' << endl;
 	if(temp.compare("") != 0)
 		parameters.push_back(temp);
 	
@@ -215,24 +216,26 @@ vector<string> func_type::parsedfuncparam(string funccall) {
 }
 
 void func_type::setreturn(string funccall) {
-	cout << "inside setreturn()" << endl;
-	cout << "returnline=" << returnline << endl;
-	cout << "funccall=" << funccall << endl;
+	//cout << "inside setreturn()" << endl;
+	//cout << "returnline=" << returnline << endl;
+	//cout << "funccall=" << funccall << endl;
+
+	//---------------THIS PART CREATES LOCAL VARIABLES BASED ON PARAMETERS
 	
 	vector<string> parameters = parsedfuncparam(funccall);
 
 	if (parameters.size() != arglist.size()) {
 		cout << "ERROR: Parameters don't match function arguments; " << funccall << endl;
-		cout << parameters.size() << ' ' << arglist.size() << endl;
+		//cout << parameters.size() << ' ' << arglist.size() << endl;
 	}
 
-	cout << "arglist:" << endl;
+	//cout << "arglist:" << endl;
 	for (int k = 0; k < arglist.size(); k++) {
-		cout << arglist[k] << endl;
+		//cout << arglist[k] << endl;
 	}
-	cout << "parameters:" << endl;
+	//cout << "parameters:" << endl;
 	for (int k = 0; k < parameters.size(); k++) {
-		cout << parameters[k] << endl;
+		//cout << parameters[k] << endl;
 	}
 
 	for (int i = 0; i < parameters.size(); i++) {
@@ -242,10 +245,14 @@ void func_type::setreturn(string funccall) {
 		temp = NULL;
 	}
 
-	cout << "assigned parameters" << endl;
+	//cout << "assigned parameters" << endl;
 
-	printVariables(Variables);
+	//printVariables(Variables);
 
+	//---------------------------------------------------------------------------
+
+
+	//-----------THIS PART EXECUTES ALL STATEMENTS WITHIN THE FUNCTION SCOPE------
 	for (int i = startline; i < returnline; i++) {
 		//cout << fileLines[i] << endl;
 		string currentLine = fileLines[i];
@@ -280,12 +287,18 @@ void func_type::setreturn(string funccall) {
 		}
 	}
 
+	//------------------------------------------------------------------------------
+
+
+	//------------------------THIS PART COMPUTES THE RETURN VALUE-------------------
 	//cout << "computing return value now" << endl;
 
 	string alreadypassed;
 	string RHS;
 	int i = 0;
 
+
+	//SKIPPING return
 	string line = fileLines[returnline];
 
 	while (line[i] == ' ' && i < line.length()) {
@@ -303,6 +316,7 @@ void func_type::setreturn(string funccall) {
 
 	//cout << "alreadypassed:" << alreadypassed << ';' << endl;
 
+	//EVALUATING THE RETURN VALUE
 	string tempTerm;
 
 	if (line[i] == '-') {
@@ -540,6 +554,6 @@ func_type * getFunction(string name, list<func_type*> & Functions) {
 			return temp;
 		}
 	}
-	cout << "Function is not define" << endl;
+	cout << "Function is not defined" << endl;
 	return NULL;	
 }

@@ -82,7 +82,7 @@ void convertToConstants(string & line, string & RHS,
 
 	//Finding First term in RHS
 	string tempterm;
-
+	/*
 	if (line[i] == '-') {
 		tempterm += line[i];
 		i++;
@@ -101,11 +101,32 @@ void convertToConstants(string & line, string & RHS,
 			i += 2;
 		}
 	}
+	*/
+
+	stack<char> parenstack;
+	while (i < line.length()) {
+		if ((line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/' || 
+			line[i] == ' ')&& parenstack.empty()) {
+			break;
+		}
+		if (line[i] == '(') {
+			parenstack.push('(');
+		}
+		if (line[i] == ')') {
+			parenstack.pop();
+		}
+		tempterm += line[i];
+		i++;
+	}
+
 
 	//cout << "tempterm=" << tempterm << ';' << endl;
 
 	//If constant append it to RHS
 	//If variable lookup value and append it to RHS
+
+	RHS += evaluatenewterm(tempterm, scopelevel);
+	/*
 	if (checkifconst(tempterm)) {
 		//cout << "is a constant: " << tempterm <<";"<< endl;
 		RHS.append(tempterm);
@@ -156,6 +177,7 @@ void convertToConstants(string & line, string & RHS,
 			}
 		}
 	}
+	*/
 
 	//RHS After first time is appended
 	//cout << "RHS=" << RHS << endl;
@@ -198,17 +220,20 @@ void convertToConstants(string & line, string & RHS,
 			i++;
 		}
 
-		while (isalnum(line[i])) {
-			//cout << line[i] << endl;
-			tempterm.append(line, i, 1);
-			i++;
-		}
-
-		if ((i + 2) <= line.length()) {
-			//cout << "next 2:"<<line[i] << line[i + 1] << endl;
-			if (line[i] == '(' && line[i + 1] == ')') {
-				i += 2;
+		stack<char> parenstack2;
+		while (i < line.length()) {
+			if ((line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/' ||
+				line[i] == ' ') && parenstack2.empty()) {
+				break;
 			}
+			if (line[i] == '(') {
+				parenstack2.push('(');
+			}
+			if (line[i] == ')') {
+				parenstack2.pop();
+			}
+			tempterm += line[i];
+			i++;
 		}
 
 		while (line[i] == ' ')
@@ -216,6 +241,9 @@ void convertToConstants(string & line, string & RHS,
 
 		//cout << tempterm << endl;
 
+		RHS += evaluatenewterm(tempterm, scopelevel);
+
+		/*
 		if (checkifconst(tempterm)) {
 			//cout << "is a constant:" <<tempterm<<";"<< endl;
 			RHS.append(tempterm);
@@ -265,6 +293,7 @@ void convertToConstants(string & line, string & RHS,
 				}
 			}
 		}
+		*/
 
 		//cout << "RHS=" << RHS << endl;
 	}
