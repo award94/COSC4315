@@ -31,68 +31,6 @@ void createNewFunc(string line, int & lineNum, int scopelevel){
 	newFunc = NULL;
 
 	//cout << "==========FUNCTION SCOPE END============" << endl;
-
-	/*
-	
-
-	int funcscope = scopelevel + 1;
-
-	string funcName = findfuncname(line);
-	//cout<<"found funcname"<<endl;
-	float funcResult;
-
-	vector<string> funcstatements;
-
-	//cout << endl << "current line#=" << lineNum << endl;
-	int lastLine = findlastlinefunc(lineNum, funcscope);
-	//cout << "found lastline" << endl;
-	
-	cout << "ENTIRE FUNCION DEFINITION" << endl;
-	for (int i = lineNum; i <= lastLine; i++) {
-		cout << fileLines[i] << endl;
-	}
-	cout << "start line = " << lineNum << endl;
-	cout << "last line = " << lastLine << endl;
-
-	cout << "STARTING TO PROCESS LINES IN FUNCTION" << endl;
-	for (int i = lineNum; i <= lastLine; i++) {
-		//cout << fileLines[i] << endl;
-		string currentLine = fileLines[i];
-		if (!currentLine.empty()) {
-			bool lineinscope = 1;
-			for (int j = 0; j < funcscope * 3; j++) {
-				if (currentLine[j] != ' ')
-					lineinscope = 0;
-			}
-			//cout << "lineinscope=" << lineinscope << endl;
-			if (currentLine[(funcscope * 3)] == ' ') {
-				//cout << "funcscope=" << funcscope << endl;
-				//cout << currentLine[(funcscope * 3)] << endl;
-				lineinscope = 0;
-			}
-			//cout << "lineinscope=" << lineinscope << endl;
-			//cout << "isthisline in scope=" << lineinscope << endl;
-
-			if (lineinscope) {
-				int j = 0;
-				while (currentLine[j] == ' ')
-					j++;
-
-				string nextvar;
-
-				while (currentLine[j] != ' ' && j < currentLine.length())
-					nextvar += currentLine[j++];
-
-				processstatement(i, currentLine, lastLine, funcscope, funcName);
-			}
-		}
-
-	}
-	deleteScope(Variables, funcscope);
-	
-
-	lineNum = lastLine;
-	*/
 }
 
 int findlastlinefunc(int startLineNum, int funcscope) {

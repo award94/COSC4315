@@ -27,7 +27,7 @@ void print(string line, int scope) {
 	parsetermlist(termlist, scope);
 	//cout << "PARSED TERMS" << endl;
 	for (int i = 0; i < termlist.size(); i++) {
-		cout << termlist[i] << endl;
+		//cout << termlist[i] << endl;
 		if (isalpha(termlist[i][0])) {
 			finalOutput += termlist[i];
 			finalOutput += ' ';
@@ -179,77 +179,6 @@ void parsetermlist(vector<string> & termlist, int scope) {
 		//cout << "termlist[i]=" << termlist[i] << endl;
 	}
 }
-
-/*
-string evaluatenewterm(string newterm, int scope) {
-	cout << "inside evaluatenewterm()" << endl;
-	cout << "newterm=" << newterm << ';'<<endl;
-	string deletingspaces = newterm;
-	newterm = "";
-	for (int i = 0; i < deletingspaces.length(); i++) {
-		if (deletingspaces[i] != ' ')
-			newterm += deletingspaces[i];
-	}
-
-	string returnstring;
-
-	if (checkifconst(newterm)) {
-		returnstring += newterm;
-		returnstring += ' ';
-	}
-	else {
-		//cout << "variable" << endl;
-		string getfuncname;
-		int i = 0;
-		while (newterm[i] != '(' && i < newterm.length()) {
-			getfuncname += newterm[i];
-			i++;
-		}
-		cout << "getfuncname=" << getfuncname << endl;
-		if (checkforfunction(getfuncname, Functions)) {
-			//cout << "func does exist" << endl;
-
-			string functionargument = parsefunctionargument(newterm, scope);
-			cout << "functionargument=" << functionargument << endl;
-
-			func_type * temp = getFunction(getfuncname, Functions);
-			
-			//cout << "checkreturn=" << temp->doesreturn << endl;
-			if (temp->doesreturn) {
-				////cout << "returnvalue=" << temp->returnvalue << ';' << endl;
-				temp->setreturn(functionargument);
-				string tempvalue = to_string(temp->returnvalue);
-				returnstring += tempvalue;
-				returnstring += ' ';
-			}
-			else {
-				cout << "ERROR: Function does not return a value" << endl;
-			}
-			temp = NULL;
-		}
-		else {
-			for (int j = scope; j >= 0; j--) {
-				////cout << "scope=" << j << endl;
-
-				if (checkforvariableinscope(newterm, Variables, j)) {
-					////cout << "variable found in this scope:" << j << endl;
-					variable * temp2 = getvariablescope(newterm, Variables, j);
-					returnstring += to_string(temp2->value);
-					returnstring += ' ';
-					temp2 = NULL;
-					break;
-				}
-				else
-					cout << "error: variable does not exist:" << newterm << endl;
-			}
-		}
-	}
-
-	cout << "returnstring=" << returnstring << endl;
-	//sleep(2);
-	return returnstring;
-}
-*/
 
 string parsefunctionargument(string newterm, int scope) {
 	//cout << "inside parsefunctionargument()" << endl;

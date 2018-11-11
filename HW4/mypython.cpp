@@ -14,8 +14,6 @@
 list<variable*> Variables;
 vector<string> fileLines;
 
-
-
 void processstatement(int & lineNum, string line, int lastLine,
 	int scopelevel, string scopename);
 float computeresult(string exp);
@@ -24,7 +22,6 @@ string evaluatenewterm(string newterm, int scope);
 
 list<func_type*> Functions;
 
-
 #include "token_assignment.h"
 #include "token_function.h"
 #include "token_ifelse.h"
@@ -32,8 +29,6 @@ list<func_type*> Functions;
 #include "token_return.h"
 
 using namespace std;
-
-
 
 int main(int argc, char* argv[]){
 	//cout<< "Homework 2"<<endl;
@@ -147,28 +142,6 @@ void processstatement(int & lineNum, string line, int lastLine,
 	}
 	//cout << endl;
 }
-
-//IDENTIFY WHAT KIND OF STATEMENT THIS IS
-//
-//ASSIGNMENT, 
-//	1. Keep LHS as it's variable name, change RHS to all constants
-//	2. Change LHS to postfix form
-//	3. Send line through assignment() to be evaluated
-
-//
-//FUNCTION,
-//	Idk yet, but it's gonna eventually create a variable with the func name and value
-//
-//PRINT
-//	1. Grab all values from variables
-//	2. concatenate the values into a string and cout it
-//
-//IF/ELSE
-//	Idk yet, but it's gonna eventually evaluate x inside if(x) and then branch
-//ALSO COMMENTS #
-//Comments at the start of line
-//Comments in the middle of a line
-
 
 float computeresult(string exp) {
 	//cout << "inside computeresult" << endl;
@@ -291,18 +264,19 @@ string evaluatenewterm(string newterm, int scope) {
 		}
 		else {
 			for (int j = scope; j >= 0; j--) {
-				////cout << "scope=" << j << endl;
+				//cout << "scope=" << j << endl;
 
 				if (checkforvariableinscope(newterm, Variables, j)) {
-					////cout << "variable found in this scope:" << j << endl;
+					//cout << "variable found in this scope:" << j << endl;
 					variable * temp2 = getvariablescope(newterm, Variables, j);
 					returnstring += to_string(temp2->value);
 					returnstring += ' ';
 					temp2 = NULL;
 					break;
 				}
-				else
-					cout << "error: variable does not exist:" << newterm << endl;
+				else {
+					//cout << "error: variable does not exist:" << newterm << endl;
+				}
 			}
 		}
 	}

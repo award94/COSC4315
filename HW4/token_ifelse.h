@@ -9,7 +9,7 @@ string parseexpr(string line, int scope);
 
 void ifelse(string ifline, int & iflineNum, int funclastline, 
 	int prevscope, string scopename) {
-	//cout << endl<<"============IF ELSE SCOPE BEGIN==========" << endl;
+	cout << endl<<"============IF ELSE SCOPE BEGIN==========" << endl;
 	
 
 	int currentscope = prevscope;
@@ -23,8 +23,6 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 	//cout << "else start line=" << elseline << endl;
 	//cout << "if/else last line=" << lastline << endl;
 	//cout << "function last line=" << funclastline << endl;
-	
-	
 
 	string line;
 	string firstWord;
@@ -41,7 +39,7 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 			for (; i <= lastline; i++) {
 				//cout << "i=" << i <<endl;
 				string currentLine = fileLines[i];
-				processstatement(i, currentLine, funclastline, currentscope, scopename);
+				processstatement(i, currentLine, funclastline, currentscope+1, scopename);
 			}
 			iflineNum = i;
 			//cout << "iflineNum=" << iflineNum << endl;
@@ -53,7 +51,7 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 			for (; i < elseline; i++) {
 				//cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
-				processstatement(i, currentLine, funclastline, currentscope, scopename);
+				processstatement(i, currentLine, funclastline, currentscope+1, scopename);
 			}
 			iflineNum = i;
 			//cout << "iflineNum=" << iflineNum << endl;
@@ -72,7 +70,7 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 			for (; i <= lastline; i++) {
 				//cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
-				processstatement(i, currentLine, funclastline, currentscope, scopename);
+				processstatement(i, currentLine, funclastline, currentscope+1, scopename);
 			}
 			iflineNum = i;
 			
@@ -81,8 +79,8 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 	}
 
 	iflineNum = lastline;
-	//cout << "lineNum=" << iflineNum << endl;
-	//cout << "============IF ELSE SCOPE END==========" << endl;
+	cout << "lineNum=" << iflineNum << endl;
+	cout << "============IF ELSE SCOPE END==========" << endl;
 	
 }
 
@@ -126,7 +124,7 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 
 				//cout << "nextvar=" << nextvar << ';' << endl;
 
-				if (nextvar.compare("else:") == 0) {
+				if (nextvar.compare("else:") == 0 && elseline == -1) {
 					//cout << "found an else" << endl;
 					elseline = i;
 				}

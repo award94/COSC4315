@@ -52,6 +52,10 @@ void setValue(string VarName, list<variable*> & Variables, float VarValue) {
 }
 
 variable* getvariablescope(string VarName, list<variable*> & Variables, int scopelevel) {
+	//cout << "getvariableinscope()" << endl;
+	//cout << "name=" << VarName << ";" << endl;
+	//cout << "scope=" << scopelevel << endl;
+
 	for (list<variable*>::iterator it = Variables.begin();
 		it != Variables.end(); it++) {
 		if ((*it)->name.compare(VarName) == 0 && (*it)->scope == scopelevel)
