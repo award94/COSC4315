@@ -21,9 +21,9 @@ class func_type{
 		int findlastline();
 		func_type();
 
-		void execute();	
+		void execute(int stackscope, int nestlevel);	
 		void checkreturn();
-		void setreturn(string funccall);
+		void setreturn(string funccall, int stackscope, int nestlevel);
 		void getreturn();
 
 		vector<string> parsedfuncparam(string funccall);
@@ -71,8 +71,9 @@ void func_type::createarglist() {
 	}
 }
 
-void func_type::execute() {
+void func_type::execute(int stacklevel, int nestlevel) {
 	//cout << "inside execute()" << endl;
+	//cout << "scope=" << stacklevel << endl;
 	//cout << "startline=" << startline << endl;
 	//cout << "returnline=" << returnline << endl;
 	//cout << "endline=" << endline << endl;
@@ -100,7 +101,7 @@ void func_type::execute() {
 				//cout << "lineinscope=" << lineinscope << endl;
 				//cout << "isthisline in scope=" << lineinscope << endl;
 				if (lineinscope)
-					processstatement(i, currentLine, endline, scope, name);
+					processstatement(i, currentLine, endline, stacklevel, name, nestlevel);
 			}
 
 		}
@@ -125,12 +126,12 @@ void func_type::execute() {
 				//cout << "lineinscope=" << lineinscope << endl;
 				//cout << "isthisline in scope=" << lineinscope << endl;
 				if (lineinscope)
-					processstatement(i, currentLine, endline, scope, name);
+					processstatement(i, currentLine, endline, stacklevel, name, nestlevel);
 			}
 		}
 	}
 
-	deleteScope(Variables, scope);
+	deleteScope(Variables, stacklevel);
 }
 
 void func_type::checkreturn() {
@@ -158,7 +159,7 @@ void func_type::checkreturn() {
 vector<string> func_type::parsedfuncparam(string funccall) {
 	
 	//cout << "inside parsedfuncparam()" << endl;
-	//cout << "funccall=" << funccall << endl;
+	cout << "funccall=" << funccall << endl;
 	vector<string> parameters;
 	
 	int i = 0;
@@ -207,7 +208,7 @@ vector<string> func_type::parsedfuncparam(string funccall) {
 			i++;
 		}
 	}
-	//cout << "pushing to parameters=" << temp << ';' << endl;
+	cout << "pushing to parameters=" << temp << ';' << endl;
 	if(temp.compare("") != 0)
 		parameters.push_back(temp);
 	
@@ -215,8 +216,14 @@ vector<string> func_type::parsedfuncparam(string funccall) {
 	
 }
 
-void func_type::setreturn(string funccall) {
-	//cout << "inside setreturn()" << endl;
+void func_type::setreturn(string funccall, int stackscope, int nestlevel) {
+	//cout << "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" << endl;
+	cout << "inside setreturn() stackdepth=" << stackscope<<endl;
+	if (stackscope >= 2000) {
+		cout << "INFINITE RECURSION" << endl;
+		recursionList[recursionList.size() - 1] = "No";
+		return;
+	}
 	//cout << "returnline=" << returnline << endl;
 	//cout << "funccall=" << funccall << endl;
 
@@ -239,8 +246,8 @@ void func_type::setreturn(string funccall) {
 	}
 
 	for (int i = 0; i < parameters.size(); i++) {
-		createNewVar(arglist[i], Variables, scope);
-		variable * temp = getvariablescope(arglist[i], Variables, scope);
+		createNewVar(arglist[i], Variables, stackscope);
+		variable * temp = getvariablescope(arglist[i], Variables, stackscope);
 		temp->value = stof(parameters[i]);
 		temp = NULL;
 	}
@@ -253,8 +260,8 @@ void func_type::setreturn(string funccall) {
 
 
 	//-----------THIS PART EXECUTES ALL STATEMENTS WITHIN THE FUNCTION SCOPE------
-	for (int i = startline; i < returnline; i++) {
-		//cout << fileLines[i] << endl;
+	for (int i = startline+1; i < returnline; i++) {
+		//cout << "\t\t\t"<<fileLines[i] << endl;
 		string currentLine = fileLines[i];
 
 		if (!currentLine.empty()) {
@@ -282,12 +289,13 @@ void func_type::setreturn(string funccall) {
 					k++;
 				}
 				if(!(nextvar.compare("print") == 0))
-					processstatement(i, currentLine, endline, scope, name);
+					processstatement(i, currentLine, endline, stackscope, name, nestlevel);
 			}
 		}
 	}
 
 	//------------------------------------------------------------------------------
+
 
 
 	//------------------------THIS PART COMPUTES THE RETURN VALUE-------------------
@@ -317,13 +325,102 @@ void func_type::setreturn(string funccall) {
 	//cout << "alreadypassed:" << alreadypassed << ';' << endl;
 
 	//EVALUATING THE RETURN VALUE
-	string tempTerm;
+	string tempterm;
+
+	while (line[i] == ' ')
+		i++;
 
 	if (line[i] == '-') {
-		tempTerm += line[i];
+		tempterm += line[i];
 		i++;
 	}
 
+	stack<char> parenstack;
+	while (i < line.length()) {
+		if ((line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/' ||
+			line[i] == ' ') && parenstack.empty()) {
+			break;
+		}
+		if (line[i] == '(') {
+			parenstack.push('(');
+		}
+		if (line[i] == ')') {
+			parenstack.pop();
+		}
+		tempterm += line[i];
+		i++;
+	}
+
+	//cout << "tempterm=" << tempterm << ';' << endl;
+
+	RHS += evaluatenewterm(tempterm, stackscope, nestlevel);
+
+	while (line[i] == ' ')
+		i++;
+
+	while (i < line.length()) {
+		tempterm = "";
+		//cout << line[i] << endl;
+
+		//cout << "inside loop" << endl;
+		while (line[i] == ' ') {
+			i++;
+		}
+		//cout << line[i] << endl;
+
+		if (line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/') {
+			tempterm.append(line, i, 1);
+			i++;
+		}
+		else {
+			//cout << "operator missing" << endl;
+		}
+		//cout << i << " tempterm=" << tempterm << 'a' << endl;
+		//cout << tempterm.compare("-") << endl;
+
+		if ((tempterm.compare("+") == 0) || (tempterm.compare("-") == 0 ||
+			tempterm.compare("*") == 0) || (tempterm.compare("/") == 0)) {
+			//cout << "operator=" << tempterm << endl;
+			RHS.append(tempterm);
+			RHS += ' ';
+		}
+
+		while (line[i] == ' ')
+			i++;
+
+		tempterm = "";
+
+		if (line[i] == '-') {
+			tempterm += line[i];
+			i++;
+		}
+
+		stack<char> parenstack2;
+		while (i < line.length()) {
+			if ((line[i] == '+' || line[i] == '-' || line[i] == '*' || line[i] == '/' ||
+				line[i] == ' ') && parenstack2.empty()) {
+				break;
+			}
+			if (line[i] == '(') {
+				parenstack2.push('(');
+			}
+			if (line[i] == ')') {
+				parenstack2.pop();
+			}
+			tempterm += line[i];
+			i++;
+		}
+
+
+		while (line[i] == ' ')
+			i++;
+
+		cout << tempterm << endl;
+
+		RHS += evaluatenewterm(tempterm, stackscope, nestlevel);
+	}
+
+	/*
 	while (isalnum(line[i])) {
 		tempTerm += line[i];
 		i++;
@@ -423,6 +520,9 @@ void func_type::setreturn(string funccall) {
 			}
 		}
 	}
+
+	*/
+
 	//cout << "RHS:" << RHS << 'a'<<endl;
 	//for (int i = 0; i < RHS.length(); i++) {
 	//	if (RHS[i] != ' ' && RHS[i] != '\n')
@@ -432,13 +532,17 @@ void func_type::setreturn(string funccall) {
 	//if (empty == 0) {
 	postfixconverter converter;
 	RHS = converter.convertToPostfix(RHS);
-		//cout << "RHS:" << RHS << 'a' << endl;
-	returnvalue = computeresult(RHS);
+	//cout << "RHS:" << RHS << ';' << endl;
+	//returnvalue = computeresult(RHS);
+	//cout << "returnvalue inside func_type=" << returnvalue << endl;
+	//returnvalue = temp->value;
+	//temp = NULL;
 	//}
 	//else
 	//	cout << "no return value" << endl;
-	
-	deleteScope(Variables, scope);
+	//cout << "Variables after computing return value within func_type()" << endl;	
+	//printVariables(Variables);
+	deleteScope(Variables, stackscope);
 }
 
 void func_type::getreturn() {
@@ -523,8 +627,9 @@ void printFunctions(list<func_type*> & Functions) {
 	func_type * temp = NULL;
 	for (list<func_type*>::iterator it = Functions.begin();
 		it != Functions.end(); it++) {
-		cout << "name=" << (*it)->name << " returnvalue=" << (*it)->returnvalue
-			<< " startline=" << (*it)->startline << " endline=" << (*it)->endline << endl;
+		cout << "name=" << (*it)->name << " scope="<<(*it)->scope<< " value="<< (*it)->returnvalue<< 
+			" returnvalue=" << (*it)->returnvalue << " startline=" << (*it)->startline << 
+			" endline=" << (*it)->endline << endl;
 	}
 }
 
@@ -556,4 +661,22 @@ func_type * getFunction(string name, list<func_type*> & Functions) {
 	}
 	cout << "Function is not defined" << endl;
 	return NULL;	
+}
+
+func_type * getFunctionScope(string name, list<func_type*> & Functions, int stackscope) {
+	//cout << "inside getFunctionScope" << endl;
+	//cout << "funcname=" << name << " scope="<<stackscope<<";"<<endl;
+
+	//printFunctions(Functions);
+
+	func_type * temp = NULL;
+	for (list<func_type*>::iterator it = Functions.begin(); it != Functions.end(); it++) {
+		if ((*it)->name == name && (*it)->scope == stackscope) {
+			//cout << "found the function" << endl;
+			temp = (*it);
+			return temp;
+		}
+	}
+	cout << "Function is not defined" << endl;
+	return NULL;
 }

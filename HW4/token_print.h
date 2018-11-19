@@ -2,11 +2,12 @@ using namespace std;
 
 void findargument(string line, int & parenthesis1, int & parenthesis2);
 void createtermlist(vector<string> & termlist, string arg);
-void parsetermlist(vector<string> & termlist, int scope);
-string parsefunctionargument(string newterm, int scope);
+void parsetermlist(vector<string> & termlist, int scope, int nestlevel);
+string parsefunctionargument(string newterm, int scope, int nestlevel);
+string convertexpressiontoconstants(string expression, int scope, int nestlevel);
 string evaluatenewterm(string newterm, int scope);
 
-void print(string line, int scope) {
+void print(string line, int scope, int nestlevel) {
 // Argument is used as a temporary variable to hold the contents before the delimiter
 	// When the delimiter is reached, the strings are checked and appended to finalOutput
 	string finalOutput;
@@ -24,7 +25,7 @@ void print(string line, int scope) {
 	
 	vector<string> termlist;
 	createtermlist(termlist, arg);
-	parsetermlist(termlist, scope);
+	parsetermlist(termlist, scope, nestlevel);
 	//cout << "PARSED TERMS" << endl;
 	for (int i = 0; i < termlist.size(); i++) {
 		//cout << termlist[i] << endl;
@@ -93,7 +94,7 @@ void createtermlist(vector<string> & termlist, string arg) {
 	}
 }
 
-void parsetermlist(vector<string> & termlist, int scope) {
+void parsetermlist(vector<string> & termlist, int scope, int nestlevel) {
 	//cout << "inside parsetermlist()" << endl;
 
 	for (int i = 0; i < termlist.size(); i++) {
@@ -130,7 +131,7 @@ void parsetermlist(vector<string> & termlist, int scope) {
 
 			//cout << "---------------------------------------" << endl;
 			//cout << "newterm=" << newterm << endl;
-			parsedexpr += evaluatenewterm(newterm, scope);
+			parsedexpr += evaluatenewterm(newterm, scope, nestlevel);
 			//cout << "parsedexpr=" << parsedexpr << endl;
 			//cout << "---------------------------------------" << endl;
 
@@ -142,7 +143,7 @@ void parsetermlist(vector<string> & termlist, int scope) {
 					j++;
 				}
 				parsedexpr += ' ';
-				j++;
+				//j++;
 
 				//cout << "index after finding first operator=" << j << currentexpr[j] << endl;
 				//cout << "parsedexpr=" << parsedexpr << endl;
@@ -151,7 +152,7 @@ void parsetermlist(vector<string> & termlist, int scope) {
 				newterm = "";
 
 				while (j < currentexpr.length()) {
-					//cout << currentexpr[j] << endl;
+					cout << currentexpr[j] << endl;
 					if (currentexpr[j] == '(')
 						parenstack2.push('(');
 					if (currentexpr[j] == ')')
@@ -166,7 +167,7 @@ void parsetermlist(vector<string> & termlist, int scope) {
 
 				//cout << "---------------------------------------" << endl;
 				//cout << "newterm=" << newterm << endl;
-				parsedexpr += evaluatenewterm(newterm, scope);
+				parsedexpr += evaluatenewterm(newterm, scope, nestlevel);
 				//cout << "parsedexpr=" << parsedexpr << endl;
 				//cout << "---------------------------------------" << endl;
 			}
@@ -180,15 +181,33 @@ void parsetermlist(vector<string> & termlist, int scope) {
 	}
 }
 
-string parsefunctionargument(string newterm, int scope) {
+string parsefunctionargument(string newterm, int scope, int nestlevel) {
 	//cout << "inside parsefunctionargument()" << endl;
 	//cout << "newterm=" << newterm << endl;
-	string funcwithconstargs;
+	string funcwithconstargs = "";
+
+	int j = 0;
+	while (j < newterm.length()) {
+		//cout << newterm[j] << endl;
+		if ((newterm[j] == '+' || newterm[j] == '-') && isalnum(newterm[j-1])) {
+			//cout << "adding space" << endl;
+			newterm.insert(j, 1, ' ');
+			j++;
+		}
+
+		else if ((newterm[j-1] == '+' || newterm[j-1] == '-') && isalnum(newterm[j])) {
+			//cout << "adding space" << endl;
+			newterm.insert(j, 1, ' ');
+			j++;
+		}
+
+		j++;
+	}
 
 	int i = 0;
 	while (newterm[i] != '(')
 		i++;
-	i++;
+	//i++;
 	//cout << i << ' '<<newterm[i]<<endl;
 
 	stack<char> parenstack;
@@ -203,9 +222,13 @@ string parsefunctionargument(string newterm, int scope) {
 		wholeargument += newterm[i];
 		i++;
 	}
+	//cout << "wholeargument=" << wholeargument << ';' << endl;
+	wholeargument.erase((wholeargument.length() - 1));
+	//cout << "wholeargument=" << wholeargument << ';' << endl;
+	wholeargument.erase(0, 1);
 	//cout << "wholeargument=" << wholeargument << ';'<<endl;
 
-	vector<string> argumentterms;
+	vector<string> argumentexpressions;
 
 	while (!parenstack.empty())
 		parenstack.pop();
@@ -214,7 +237,7 @@ string parsefunctionargument(string newterm, int scope) {
 	string temp;
 	while (i < wholeargument.length()) {
 		if (wholeargument[i] == ',' && parenstack.empty()) {
-			argumentterms.push_back(temp);
+			argumentexpressions.push_back(temp);
 			temp = "";
 			i++;
 		}
@@ -227,16 +250,122 @@ string parsefunctionargument(string newterm, int scope) {
 		temp += wholeargument[i];
 		i++;
 	}
-	argumentterms.push_back(temp);
+	if(temp.length() != 0)
+		argumentexpressions.push_back(temp);
 
-	for (int j = 0; j < argumentterms.size(); j++) {
-		//cout << argumentterms[j] << endl;
-		funcwithconstargs += evaluatenewterm(argumentterms[j], scope);
-		if(j < argumentterms.size() -1)
+	//cout << "argumentexpressions:" << "; size="<<argumentexpressions.size()<<endl;
+	for (int j = 0; j < argumentexpressions.size(); j++) {
+		cout << argumentexpressions[j] << ';'<<endl;
+		string prefix = convertexpressiontoconstants(argumentexpressions[j], scope, nestlevel);
+		//cout << "prefix=" << prefix << ';' << endl;
+		postfixconverter converter;
+		string pfxRHS = converter.convertToPostfix(prefix);
+		//cout << "pfxRHS=" << pfxRHS << ';'<<endl;
+		float result = computeresult(pfxRHS);
+		//cout << "result=" << result << ';'<<endl;
+
+		funcwithconstargs += to_string(result);
+
+		if(j < argumentexpressions.size() -1)
 			funcwithconstargs += ',';
 	}
 	//cout << "funcwithconstargs=" << funcwithconstargs << endl;
 	return funcwithconstargs;
+}
+
+string convertexpressiontoconstants(string expression, int scope, int nestlevel) {
+	//cout << "inside convertoexpressiontoconstants()" << endl;
+	//cout << "expression=" << expression << endl;
+	int i = 0;	
+	string result;
+	string tempterm;
+
+	while (expression[i] == ' ')
+		i++;
+
+	stack<char> parenstack;
+	while (i < expression.length()) {
+		if ((expression[i] == '+' || expression[i] == '-' || expression[i] == '*' || expression[i] == '/' ||
+			expression[i] == ' ') && parenstack.empty()) {
+			break;
+		}
+		if (expression[i] == '(') {
+			parenstack.push('(');
+		}
+		if (expression[i] == ')') {
+			parenstack.pop();
+		}
+		tempterm += expression[i];
+		i++;
+	}
+
+
+	//cout << "tempterm=" << tempterm << ';' << endl;
+
+	//If constant append it to RHS
+	//If variable lookup value and append it to RHS
+
+	result += evaluatenewterm(tempterm, scope, nestlevel);
+	while (i < expression.length()) {
+		tempterm = "";
+		//cout << line[i] << endl;
+
+		//cout << "inside loop" << endl;
+		while (expression[i] == ' ') {
+			i++;
+		}
+		//cout << expression[i] << endl;
+
+		if (expression[i] == '+' || expression[i] == '-' || expression[i] == '*' || expression[i] == '/') {
+			tempterm.append(expression, i, 1);
+			i++;
+		}
+		//cout << i<<" tempterm=" << tempterm << 'a'<<endl;
+		//cout << tempterm.compare("-") << endl;
+
+		if ((tempterm.compare("+") == 0) || (tempterm.compare("-") == 0 ||
+			tempterm.compare("*") == 0) || (tempterm.compare("/") == 0)) {
+			//cout << "operator=" << tempterm << endl;
+			result += tempterm;
+			result += ' ';
+		}
+
+		while (expression[i] == ' ')
+			i++;
+
+		tempterm = "";
+
+		if (expression[i] == '-') {
+			tempterm += expression[i];
+			i++;
+		}
+
+		stack<char> parenstack2;
+		while (i < expression.length()) {
+			if ((expression[i] == '+' || expression[i] == '-' || expression[i] == '*' || expression[i] == '/' ||
+				expression[i] == ' ') && parenstack2.empty()) {
+				break;
+			}
+			if (expression[i] == '(') {
+				parenstack2.push('(');
+			}
+			if (expression[i] == ')') {
+				parenstack2.pop();
+			}
+			tempterm += expression[i];
+			i++;
+		}
+
+		while (expression[i] == ' ')
+			i++;
+
+		//cout << tempterm << endl;
+
+		result += evaluatenewterm(tempterm, scope, nestlevel);
+
+		//cout << "result=" << result << endl;
+	}
+	return result;
 }
 
 void findargument(string line, int & parenthesis1, int & parenthesis2) {

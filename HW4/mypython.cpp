@@ -13,14 +13,19 @@
 #include "variable.h"
 list<variable*> Variables;
 vector<string> fileLines;
+vector<string> mutationList;
+vector<int> ifelseList;
+vector<string> recursionList;
 
 void processstatement(int & lineNum, string line, int lastLine,
-	int scopelevel, string scopename);
+	int stacklevel, string stackname, int nestlevel);
 float computeresult(string exp);
-string evaluatenewterm(string newterm, int scope);
+string evaluatenewterm(string newterm, int scope, int nestlevel);
+#include "mutation.h"
 #include "function_type.h"
 
 list<func_type*> Functions;
+
 
 #include "token_assignment.h"
 #include "token_function.h"
@@ -60,21 +65,51 @@ int main(int argc, char* argv[]){
 
 	for (int lineNum = 0; lineNum < fileLines.size(); lineNum++) {
 		//cout << "==================MAIN SCOPE BEGIN=====================" << endl;
-		processstatement(lineNum, fileLines[lineNum], lastLine, 0, "main");
+		processstatement(lineNum, fileLines[lineNum], lastLine, 0, "main", 0);
 		//cout << "lineNum after = " << lineNum << endl;
 		//cout << "==================MAIN SCOPE END=====================" << endl;
 	}
 
-	//printFunctions(Functions);
-	//printVariables(Variables);
+	printFunctions(Functions);
+	printVariables(Variables);
 	deleteVariables(Variables);
 	
+	if (mutationList.size() > 0) {
+		cout << endl;
+		cout << "Mutated Variables:";
+		for (int i = 0; i < mutationList.size(); i++) {
+			cout << ' ' << mutationList[i];
+			if (i < mutationList.size() - 1)
+				cout << ",";
+		}
+		cout << endl;
+	}
+
+	if (ifelseList.size() > 0) {
+		cout << "Nested if/else level:";
+		for (int i = 0; i < ifelseList.size(); i++) {
+			cout << ' ' << ifelseList[i] << " level";
+			if (i < ifelseList.size() - 1)
+				cout << ",";
+		}
+		cout << endl;
+	}
+	if (recursionList.size() > 0) {
+		cout << "Recursive Function Ends:";
+		for (int i = 0; i < recursionList.size(); i++) {
+			cout << ' ' << recursionList[i];
+			if (i < recursionList.size() - 1)
+				cout << ",";
+		}
+		cout << endl;
+	}
+
 	return 0;	
 }
 
 void processstatement(int & lineNum, string line, int lastLine, 
-	int scopelevel, string scopename) {
-	printVariables(Variables);
+	int stacklevel, string stackname, int nestlevel) {
+	//printVariables(Variables);
 	cout << "inside processstatement: " << line<< " ("<<lineNum<< ")"<<endl;
 	//cout << "lineNum = " << lineNum << ";"<<endl;
 	//cout << "line="<<fileLines[lineNum] <<";"<< endl;
@@ -104,37 +139,68 @@ void processstatement(int & lineNum, string line, int lastLine,
 			//cout << "Function definition" << endl;
 			//cout << "before" << endl;
 			//printFunctions(Functions);
-			createNewFunc(line, lineNum, scopelevel);
+			createNewFunc(line, lineNum, stacklevel, stackname, nestlevel);
 			//cout << "after" << endl;
 			//printFunctions(Functions);
 		}
 		else if (nextVar.compare("print") == 0) {
 			//cout << "Print statement" << endl;
-			print(line, scopelevel);
+			//print(line, stacklevel, nestlevel);
 		}
 		else if (nextVar.compare("if") == 0) {
 			//cout << "If/Else statement" << endl;
-			ifelse(line, lineNum, lastLine, scopelevel, scopename);
+			ifelse(line, lineNum, lastLine, stacklevel, 
+				stackname, nestlevel);
 		}
 		else if (nextVar.compare("else") == 0) {
 			cout << "ERROR: No if for this else" << endl;
 		}
 		else if (nextVar.compare("return") == 0) {
 			//cout << "return found" << endl;
-			setreturn(line, lineNum, lastLine, scopelevel, scopename);
+			setreturn(line, lineNum, lastLine, stacklevel, 
+				stackname, nestlevel);
 		}
-		else if (line[i] == '(' && line[i + 1] == ')') {
+		else if (line[i] == '(' && line[line.length()-1] == ')') {
 			//cout << "function found" << endl;
 			//printFunctions(Functions);
-			func_type * temp = getFunction(nextVar, Functions);
+			//func_type * temp = getFunction(nextVar, Functions);
 			//cout << "temp=" << temp->name << endl;
+			//string functionargument = parsefunctionargument(newterm,
+			//	scope, nestlevel);
+			//temp->setreturn(stacklevel, nestlevel);
 
-			temp->execute();
-				
+			string tempterm;
+			int j = 0;
+
+			while (line[j] == ' ')
+				j++;
+
+			if (line[j] == '-') {
+				tempterm += line[j];
+				j++;
+			}
+
+			stack<char> parenstack;
+			while (j < line.length()) {
+				if ((line[j] == '+' || line[j] == '-' || line[j] == '*' || line[j] == '/' ||
+					line[j] == ' ') && parenstack.empty()) {
+					break;
+				}
+				if (line[j] == '(') {
+					parenstack.push('(');
+				}
+				if (line[j] == ')') {
+					parenstack.pop();
+				}
+				tempterm += line[j];
+				j++;
+			}
+			evaluatenewterm(tempterm, stacklevel, nestlevel);
+
 		}
 		else {
 			//cout << "Variable Assignment/Arithmetic" << endl;
-			assignment(line, scopelevel, scopename);
+			assignment(line, stacklevel, stackname, nestlevel);
 		}
 	}
 	else {
@@ -216,8 +282,10 @@ float computeresult(string exp) {
 	return numbers.top();
 }
 
-string evaluatenewterm(string newterm, int scope) {
+string evaluatenewterm(string newterm, int scope, int nestlevel) {
 	//cout << "inside evaluatenewterm()" << endl;
+	//printVariables(Variables);
+	//printFunctions(Functions);
 	//cout << "newterm=" << newterm << ';' << endl;
 	string deletingspaces = newterm;
 	//newterm = "";
@@ -229,6 +297,7 @@ string evaluatenewterm(string newterm, int scope) {
 	string returnstring;
 
 	if (checkifconst(newterm)) {
+		//cout << "constant" << endl;
 		returnstring += newterm;
 		returnstring += ' ';
 	}
@@ -240,19 +309,23 @@ string evaluatenewterm(string newterm, int scope) {
 			getfuncname += newterm[i];
 			i++;
 		}
+		//
 		//cout << "getfuncname=" << getfuncname << endl;
 		if (checkforfunction(getfuncname, Functions)) {
 			//cout << "func does exist" << endl;
+			if (scope == 2)
+				recursionList.push_back("Yes");
 
-			string functionargument = parsefunctionargument(newterm, scope);
+			string functionargument = parsefunctionargument(newterm, 
+				scope, nestlevel);
 			//cout << "functionargument=" << functionargument << endl;
 
 			func_type * temp = getFunction(getfuncname, Functions);
 
 			//cout << "checkreturn=" << temp->doesreturn << endl;
 			if (temp->doesreturn) {
-				////cout << "returnvalue=" << temp->returnvalue << ';' << endl;
-				temp->setreturn(functionargument);
+				temp->setreturn(functionargument, scope+1, nestlevel);
+				//cout << "returnvalue in evaluatenewterm=" << temp->returnvalue << ';' << endl;
 				string tempvalue = to_string(temp->returnvalue);
 				returnstring += tempvalue;
 				returnstring += ' ';
@@ -283,5 +356,9 @@ string evaluatenewterm(string newterm, int scope) {
 
 	//cout << "returnstring=" << returnstring << endl;
 	//sleep(2);
+	postfixconverter converter;
+	string pfxreturnstring = converter.convertToPostfix(returnstring);
+	//cout << "pfxreturnstring=" << pfxreturnstring << endl;
+	float result = computeresult(pfxreturnstring);
 	return returnstring;
 }

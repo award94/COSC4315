@@ -4,7 +4,7 @@ string findfuncname(string line);
 int findlastlinefunc(int startLineNum, int funcscope);
 
 
-void createNewFunc(string line, int & lineNum, int scopelevel){
+void createNewFunc(string line, int & lineNum, int scopelevel,string stackname, int nestlevel){
 	//cout << endl << "==========FUNCTION SCOPE BEGIN============" << endl;
 
 	func_type * newFunc = new func_type();
@@ -97,62 +97,3 @@ string findfuncname(string line) {
 
 	return name;
 }
-
-/*
-
-//cout << "nextvar=" << nextvar << ';'<< endl;
-
-
-if (nextvar.compare("return") != 0) {
-//cout << "I will process this statement" << endl;
-
-}
-else {
-cout << "assigning return value" << endl;
-float returnvalue = setreturnvalue(currentLine, funcName, funcscope);
-variable * temp = getvariable(funcName, Variables);
-temp->value = returnvalue;
-temp = NULL;
-cout << "ending function because return found" << endl;
-lineNum = lastLine;
-}
-
-bool checkreturn(int startLine, int lastLine, int scopelevel);
-
-
-bool checkreturn(int startLine, int lastLine, int scopelevel) {
-//cout << "inside checkreturn()" << endl;
-//cout << "scope=" << scopelevel << endl;
-
-for (int i = startLine + 1; i <= lastLine; i++) {
-cout << fileLines[i] << endl;
-string currentLine = fileLines[i];
-
-bool lineinscope = 1;
-for (int j = 0; j < scopelevel * 3; j++) {
-if (currentLine[j] != ' ')
-lineinscope = 0;
-}
-if (currentLine[(scopelevel * 3) + 1] == ' ')
-lineinscope = 0;
-//cout << "isthisline in scope=" << lineinscope << endl;
-
-int j = 0;
-while (currentLine[j] == ' ')
-j++;
-
-string nextvar;
-
-while (currentLine[j] != ' ' && j < currentLine.length())
-nextvar += currentLine[j++];
-
-//cout << "nextvar="<<nextvar << endl;
-
-if (lineinscope && nextvar.compare("return") == 0)
-return 1;
-}
-
-return 0;
-}
-
-*/

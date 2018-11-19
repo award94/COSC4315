@@ -1,23 +1,23 @@
 using namespace std;
 
 string getarg(string ifline);
-bool evaluatearg(string arg, int scope);
+bool evaluatearg(string arg, int scope, int nestlevel);
 list<string> findbranchdata(list<string> & branch, bool iftruth, int & linestoskip);
-int findlastlineifelse(int startLineNum, int & elseline, int currentscope);
+int findlastlineifelse(int startLineNum, int & elseline, int stacklevel, int nestlevel);
 
-string parseexpr(string line, int scope);
+string parseexpr(string line, int scope, int nestlevel);
 
-void ifelse(string ifline, int & iflineNum, int funclastline, 
-	int prevscope, string scopename) {
-	cout << endl<<"============IF ELSE SCOPE BEGIN==========" << endl;
+void ifelse(string ifline, int & iflineNum, int funclastline,
+	int prevstack, string stackname, int nestlevel) {
+	cout << endl<<"============IF ELSE BEGIN==========" << endl;
 	
 
-	int currentscope = prevscope;
-	//cout << "scopelevel=" << currentscope << endl;
-	//cout << "scopename=" << scopename << endl;
+	int currentstack = prevstack;
+	//cout << "stacklevel=" << prevstack << endl;
+	//cout << "nestlevel=" << nestlevel << endl;
 
 	int elseline = -1;
-	int lastline = findlastlineifelse(iflineNum, elseline, currentscope+1);
+	int lastline = findlastlineifelse(iflineNum, elseline, prevstack, nestlevel);
 	
 	//cout << "if start line Num=" << iflineNum << endl;
 	//cout << "else start line=" << elseline << endl;
@@ -29,7 +29,7 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 
 	string arg = getarg(ifline);
 	//cout << "arg=" << arg << endl;
-	bool iftruth = evaluatearg(arg, currentscope);
+	bool iftruth = evaluatearg(arg, currentstack, nestlevel);
 	//cout << "iftruth=" << iftruth << endl;
 
 	if (iftruth == 1) {
@@ -39,7 +39,7 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 			for (; i <= lastline; i++) {
 				//cout << "i=" << i <<endl;
 				string currentLine = fileLines[i];
-				processstatement(i, currentLine, funclastline, currentscope+1, scopename);
+				processstatement(i, currentLine, funclastline, currentstack, stackname, nestlevel+1);
 			}
 			iflineNum = i;
 			//cout << "iflineNum=" << iflineNum << endl;
@@ -51,7 +51,7 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 			for (; i < elseline; i++) {
 				//cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
-				processstatement(i, currentLine, funclastline, currentscope+1, scopename);
+				processstatement(i, currentLine, funclastline, currentstack, stackname, nestlevel+1);
 			}
 			iflineNum = i;
 			//cout << "iflineNum=" << iflineNum << endl;
@@ -70,7 +70,7 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 			for (; i <= lastline; i++) {
 				//cout << "i=" << i << endl;
 				string currentLine = fileLines[i];
-				processstatement(i, currentLine, funclastline, currentscope+1, scopename);
+				processstatement(i, currentLine, funclastline, currentstack, stackname, nestlevel+1);
 			}
 			iflineNum = i;
 			
@@ -79,15 +79,36 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 	}
 
 	iflineNum = lastline;
-	cout << "lineNum=" << iflineNum << endl;
-	cout << "============IF ELSE SCOPE END==========" << endl;
+	//cout << "lineNum=" << iflineNum << endl;
+	cout << "============IF ELSE END==========" << endl;
 	
 }
 
-int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
+int findlastlineifelse(int startLineNum, int & elseline, int stacklevel, int nestlevel) {
 	//cout << "findlastline" << endl;
-	//cout << "currentscope=" << currentscope << endl;
+	//cout << "nestlevel=" << nestlevel << endl;
 	//cout << "filesize=" << fileLines.size() << endl;
+
+
+	string ifline = fileLines[startLineNum];
+	//cout << "ifline=" << ifline << endl;
+	int s = 0;
+	while (ifline[s] == ' ')
+		s++;
+	int indention = s / 3 + 1;
+	cout << "indention=" << indention << endl;
+
+	if (ifelseList.empty())
+		ifelseList.push_back(indention-1);
+
+	else {
+		if (ifelseList[ifelseList.size() - 1] < indention-1)
+			ifelseList[ifelseList.size() - 1] = indention-1;
+		else if (ifelseList[ifelseList.size() - 1] > indention-1)
+			ifelseList.push_back(indention-1);
+	}
+
+
 	int i = startLineNum+1;
 	for(; i < fileLines.size(); i++){
 		string currentLine = fileLines[i];
@@ -107,7 +128,7 @@ int findlastlineifelse(int startLineNum, int & elseline, int currentscope) {
 			//cout << "i=" << i << endl;
 
 			bool checkscope = 1;
-			for (int j = 0; j < 3 * currentscope; j++) {
+			for (int j = 0; j < 3 * indention; j++) {
 				if (currentLine[j] != ' ')
 					checkscope = 0;
 			}
@@ -170,7 +191,7 @@ string getarg(string ifline) {
 	return arg;
 }
 
-string parseexpr(string line, int scope) {
+string parseexpr(string line, int scope, int nestlevel) {
 	//cout << "inside parseexpr" << endl;
 	//cout << "line=" << line << endl;
 	string newexpr;
@@ -203,54 +224,10 @@ string parseexpr(string line, int scope) {
 	}
 
 	//cout << "tempterm=" << tempterm << endl;
+	newexpr += evaluatenewterm(tempterm, scope, nestlevel);
 
-	newexpr += evaluatenewterm(tempterm, scope);
-	/*
-	if (checkifconst(tempterm)) {
-		//cout << "is a constant: " << tempterm << ";" << endl;
-		newexpr.append(tempterm);
-		newexpr += ' ';
-	}
-	else {
-		//cout << "variable:" << tempterm << endl;
-
-		string getfuncname;
-		int i = 0;
-		while (tempterm[i] != '(' && i < tempterm.length()) {
-			getfuncname += tempterm[i];
-			i++;
-		}
-		cout << "getfuncname=" << getfuncname << endl;
-		if (checkforfunction(getfuncname, Functions)) {
-			//cout << "found function" << endl;
-			func_type * temp = getFunction(tempterm, Functions);
-
-			
-
-			if (temp->doesreturn) {
-				//cout << temp->returnvalue << endl;
-				temp->setreturn(tempterm);
-				newexpr += to_string(temp->returnvalue);
-				newexpr += ' ';
-			}
-			else {
-				cout << "ERROR: Function does not return a value" << endl;
-			}
-			temp = NULL;
-		}
-		else {
-			variable * grabValue = getvariable(tempterm, Variables);
-			if (grabValue == NULL)
-				cout << "error: " << tempterm << " is undefined at this point" << endl;
-			else {
-				// << to_string(grabValue->value) << endl;
-				newexpr.append(to_string(grabValue->value));
-				newexpr += ' ';
-				grabValue = NULL;
-			}
-		}
-	}
-	*/
+	while (line[i] == ' ')
+		i++;
 
 	while (i < line.length()) {
 		tempterm = "";
@@ -311,62 +288,15 @@ string parseexpr(string line, int scope) {
 
 		//cout << tempterm << endl;
 
-		newexpr += evaluatenewterm(tempterm, scope);
-
-		/*
-		if (checkifconst(tempterm)) {
-			//cout << "is a constant:" << tempterm << ";" << endl;
-			newexpr.append(tempterm);
-			newexpr += ' ';
-		}
-		else {
-			//cout << "variable:" << tempterm << endl;
-			string getfuncname;
-			int i = 0;
-			while (tempterm[i] != '(' && i < tempterm.length()) {
-				getfuncname += tempterm[i];
-				i++;
-			}
-			cout << "getfuncname=" << getfuncname << endl;
-
-			if (checkforfunction(getfuncname, Functions)) {
-				//cout << "found function" << endl;
-				func_type * temp = getFunction(getfuncname, Functions);
-
-				if (temp->doesreturn) {
-					//cout << temp->returnvalue << endl;
-					temp->setreturn(tempterm);
-					newexpr += to_string(temp->returnvalue);
-					newexpr += ' ';
-				}
-				else {
-					cout << "ERROR: Function does not return a value" << endl;
-				}
-
-				temp = NULL;
-			}
-			else {
-				variable * grabValue = getvariable(tempterm, Variables);
-				if (grabValue == NULL)
-					cout << "error: " << tempterm << " is undefined at this point" << endl;
-				else {
-					// << to_string(grabValue->value) << endl;
-					newexpr.append(to_string(grabValue->value));
-					newexpr += ' ';
-					grabValue = NULL;
-				}
-			}
-		}
-		*/
-
-		//cout << "newexpr=" << newexpr << endl;
+		newexpr += evaluatenewterm(tempterm, scope, nestlevel);
 	}
 
 	return newexpr;
 }
 
 //parses out the values from the argument and determines the truth of it
-bool evaluatearg(string arg, int scope) {
+bool evaluatearg(string arg, int scope, int nestlevel) {
+	//cout << "inside evaluatearg()" << endl;
 	string rawexpr1;
 	string rawexpr2;
 	string compoper;
@@ -399,8 +329,8 @@ bool evaluatearg(string arg, int scope) {
 	//cout << "rawexpr1=" << rawexpr1 << endl;
 	//cout << "rawexpr2=" << rawexpr2 << endl;
 
-	string expr1 = parseexpr(rawexpr1, scope);
-	string expr2 = parseexpr(rawexpr2, scope);
+	string expr1 = parseexpr(rawexpr1, scope, nestlevel);
+	string expr2 = parseexpr(rawexpr2, scope, nestlevel);
 
 	//cout << "expr1=" << expr1 << endl;
 	//cout << "expr2=" << expr2 << endl;

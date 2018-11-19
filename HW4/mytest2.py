@@ -1,4 +1,4 @@
-x = 4
+x = 2
 
 if x <= 2:
    if x == 1:
@@ -10,3 +10,8 @@ else:
       print("c")
    else:
       print("d")
+
+x = 3
+x = 4
+y = 2
+y = 3
