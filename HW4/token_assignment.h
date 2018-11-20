@@ -4,7 +4,7 @@ void convertToConstants(string & line, string & RHS,
 	string & LHS, int scopelevel, int nestlevel);
 
 void assignment(string line, int scopelevel, string stackname, int nestlevel) {
-	cout <<endl<< "==========ASSIGNMENT BEGIN============" << endl;
+	//cout <<endl<< "==========ASSIGNMENT BEGIN============" << endl;
 	//cout << line << endl;
 	//cout << "scope = " << scopelevel << endl;
 	//printVariables(Variables);
@@ -29,7 +29,7 @@ void assignment(string line, int scopelevel, string stackname, int nestlevel) {
 	lhsvar->value = result;
 	//cout << lhsvar->name << '=' << lhsvar->value << endl;
 	lhsvar = NULL;
-	cout << "==========ASSIGNMENT END============" << endl;
+	//cout << "==========ASSIGNMENT END============" << endl;
 }
 
 void convertToConstants(string & line, string & RHS,

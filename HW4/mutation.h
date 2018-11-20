@@ -30,7 +30,7 @@ bool checkforvariable(string variablename) {
 */
 
 bool checkformutatedvariable(string variablename) {
-	cout << "inside checkformutatedvariable()" << endl;
+	//cout << "inside checkformutatedvariable()" << endl;
 
 	for (int i = 0; i < mutationList.size(); i++) {
 		if (mutationList[i].compare(variablename) == 0)

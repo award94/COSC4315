@@ -44,7 +44,7 @@ void print(string line, int scope, int nestlevel) {
 	}
 
 	//cout << "finalOutput=" << finalOutput << endl;
-	cout << finalOutput << endl;	
+	//cout << finalOutput << endl;	
 }
 
 void createtermlist(vector<string> & termlist, string arg) {
@@ -152,7 +152,7 @@ void parsetermlist(vector<string> & termlist, int scope, int nestlevel) {
 				newterm = "";
 
 				while (j < currentexpr.length()) {
-					cout << currentexpr[j] << endl;
+					//cout << currentexpr[j] << endl;
 					if (currentexpr[j] == '(')
 						parenstack2.push('(');
 					if (currentexpr[j] == ')')
@@ -255,7 +255,7 @@ string parsefunctionargument(string newterm, int scope, int nestlevel) {
 
 	//cout << "argumentexpressions:" << "; size="<<argumentexpressions.size()<<endl;
 	for (int j = 0; j < argumentexpressions.size(); j++) {
-		cout << argumentexpressions[j] << ';'<<endl;
+		//cout << argumentexpressions[j] << ';'<<endl;
 		string prefix = convertexpressiontoconstants(argumentexpressions[j], scope, nestlevel);
 		//cout << "prefix=" << prefix << ';' << endl;
 		postfixconverter converter;

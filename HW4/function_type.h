@@ -159,7 +159,7 @@ void func_type::checkreturn() {
 vector<string> func_type::parsedfuncparam(string funccall) {
 	
 	//cout << "inside parsedfuncparam()" << endl;
-	cout << "funccall=" << funccall << endl;
+	//cout << "funccall=" << funccall << endl;
 	vector<string> parameters;
 	
 	int i = 0;
@@ -208,7 +208,7 @@ vector<string> func_type::parsedfuncparam(string funccall) {
 			i++;
 		}
 	}
-	cout << "pushing to parameters=" << temp << ';' << endl;
+	//cout << "pushing to parameters=" << temp << ';' << endl;
 	if(temp.compare("") != 0)
 		parameters.push_back(temp);
 	
@@ -218,9 +218,9 @@ vector<string> func_type::parsedfuncparam(string funccall) {
 
 void func_type::setreturn(string funccall, int stackscope, int nestlevel) {
 	//cout << "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" << endl;
-	cout << "inside setreturn() stackdepth=" << stackscope<<endl;
+	//cout << "inside setreturn() stackdepth=" << stackscope<<endl;
 	if (stackscope >= 2000) {
-		cout << "INFINITE RECURSION" << endl;
+		//cout << "INFINITE RECURSION" << endl;
 		recursionList[recursionList.size() - 1] = "No";
 		return;
 	}
@@ -288,8 +288,9 @@ void func_type::setreturn(string funccall, int stackscope, int nestlevel) {
 					nextvar += currentLine[k];
 					k++;
 				}
-				if(!(nextvar.compare("print") == 0))
+				if (!(nextvar.compare("print") == 0)) {
 					processstatement(i, currentLine, endline, stackscope, name, nestlevel);
+				}
 			}
 		}
 	}
@@ -415,7 +416,7 @@ void func_type::setreturn(string funccall, int stackscope, int nestlevel) {
 		while (line[i] == ' ')
 			i++;
 
-		cout << tempterm << endl;
+		//cout << tempterm << endl;
 
 		RHS += evaluatenewterm(tempterm, stackscope, nestlevel);
 	}

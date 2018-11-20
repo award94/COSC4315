@@ -69,13 +69,13 @@ int main(int argc, char* argv[]){
 		//cout << "lineNum after = " << lineNum << endl;
 		//cout << "==================MAIN SCOPE END=====================" << endl;
 	}
+	//cout << "finished with statements" << endl;
 
-	printFunctions(Functions);
-	printVariables(Variables);
+	//printFunctions(Functions);
+	//printVariables(Variables);
 	deleteVariables(Variables);
 	
 	if (mutationList.size() > 0) {
-		cout << endl;
 		cout << "Mutated Variables:";
 		for (int i = 0; i < mutationList.size(); i++) {
 			cout << ' ' << mutationList[i];
@@ -110,8 +110,8 @@ int main(int argc, char* argv[]){
 void processstatement(int & lineNum, string line, int lastLine, 
 	int stacklevel, string stackname, int nestlevel) {
 	//printVariables(Variables);
-	cout << "inside processstatement: " << line<< " ("<<lineNum<< ")"<<endl;
-	//cout << "lineNum = " << lineNum << ";"<<endl;
+	//cout << "inside processstatement: " << line<< " ("<<lineNum<< ")"<<endl;
+	//cout << "lineNum before statement= " << lineNum << ";"<<endl;
 	//cout << "line="<<fileLines[lineNum] <<";"<< endl;
 	//cout << "scopename=" << scopename << endl;
 
@@ -151,9 +151,10 @@ void processstatement(int & lineNum, string line, int lastLine,
 			//cout << "If/Else statement" << endl;
 			ifelse(line, lineNum, lastLine, stacklevel, 
 				stackname, nestlevel);
+			//cout << "end if lineNum=" << lineNum<<endl;
 		}
 		else if (nextVar.compare("else") == 0) {
-			cout << "ERROR: No if for this else" << endl;
+			cout << "ERROR: No if for this else: " << "(#"<<lineNum <<')'<< ' '<<line<< endl;
 		}
 		else if (nextVar.compare("return") == 0) {
 			//cout << "return found" << endl;
@@ -202,11 +203,12 @@ void processstatement(int & lineNum, string line, int lastLine,
 			//cout << "Variable Assignment/Arithmetic" << endl;
 			assignment(line, stacklevel, stackname, nestlevel);
 		}
+		//cout << "done" << endl;
 	}
 	else {
 		//cout << "Line empty or comment" << endl;
 	}
-	//cout << endl;
+	//cout <<"linenum after statement="<< lineNum<<endl;
 }
 
 float computeresult(string exp) {

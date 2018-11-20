@@ -9,7 +9,7 @@ string parseexpr(string line, int scope, int nestlevel);
 
 void ifelse(string ifline, int & iflineNum, int funclastline,
 	int prevstack, string stackname, int nestlevel) {
-	cout << endl<<"============IF ELSE BEGIN==========" << endl;
+	//cout << endl<<"============IF ELSE BEGIN==========" << endl;
 	
 
 	int currentstack = prevstack;
@@ -80,7 +80,7 @@ void ifelse(string ifline, int & iflineNum, int funclastline,
 
 	iflineNum = lastline;
 	//cout << "lineNum=" << iflineNum << endl;
-	cout << "============IF ELSE END==========" << endl;
+	//cout << "============IF ELSE END==========" << endl;
 	
 }
 
@@ -96,16 +96,20 @@ int findlastlineifelse(int startLineNum, int & elseline, int stacklevel, int nes
 	while (ifline[s] == ' ')
 		s++;
 	int indention = s / 3 + 1;
-	cout << "indention=" << indention << endl;
+	//cout << "indention=" << indention << endl;
+
+	int listindention = indention;
+	if (stacklevel > 0)
+		listindention--;
 
 	if (ifelseList.empty())
-		ifelseList.push_back(indention-1);
+		ifelseList.push_back(listindention-1);
 
 	else {
-		if (ifelseList[ifelseList.size() - 1] < indention-1)
-			ifelseList[ifelseList.size() - 1] = indention-1;
-		else if (ifelseList[ifelseList.size() - 1] > indention-1)
-			ifelseList.push_back(indention-1);
+		if (ifelseList[ifelseList.size() - 1] < listindention-1)
+			ifelseList[ifelseList.size() - 1] = listindention-1;
+		else if (ifelseList[ifelseList.size() - 1] > listindention-1)
+			ifelseList.push_back(listindention-1);
 	}
 
 
